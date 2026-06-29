@@ -7,6 +7,7 @@ export interface MockLogger extends Logger {
     details?: Record<string, unknown>;
     error?: Error;
   }[];
+  child(context: Partial<LogEntry>): MockLogger;
   reset(): void;
 }
 

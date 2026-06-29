@@ -23,6 +23,7 @@ export default tseslint.config(
       parserOptions: {
         projectService: {
           allowDefaultProject: [
+            "packages/*/vitest.config.ts",
             "services/backend/test/*.ts",
             "services/backend/vitest.config.ts",
             "services/backend/vitest.e2e.config.ts",
