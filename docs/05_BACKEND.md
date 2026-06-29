@@ -58,7 +58,7 @@ API Gateway
 
 ↓
 
-FastAPI
+NestJS + Fastify
 
 ↓
 
@@ -150,8 +150,10 @@ Contains
 
 Domain layer must not depend on
 
-- FastAPI
-- SQLAlchemy
+- NestJS
+- Fastify
+- Prisma
+- Express
 - Redis
 - OpenAI SDK
 - External APIs
@@ -165,7 +167,7 @@ Contains
 - Database
 - Repositories
 - Redis
-- Celery
+- BullMQ
 - Storage
 - AI Providers
 - MCP

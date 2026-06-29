@@ -41,7 +41,8 @@ Related Documents
 
 This document defines every core business workflow of Atlas AI.
 
-All user actions must follow standardized workflows to ensure predictable behavior, auditability and scalability.
+All user actions must follow standardized workflows to ensure predictable behavior, auditability and
+scalability.
 
 ---
 

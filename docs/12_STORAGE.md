@@ -33,7 +33,8 @@ Related Documents
 
 This document defines the complete storage architecture for Atlas AI.
 
-Storage must be independent from cloud vendors and allow replacement without affecting business logic.
+Storage must be independent from cloud vendors and allow replacement without affecting business
+logic.
 
 ---
 

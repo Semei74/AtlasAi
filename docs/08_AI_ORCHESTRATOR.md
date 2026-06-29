@@ -29,7 +29,8 @@ Related Documents
 
 This document defines the architecture, responsibilities and execution model of the AI Orchestrator.
 
-The AI Orchestrator is the central intelligence layer responsible for coordinating all AI operations.
+The AI Orchestrator is the central intelligence layer responsible for coordinating all AI
+operations.
 
 No frontend, backend module or MCP tool communicates directly with AI providers.
 

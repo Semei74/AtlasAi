@@ -34,7 +34,8 @@ Related Documents
 
 # Purpose
 
-This document defines the DevOps processes, infrastructure architecture and deployment standards for Atlas AI.
+This document defines the DevOps processes, infrastructure architecture and deployment standards for
+Atlas AI.
 
 Infrastructure must be automated, reproducible, observable and cloud agnostic.
 

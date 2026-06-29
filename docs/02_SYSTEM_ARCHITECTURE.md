@@ -15,9 +15,11 @@
 
 This document defines the complete system architecture for Atlas AI.
 
-It specifies the logical components, infrastructure, service boundaries, communication protocols, deployment strategy, scalability model, and engineering constraints.
+It specifies the logical components, infrastructure, service boundaries, communication protocols,
+deployment strategy, scalability model, and engineering constraints.
 
-Every backend, frontend, AI service, MCP integration, and infrastructure component MUST comply with this architecture.
+Every backend, frontend, AI service, MCP integration, and infrastructure component MUST comply with
+this architecture.
 
 ---
 
@@ -554,4 +556,5 @@ OpenCode MUST
 - document all public APIs;
 - reject implementations that violate this architecture.
 
-This document is the authoritative system architecture specification for Atlas AI and is mandatory for every engineering task.
+This document is the authoritative system architecture specification for Atlas AI and is mandatory
+for every engineering task.

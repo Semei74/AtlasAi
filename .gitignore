@@ -2,6 +2,8 @@
 .env
 .env.local
 .env.production
+.env.development
+.env.test
 
 # IDE
 .idea/
@@ -9,24 +11,46 @@
 *.swp
 *.swo
 *~
+*.iml
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log
-logs/
-
 # Dependencies
 node_modules/
+.pnpm-store/
 .pub-cache/
 .packages
+.pnpmfile.cjs
+
+# Build output
 build/
 dist/
 target/
+.next/
+out/
+
+# Coverage
+coverage/
+coverage-ts/
+
+# Logs
+*.log
+logs/
+lerna-debug.log
+npm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+
+# Environment files
+!.env.example
 
 # Misc
 *.pid
 *.seed
 *.pid.lock
+tmp/
+temp/
+.cache/

@@ -13,17 +13,22 @@
 
 # 1. Product Overview
 
-Atlas AI is an AI-powered productivity platform designed to help individuals and teams manage projects, automate workflows, interact with multiple AI models, connect external tools through MCP, and build a persistent knowledge base.
+Atlas AI is an AI-powered productivity platform designed to help individuals and teams manage
+projects, automate workflows, interact with multiple AI models, connect external tools through MCP,
+and build a persistent knowledge base.
 
-The application combines conversational AI, automation, document management, project management, memory, and external integrations into a single workspace.
+The application combines conversational AI, automation, document management, project management,
+memory, and external integrations into a single workspace.
 
 ---
 
 # 2. Product Vision
 
-Create the most capable AI workspace where users can think, build, organize, automate, and execute work without switching between dozens of applications.
+Create the most capable AI workspace where users can think, build, organize, automate, and execute
+work without switching between dozens of applications.
 
-Atlas AI should become the primary AI operating environment for professionals, developers, researchers, creators, and businesses.
+Atlas AI should become the primary AI operating environment for professionals, developers,
+researchers, creators, and businesses.
 
 ---
 

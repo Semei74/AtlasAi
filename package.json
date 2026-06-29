@@ -1,0 +1,64 @@
+{
+  "name": "atlas-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Atlas AI — Enterprise AI Platform",
+  "license": "MIT",
+  "author": "Atlas AI Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Semei74/AtlasAi.git"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "type": "module",
+  "packageManager": "pnpm@10.8.0",
+  "scripts": {
+    "install:all": "pnpm install",
+    "build": "pnpm -r build",
+    "dev": "pnpm -r dev",
+    "start": "pnpm -r start",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md,yaml,yml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md,yaml,yml}\"",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "test:watch": "pnpm -r test:watch",
+    "test:e2e": "pnpm -r test:e2e",
+    "clean": "pnpm -r clean",
+    "clean:all": "pnpm -r clean && rm -rf node_modules",
+    "lint:workspace": "pnpm ls -r --depth=0",
+    "setup": "pnpm install && pnpm run build",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,jsx,cjs,mjs}": [
+      "prettier --write"
+    ],
+    "*.{json,md,yaml,yml}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "vitest": "^3.1.0",
+    "eslint": "^9.24.0",
+    "prettier": "^3.5.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "husky": "^9.1.0",
+    "lint-staged": "^15.5.0",
+    "@eslint/js": "^9.24.0",
+    "typescript-eslint": "^8.30.0",
+    "eslint-config-prettier": "^10.1.0",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0"
+  }
+}

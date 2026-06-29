@@ -30,7 +30,8 @@ Related Documents
 
 This document defines the Memory System used by Atlas AI.
 
-The Memory System provides persistent, structured and controllable memory for every user, workspace and organization.
+The Memory System provides persistent, structured and controllable memory for every user, workspace
+and organization.
 
 Memory is independent from AI providers.
 

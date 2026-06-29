@@ -13,21 +13,27 @@
 
 # 1. Executive Summary
 
-Atlas AI is an AI-first productivity platform designed to become a user's intelligent operating system for work, research, automation, software development, and knowledge management.
+Atlas AI is an AI-first productivity platform designed to become a user's intelligent operating
+system for work, research, automation, software development, and knowledge management.
 
-The platform combines Large Language Models (LLMs), MCP (Model Context Protocol), long-term memory, external integrations, project management, document processing, and workflow automation into a unified ecosystem.
+The platform combines Large Language Models (LLMs), MCP (Model Context Protocol), long-term memory,
+external integrations, project management, document processing, and workflow automation into a
+unified ecosystem.
 
 This document is the highest-level technical specification for the entire Atlas AI project.
 
-Every architectural, engineering, security, and product decision MUST comply with this specification.
+Every architectural, engineering, security, and product decision MUST comply with this
+specification.
 
 ---
 
 # 2. Vision
 
-Build the most capable AI workspace that allows users to think, create, automate, search, analyze, and execute complex tasks through one unified intelligent assistant.
+Build the most capable AI workspace that allows users to think, create, automate, search, analyze,
+and execute complex tasks through one unified intelligent assistant.
 
-Atlas AI should evolve from a conversational assistant into a fully autonomous AI operating platform.
+Atlas AI should evolve from a conversational assistant into a fully autonomous AI operating
+platform.
 
 ---
 
@@ -261,14 +267,14 @@ The platform shall support:
 
 # 14. Reliability Targets
 
-| Component | Target Availability |
-|------------|--------------------|
-| Authentication | 99.95% |
-| Backend API | 99.90% |
-| Database | 99.95% |
-| Storage | 99.90% |
-| AI Services | 99.50% |
-| MCP Gateway | 99.50% |
+| Component      | Target Availability |
+| -------------- | ------------------- |
+| Authentication | 99.95%              |
+| Backend API    | 99.90%              |
+| Database       | 99.95%              |
+| Storage        | 99.90%              |
+| AI Services    | 99.50%              |
+| MCP Gateway    | 99.50%              |
 
 ---
 
@@ -466,4 +472,5 @@ OpenCode MUST:
 
 This document is the authoritative engineering specification for Atlas AI.
 
-If conflicts arise between documents, this specification has the highest priority unless explicitly superseded by a newer approved version.
+If conflicts arise between documents, this specification has the highest priority unless explicitly
+superseded by a newer approved version.

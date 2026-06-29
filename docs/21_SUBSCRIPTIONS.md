@@ -42,7 +42,8 @@ Related Documents
 
 This document defines the complete subscription and billing architecture for Atlas AI.
 
-The billing system must support recurring subscriptions, usage limits, feature gating and future enterprise licensing.
+The billing system must support recurring subscriptions, usage limits, feature gating and future
+enterprise licensing.
 
 ---
 

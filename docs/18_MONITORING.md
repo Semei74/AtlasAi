@@ -39,7 +39,8 @@ Related Documents
 
 This document defines the complete monitoring and observability platform for Atlas AI.
 
-Every service, container, workflow and infrastructure component must expose metrics, traces and health information.
+Every service, container, workflow and infrastructure component must expose metrics, traces and
+health information.
 
 Monitoring is mandatory for production.
 

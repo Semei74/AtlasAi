@@ -24,7 +24,8 @@ Related Documents:
 
 This document defines the official technology stack for Atlas AI.
 
-Every implementation must use the technologies described in this document unless a newer version of this specification explicitly replaces them.
+Every implementation must use the technologies described in this document unless a newer version of
+this specification explicitly replaces them.
 
 Technology choices are based on:
 
@@ -101,71 +102,60 @@ Reason
 
 ## Programming Language
 
-Dart
+TypeScript
 
-Latest Stable Version
+Strict Mode Required
+
+---
+
+## Framework
+
+NestJS
+
+Reason
+
+- Modular architecture
+- Dependency Injection (built-in)
+- TypeScript first
+- Decorator pattern
+- OpenAPI support
+- Enterprise grade
 
 ---
 
 ## State Management
 
-Riverpod
+Redux Toolkit / Zustand
 
 Reason
 
-- Compile-time safety
+- TypeScript support
 - Testability
-- Dependency Injection
-- Modular architecture
+- Middleware support
+- DevTools
 
 Forbidden
 
-- Provider
-- GetX
 - Global mutable state
 
 ---
 
-## Routing
+## Routing (Frontend)
 
-GoRouter
+Next.js App Router
 
 Reason
 
-- Official Flutter recommendation
-- Deep Linking
-- Web compatible
-
----
-
-## Local Storage
-
-Hive
-
-Use Cases
-
-- cached settings
-- cached conversations
-- offline queue
-- preferences
-
----
-
-## Secure Storage
-
-Flutter Secure Storage
-
-Use Cases
-
-- tokens
-- encryption keys
-- device secrets
+- File-based routing
+- SSR / SSG
+- API routes
+- Middleware
 
 ---
 
 ## HTTP Client
 
-Dio
+Axios
 
 Requirements
 
@@ -179,86 +169,57 @@ Requirements
 
 ## Serialization
 
-json_serializable
-
-build_runner
-
----
-
-## Localization
-
-intl
-
-ARB localization files
+class-transformer / class-validator
 
 ---
 
 ## UI
 
-Material 3
+Tailwind CSS
+
+shadcn/ui
 
 Custom Design System
 
-No third-party UI kits.
-
 ---
 
-## Charts
+## Backend Framework
 
-fl_chart
-
----
-
-## Image Cache
-
-cached_network_image
-
----
-
-## Forms
-
-flutter_form_builder
-
----
-
-## Backend
-
-Framework
-
-FastAPI
+NestJS + Fastify
 
 Reason
 
-- async
-- OpenAPI support
-- performance
-- Python ecosystem
-- typing
+- Modular architecture
+- Dependency Injection (built-in)
+- TypeScript first
+- OpenAPI / Swagger
+- Fastify adapter for performance
 
 ---
 
 ## Programming Language
 
-Python
+TypeScript
 
-Stable LTS version
+Strict mode with exactOptionalPropertyTypes
 
 ---
 
-## Dependency Management
+## Package Manager
 
-uv
+pnpm
 
 Requirements
 
 - lock file
+- workspace support
 - reproducible builds
 
 ---
 
 ## API
 
-REST
+REST (primary)
 
 Future
 
@@ -268,21 +229,28 @@ GraphQL Gateway if needed.
 
 ## Validation
 
-Pydantic
+Zod (runtime)
+
+class-validator (decorator-based)
 
 ---
 
 ## ORM
 
-SQLAlchemy 2.x
+Prisma
 
-Async Mode
+Reason
+
+- Type-safe queries
+- Auto-generated types
+- Migration system
+- Relation management
 
 ---
 
 ## Database Migration
 
-Alembic
+Prisma Migrate
 
 ---
 
@@ -298,7 +266,7 @@ Rotating Refresh Tokens
 
 ## Password Hashing
 
-Argon2
+bcrypt / Argon2
 
 Forbidden
 
@@ -306,7 +274,7 @@ MD5
 
 SHA1
 
-SHA256 as password hashing
+Plain SHA256 as password hashing
 
 ---
 
@@ -322,7 +290,7 @@ ABAC
 
 ## Task Queue
 
-Celery
+BullMQ
 
 Broker
 
@@ -522,15 +490,11 @@ OCR implementation hidden behind interface.
 
 # Document Generation
 
-python-docx
-
-reportlab
-
 markdown
 
-openpyxl
+pdfkit
 
-python-pptx
+ExcelJS
 
 ---
 
@@ -544,7 +508,7 @@ Search module isolated.
 
 # Logging
 
-structlog
+Pino
 
 Requirements
 
@@ -586,31 +550,29 @@ Sensitive data masking
 
 Unit Tests
 
-pytest
+Vitest
 
 ---
 
 Integration Tests
 
-pytest
+Vitest
 
-Testcontainers
+Supertest
 
 ---
 
 API Tests
 
-httpx
+Vitest
+
+Supertest
 
 ---
 
-Flutter Tests
+E2E Tests
 
-flutter_test
-
-integration_test
-
-mocktail
+Playwright
 
 ---
 
@@ -740,11 +702,11 @@ Firebase Crashlytics
 
 Backend
 
-dependency-injector
+NestJS DI (built-in)
 
 Frontend
 
-Riverpod
+React Context / Zustand
 
 ---
 
@@ -764,27 +726,27 @@ Architecture Decision Records
 
 Backend
 
-ruff
+ESLint (strict)
 
-black
+Prettier
 
-mypy
+TypeScript (strict mode)
 
 ---
 
 Frontend
 
-dart format
+ESLint (strict)
 
-flutter analyze
+Prettier
 
-very_good_analysis
+TypeScript (strict mode)
 
 ---
 
 # Security
 
-Bandit
+ESLint Security Plugins
 
 Trivy
 
@@ -824,17 +786,13 @@ hotfix/*
 
 Backend
 
-snake_case
+camelCase (TypeScript/JavaScript)
 
-Python Classes
-
-PascalCase
-
-Flutter Widgets
+Classes / Interfaces
 
 PascalCase
 
-Variables
+Variables / Functions
 
 camelCase
 
@@ -854,7 +812,7 @@ No Firebase Authentication
 
 No Supabase Authentication
 
-No Business Logic in Flutter Widgets
+No Business Logic in React Components
 
 No SQLite Production Database
 
@@ -862,7 +820,7 @@ No Hardcoded Secrets
 
 No Vendor Lock-In
 
-No Direct AI SDK Calls from UI
+No Direct AI SDK Calls from Frontend
 
 No Static Global State
 

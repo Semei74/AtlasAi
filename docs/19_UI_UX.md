@@ -40,7 +40,8 @@ Related Documents
 
 This document defines the complete UI/UX standards for Atlas AI.
 
-Every screen, component and interaction must follow a unified design system to ensure consistency, accessibility and scalability.
+Every screen, component and interaction must follow a unified design system to ensure consistency,
+accessibility and scalability.
 
 ---
 

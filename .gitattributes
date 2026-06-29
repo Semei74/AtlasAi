@@ -1,0 +1,29 @@
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+# Source files
+*.ts text
+*.tsx text
+*.js text
+*.json text
+*.yaml text
+*.yml text
+*.md text
+
+# Lock files
+pnpm-lock.yaml -diff
+yarn.lock -diff
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text
+*.pdf binary
+*.ico binary
+
+# Git diff
+*.ts linguist-language=TypeScript
+*.tsx linguist-language=TypeScript

@@ -1,0 +1,21 @@
+{
+  "extends": "./configs/tsconfig.base.json",
+  "files": ["vitest.config.ts"],
+  "include": [],
+  "references": [
+    { "path": "packages/types" },
+    { "path": "packages/constants" },
+    { "path": "packages/errors" },
+    { "path": "packages/logger" },
+    { "path": "packages/validation" },
+    { "path": "packages/utils" },
+    { "path": "packages/config-vitest" },
+    { "path": "packages/config" },
+    { "path": "packages/testing" }
+  ],
+  "compilerOptions": {
+    "noEmit": true,
+    "outDir": "dist",
+    "rootDir": "."
+  }
+}

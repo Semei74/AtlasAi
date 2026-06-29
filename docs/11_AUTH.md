@@ -32,7 +32,8 @@ Related Documents
 
 This document defines the authentication and authorization architecture of Atlas AI.
 
-All user authentication, session management and permission validation must follow this specification.
+All user authentication, session management and permission validation must follow this
+specification.
 
 ---
 
