@@ -21,7 +21,13 @@ export default tseslint.config(
   {
     languageOptions: {
       parserOptions: {
-        projectService: true,
+        projectService: {
+          allowDefaultProject: [
+            "services/backend/test/*.ts",
+            "services/backend/vitest.config.ts",
+            "services/backend/vitest.e2e.config.ts",
+          ],
+        },
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -40,6 +46,12 @@ export default tseslint.config(
       "no-console": ["warn", { allow: ["log", "warn", "error"] }],
       eqeqeq: ["error", "always"],
       curly: ["error", "all"],
+    },
+  },
+  {
+    files: ["services/backend/**/*.module.ts"],
+    rules: {
+      "@typescript-eslint/no-extraneous-class": "off",
     },
   },
   eslintConfigPrettier,

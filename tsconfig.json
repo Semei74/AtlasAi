@@ -11,7 +11,8 @@
     { "path": "packages/utils" },
     { "path": "packages/config-vitest" },
     { "path": "packages/config" },
-    { "path": "packages/testing" }
+    { "path": "packages/testing" },
+    { "path": "services/backend" }
   ],
   "compilerOptions": {
     "noEmit": true,
