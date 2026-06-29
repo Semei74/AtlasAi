@@ -1,43 +1,19 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import type { PasswordValidationResult } from "../dto/password-validation-result.js";
 import { VALID_PASSWORD } from "../dto/password-validation-result.js";
 import type {
   PasswordPolicy,
   PasswordPolicyConfig,
 } from "../interfaces/password-policy.interface.js";
-import { DEFAULT_PASSWORD_POLICY } from "../interfaces/password-policy.interface.js";
-
-const COMMON_PASSWORDS = new Set([
-  "password",
-  "password123",
-  "12345678",
-  "123456789",
-  "1234567890",
-  "qwerty123",
-  "qwertyuiop",
-  "abcdefgh",
-  "letmein",
-  "welcome",
-  "admin123",
-  "iloveyou",
-  "sunshine",
-  "monkey",
-  "dragon",
-  "passw0rd",
-  "master",
-  "shadow",
-  "trustno1",
-  "football",
-  "baseball",
-  "abc123",
-  "11111111",
-  "00000000",
-  "login",
-]);
+import { PASSWORD_POLICY_CONFIG } from "../interfaces/password-policy.interface.js";
 
 @Injectable()
 export class PasswordPolicyService implements PasswordPolicy {
-  public readonly config: PasswordPolicyConfig = { ...DEFAULT_PASSWORD_POLICY };
+  public readonly config: PasswordPolicyConfig;
+
+  public constructor(@Inject(PASSWORD_POLICY_CONFIG) config: PasswordPolicyConfig) {
+    this.config = { ...config };
+  }
 
   public validate(password: string, context?: { email?: string }): PasswordValidationResult {
     const errors: string[] = [];
@@ -62,7 +38,10 @@ export class PasswordPolicyService implements PasswordPolicy {
       errors.push("Password must contain at least one special character");
     }
 
-    if (this.config.forbidCommonPasswords && COMMON_PASSWORDS.has(password.toLowerCase())) {
+    if (
+      this.config.forbidCommonPasswords &&
+      this.config.commonPasswords.includes(password.toLowerCase())
+    ) {
       errors.push("This password is too common and has been compromised");
     }
 

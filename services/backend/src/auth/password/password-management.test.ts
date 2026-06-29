@@ -5,6 +5,7 @@ import { PasswordHistoryService } from "./services/password-history.service.js";
 import { PasswordResetService } from "./services/password-reset.service.js";
 import { PasswordExpirationService } from "./services/password-expiration.service.js";
 import { PasswordManagementService } from "./services/password-management.service.js";
+import { DEFAULT_PASSWORD_POLICY } from "./interfaces/password-policy.interface.js";
 import type { PasswordHistoryStore } from "./interfaces/password-history-store.interface.js";
 import type {
   PasswordResetStore,
@@ -129,7 +130,7 @@ describe("PasswordPolicyService", () => {
   let service: PasswordPolicyService;
 
   beforeAll(() => {
-    service = new PasswordPolicyService();
+    service = new PasswordPolicyService(DEFAULT_PASSWORD_POLICY);
   });
 
   it("should reject password shorter than 12 chars", () => {
@@ -192,9 +193,9 @@ describe("PasswordPolicyService", () => {
     expect(result.errors.length).toBeGreaterThanOrEqual(4);
   });
 
-  it("should accept password with custom config (minLength 8)", () => {
-    const customService = new PasswordPolicyService();
-    expect(customService.config.minLength).toBe(12);
+  it("should accept config injection", () => {
+    const customService = new PasswordPolicyService({ ...DEFAULT_PASSWORD_POLICY, minLength: 8 });
+    expect(customService.config.minLength).toBe(8);
   });
 });
 
@@ -310,7 +311,7 @@ describe("PasswordExpirationService", () => {
   let service: PasswordExpirationService;
 
   beforeAll(() => {
-    service = new PasswordExpirationService();
+    service = new PasswordExpirationService(DEFAULT_PASSWORD_POLICY);
   });
 
   it("should not flag recent password as expired", () => {
@@ -354,7 +355,7 @@ describe("PasswordManagementService", () => {
 
   beforeAll(async () => {
     hashingService = new PasswordHashingService();
-    policyService = new PasswordPolicyService();
+    policyService = new PasswordPolicyService(DEFAULT_PASSWORD_POLICY);
     historyStore = new InMemoryPasswordHistoryStore();
     historyService = new PasswordHistoryService(historyStore, hashingService);
     resetStore = new InMemoryPasswordResetStore();

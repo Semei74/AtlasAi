@@ -12,6 +12,10 @@ import { PasswordExpirationService } from "./password/services/password-expirati
 import { PasswordManagementService } from "./password/services/password-management.service.js";
 import { PASSWORD_HISTORY_STORE } from "./password/interfaces/password-history-store.interface.js";
 import { PASSWORD_RESET_STORE } from "./password/interfaces/password-reset-store.interface.js";
+import {
+  PASSWORD_POLICY_CONFIG,
+  DEFAULT_PASSWORD_POLICY,
+} from "./password/interfaces/password-policy.interface.js";
 import type { AuthProvider } from "./interfaces/auth-provider.interface.js";
 import type { UserRepository } from "./interfaces/user-repository.interface.js";
 import type { PasswordHistoryStore } from "./password/interfaces/password-history-store.interface.js";
@@ -86,6 +90,10 @@ const DEFAULT_PASSWORD_RESET_STORE: PasswordResetStore = {
     {
       provide: PASSWORD_RESET_STORE,
       useValue: DEFAULT_PASSWORD_RESET_STORE,
+    },
+    {
+      provide: PASSWORD_POLICY_CONFIG,
+      useValue: DEFAULT_PASSWORD_POLICY,
     },
     {
       provide: AUTH_PROVIDERS,
