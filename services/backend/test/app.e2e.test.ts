@@ -89,6 +89,25 @@ describe("App (e2e)", () => {
     });
   });
 
+  describe("OpenAPI spec", () => {
+    it("should return valid JSON spec with required fields", async () => {
+      const response = await app.inject({
+        method: "GET",
+        url: "/docs-json",
+      });
+
+      expect(response.statusCode).toBe(200);
+      const spec = JSON.parse(response.body) as Record<string, unknown>;
+
+      expect(spec).toHaveProperty("openapi");
+      expect(spec).toHaveProperty("info");
+      expect(spec).toHaveProperty("paths");
+      expect(spec).toHaveProperty("components");
+      expect((spec["info"] as Record<string, unknown>).title).toBe("Atlas AI API");
+      expect((spec["info"] as Record<string, unknown>).version).toBe("1.0.0");
+    });
+  });
+
   describe("GET /metrics", () => {
     it("should return Prometheus metrics", async () => {
       const response = await app.inject({

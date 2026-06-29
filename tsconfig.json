@@ -12,6 +12,7 @@
     { "path": "packages/config-vitest" },
     { "path": "packages/config" },
     { "path": "packages/testing" },
+    { "path": "packages/user" },
     { "path": "services/backend" }
   ],
   "compilerOptions": {

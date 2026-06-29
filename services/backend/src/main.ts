@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
 import type { NestFastifyApplication } from "@nestjs/platform-fastify";
 import { FastifyAdapter } from "@nestjs/platform-fastify";
@@ -5,6 +6,7 @@ import compression from "@fastify/compress";
 import cors from "@fastify/cors";
 import { AppModule } from "./app.module.js";
 import { setupOpenapi } from "./openapi/setup.js";
+import { registerResponseTiming } from "./common/middleware/response-timing.middleware.js";
 import { CONFIG_LOADER } from "./config/config.module.js";
 import type { ConfigLoader } from "@atlas/config";
 import type { ConfigSchema } from "@atlas/config";
@@ -15,6 +17,18 @@ async function bootstrap(): Promise<void> {
     AppModule,
     new FastifyAdapter({ logger: false }),
   );
+
+  app.enableShutdownHooks();
+
+  process.on("SIGTERM", () => {
+    rootLogger.info("Received SIGTERM signal, shutting down gracefully");
+    void app.close().finally(() => process.exit(0));
+  });
+
+  process.on("SIGINT", () => {
+    rootLogger.info("Received SIGINT signal, shutting down gracefully");
+    void app.close().finally(() => process.exit(0));
+  });
 
   const configLoader = app.get<ConfigLoader>(CONFIG_LOADER);
   const config = configLoader.load({
@@ -34,6 +48,7 @@ async function bootstrap(): Promise<void> {
   });
 
   setupOpenapi(app);
+  registerResponseTiming(app);
 
   await app.listen(port, host);
 

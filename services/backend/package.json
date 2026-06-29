@@ -16,28 +16,28 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@atlas/config": "workspace:*",
+    "@atlas/errors": "workspace:*",
+    "@atlas/logger": "workspace:*",
+    "@fastify/compress": "^8.0.0",
+    "@fastify/cors": "^11.0.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-fastify": "^11.0.0",
     "@nestjs/swagger": "^11.0.0",
-    "@fastify/cors": "^11.0.0",
-    "@fastify/compress": "^8.0.0",
-    "@fastify/static": "^8.0.0",
-    "fastify": "^5.0.0",
-    "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.0",
-    "prom-client": "^15.0.0",
-    "class-validator": "^0.14.0",
+    "argon2": "^0.44.0",
     "class-transformer": "^0.5.0",
-    "@atlas/config": "workspace:*",
-    "@atlas/errors": "workspace:*",
-    "@atlas/logger": "workspace:*",
-    "@atlas/validation": "workspace:*"
+    "class-validator": "^0.14.0",
+    "fastify": "^5.0.0",
+    "prom-client": "^15.0.0",
+    "reflect-metadata": "^0.2.0",
+    "rxjs": "^7.8.0"
   },
   "devDependencies": {
+    "@atlas/testing": "workspace:*",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/testing": "^11.0.0",
-    "@atlas/testing": "workspace:*",
+    "@types/argon2": "^0.15.4",
     "vitest": "^3.1.0"
   }
 }

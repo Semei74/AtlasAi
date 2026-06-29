@@ -1186,17 +1186,21 @@ Request clarification.
 
 # Definition of Done
 
-A task is complete only if ALL of the following are true:
+A task SHALL NOT be marked as complete until ALL of the following conditions are satisfied:
 
-✓ Feature is fully implemented.
+✓ The feature is fully implemented.
 
-✓ Business logic is correct.
+✓ Business logic is complete and correct.
 
-✓ Code builds successfully.
+✓ The implementation fully complies with the architecture documentation.
 
-✓ Formatter passes.
+✓ No temporary solutions, shortcuts, or workarounds have been introduced.
 
-✓ Linter passes.
+✓ The project builds successfully.
+
+✓ Formatting passes.
+
+✓ Linting passes.
 
 ✓ Static analysis passes.
 
@@ -1212,7 +1216,9 @@ A task is complete only if ALL of the following are true:
 
 ✓ Performance impact is acceptable.
 
-✓ Documentation is updated.
+✓ Documentation has been updated where required.
+
+✓ CHANGELOG.md has been updated when the implementation affects project history.
 
 ✓ Architecture remains consistent.
 
@@ -1220,11 +1226,99 @@ A task is complete only if ALL of the following are true:
 
 ✓ No dead code remains.
 
-✓ No TODO or FIXME comments remain.
+✓ No unused imports, variables, or dependencies remain.
+
+✓ No TODO, FIXME, XXX, or HACK comments remain.
+
+✓ All mandatory quality gates pass.
+
+✓ Repository passes all configured Git hooks (pre-commit, commit-msg, pre-push).
+
+✓ All changes are committed successfully.
+
+✓ Working tree is clean (`git status`).
 
 ✓ Repository remains production-ready.
 
-Only then may the task be marked as completed.
+Only then may the task be marked as COMPLETED.
+
+---
+
+# Phase Completion Rule
+
+Completion of a phase requires significantly more than passing quality gates.
+
+A phase SHALL NOT be marked as COMPLETE until ALL of the following conditions are satisfied:
+
+1. Every task defined for the phase in MASTER_IMPLEMENTATION_PLAN.md has been fully implemented.
+
+2. Every mandatory deliverable defined for the phase exists.
+
+3. All Definition of Done requirements have been satisfied for every completed task.
+
+4. All quality gates pass successfully.
+
+5. No known Critical or High severity issues remain.
+
+6. Architecture self-review reports no unresolved findings.
+
+7. The repository contains no duplicated implementation, dead code, or architectural violations.
+
+8. Repository documentation is fully synchronized with the implementation.
+
+9. CHANGELOG.md has been updated.
+
+10. All implementation changes have been committed successfully.
+
+11. All commits have been pushed successfully to the remote repository.
+
+12. The remote repository reflects the completed implementation.
+
+13. The working tree is clean (`git status`).
+
+14. The repository is verified to be in a production-ready state.
+
+Only after ALL of the above conditions are satisfied may OpenCode:
+
+- mark the phase as COMPLETE;
+- recommend proceeding to the next phase;
+- begin implementation of the next phase.
+
+Passing quality gates alone does NOT constitute phase completion.
+
+If any verification step fails:
+
+STOP.
+
+Resolve every remaining issue.
+
+Repeat the complete verification process.
+
+Do NOT begin the next phase.
+
+---
+
+# Mandatory Phase Completion Report
+
+After a phase has been successfully completed, OpenCode SHALL produce a completion report containing
+at minimum:
+
+- Phase name and status.
+- Completed tasks.
+- Created files.
+- Modified files.
+- Deleted files.
+- Quality gate results.
+- Test summary.
+- Architecture review summary.
+- Security review summary.
+- Documentation updates.
+- Recommended Conventional Commit message.
+- Confirmation that all commits have been pushed.
+- Confirmation that the repository is clean.
+- Confirmation that the repository is ready for the next implementation phase.
+
+Only after this report has been generated may the phase be considered officially completed.
 
 ---
 
