@@ -71,6 +71,15 @@ class MockUserRepository implements UserRepository {
       passwordHash: "",
       displayName: "Test User",
       status: "active",
+      avatarUrl: null,
+      bio: null,
+      timezone: null,
+      theme: "system",
+      locale: "en-US",
+      emailNotifications: true,
+      pushNotifications: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
   }
 
@@ -92,6 +101,23 @@ class MockUserRepository implements UserRepository {
     if (user) {
       this.users.set(userId, { ...user, passwordHash: hash });
     }
+  }
+
+  public create(record: Omit<UserRecord, "createdAt" | "updatedAt">): Promise<UserRecord> {
+    const now = new Date();
+    const user: UserRecord = { ...record, createdAt: now, updatedAt: now };
+    this.users.set(user.id, user);
+    return Promise.resolve(user);
+  }
+
+  public update(id: string, changes: Partial<Omit<UserRecord, "id">>): Promise<UserRecord> {
+    const existing = this.users.get(id);
+    if (existing === undefined) {
+      throw new Error("User not found");
+    }
+    const updated: UserRecord = { ...existing, ...changes, updatedAt: new Date() };
+    this.users.set(updated.id, updated);
+    return Promise.resolve(updated);
   }
 }
 

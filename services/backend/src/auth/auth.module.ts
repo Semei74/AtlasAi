@@ -30,6 +30,11 @@ import type { SessionStore } from "./session/interfaces/session-store.interface.
 import { AuthorizationService } from "./authorization/services/authorization.service.js";
 import { AuthGuard } from "./authorization/guards/auth.guard.js";
 import { RolesGuard } from "./authorization/guards/roles.guard.js";
+import { UserRegistrationService } from "./services/user-registration.service.js";
+import { AuthOrchestratorService } from "./services/auth-orchestrator.service.js";
+import { AuthController } from "./controllers/auth.controller.js";
+import { UserController } from "./controllers/user.controller.js";
+import { PasswordController } from "./controllers/password.controller.js";
 import type { AuthProvider } from "./interfaces/auth-provider.interface.js";
 import type { UserRepository } from "./interfaces/user-repository.interface.js";
 import type { PasswordHistoryStore } from "./password/interfaces/password-history-store.interface.js";
@@ -40,6 +45,12 @@ const DEFAULT_USER_REPOSITORY: UserRepository = {
     throw new Error("UserRepository not configured. Provide a custom USER_REPOSITORY provider.");
   },
   findById(): never {
+    throw new Error("UserRepository not configured. Provide a custom USER_REPOSITORY provider.");
+  },
+  create(): never {
+    throw new Error("UserRepository not configured. Provide a custom USER_REPOSITORY provider.");
+  },
+  update(): never {
     throw new Error("UserRepository not configured. Provide a custom USER_REPOSITORY provider.");
   },
 };
@@ -128,6 +139,7 @@ const DEFAULT_SESSION_STORE: SessionStore = {
 };
 
 @Module({
+  controllers: [AuthController, UserController, PasswordController],
   providers: [
     AuthService,
     EmailPasswordProvider,
@@ -145,6 +157,8 @@ const DEFAULT_SESSION_STORE: SessionStore = {
     AuthorizationService,
     AuthGuard,
     RolesGuard,
+    UserRegistrationService,
+    AuthOrchestratorService,
     {
       provide: USER_REPOSITORY,
       useValue: DEFAULT_USER_REPOSITORY,
