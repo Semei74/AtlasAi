@@ -27,6 +27,9 @@ import {
 } from "./session/interfaces/session-config.interface.js";
 import { SESSION_STORE } from "./session/interfaces/session-store.interface.js";
 import type { SessionStore } from "./session/interfaces/session-store.interface.js";
+import { AuthorizationService } from "./authorization/services/authorization.service.js";
+import { AuthGuard } from "./authorization/guards/auth.guard.js";
+import { RolesGuard } from "./authorization/guards/roles.guard.js";
 import type { AuthProvider } from "./interfaces/auth-provider.interface.js";
 import type { UserRepository } from "./interfaces/user-repository.interface.js";
 import type { PasswordHistoryStore } from "./password/interfaces/password-history-store.interface.js";
@@ -139,6 +142,9 @@ const DEFAULT_SESSION_STORE: SessionStore = {
     PasswordManagementService,
     JwtService,
     SessionService,
+    AuthorizationService,
+    AuthGuard,
+    RolesGuard,
     {
       provide: USER_REPOSITORY,
       useValue: DEFAULT_USER_REPOSITORY,
@@ -182,6 +188,6 @@ const DEFAULT_SESSION_STORE: SessionStore = {
       inject: [EmailPasswordProvider, OAuth2Provider, OpenIDConnectProvider, ApiKeyProvider],
     },
   ],
-  exports: [AuthService, JwtService],
+  exports: [AuthService, JwtService, AuthorizationService, AuthGuard, RolesGuard],
 })
 export class AuthModule {}
