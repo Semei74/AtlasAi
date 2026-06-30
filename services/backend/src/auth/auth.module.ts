@@ -16,6 +16,10 @@ import {
   PASSWORD_POLICY_CONFIG,
   DEFAULT_PASSWORD_POLICY,
 } from "./password/interfaces/password-policy.interface.js";
+import { JwtService } from "./jwt/services/jwt.service.js";
+import { JWT_CONFIG, DEFAULT_JWT_CONFIG } from "./jwt/interfaces/jwt-config.interface.js";
+import { REFRESH_TOKEN_STORE } from "./jwt/interfaces/refresh-token-store.interface.js";
+import type { RefreshTokenStore } from "./jwt/interfaces/refresh-token-store.interface.js";
 import type { AuthProvider } from "./interfaces/auth-provider.interface.js";
 import type { UserRepository } from "./interfaces/user-repository.interface.js";
 import type { PasswordHistoryStore } from "./password/interfaces/password-history-store.interface.js";
@@ -66,6 +70,29 @@ const DEFAULT_PASSWORD_RESET_STORE: PasswordResetStore = {
   },
 };
 
+const DEFAULT_REFRESH_TOKEN_STORE: RefreshTokenStore = {
+  save(): never {
+    throw new Error(
+      "RefreshTokenStore not configured. Provide a custom REFRESH_TOKEN_STORE provider.",
+    );
+  },
+  find(): never {
+    throw new Error(
+      "RefreshTokenStore not configured. Provide a custom REFRESH_TOKEN_STORE provider.",
+    );
+  },
+  markConsumed(): never {
+    throw new Error(
+      "RefreshTokenStore not configured. Provide a custom REFRESH_TOKEN_STORE provider.",
+    );
+  },
+  invalidateByUser(): never {
+    throw new Error(
+      "RefreshTokenStore not configured. Provide a custom REFRESH_TOKEN_STORE provider.",
+    );
+  },
+};
+
 @Module({
   providers: [
     AuthService,
@@ -79,6 +106,7 @@ const DEFAULT_PASSWORD_RESET_STORE: PasswordResetStore = {
     PasswordResetService,
     PasswordExpirationService,
     PasswordManagementService,
+    JwtService,
     {
       provide: USER_REPOSITORY,
       useValue: DEFAULT_USER_REPOSITORY,
@@ -96,6 +124,14 @@ const DEFAULT_PASSWORD_RESET_STORE: PasswordResetStore = {
       useValue: DEFAULT_PASSWORD_POLICY,
     },
     {
+      provide: JWT_CONFIG,
+      useValue: DEFAULT_JWT_CONFIG,
+    },
+    {
+      provide: REFRESH_TOKEN_STORE,
+      useValue: DEFAULT_REFRESH_TOKEN_STORE,
+    },
+    {
       provide: AUTH_PROVIDERS,
       useFactory: (
         emailPassword: EmailPasswordProvider,
@@ -106,6 +142,6 @@ const DEFAULT_PASSWORD_RESET_STORE: PasswordResetStore = {
       inject: [EmailPasswordProvider, OAuth2Provider, OpenIDConnectProvider, ApiKeyProvider],
     },
   ],
-  exports: [AuthService],
+  exports: [AuthService, JwtService],
 })
 export class AuthModule {}
