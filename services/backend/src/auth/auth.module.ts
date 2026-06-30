@@ -20,6 +20,13 @@ import { JwtService } from "./jwt/services/jwt.service.js";
 import { JWT_CONFIG, DEFAULT_JWT_CONFIG } from "./jwt/interfaces/jwt-config.interface.js";
 import { REFRESH_TOKEN_STORE } from "./jwt/interfaces/refresh-token-store.interface.js";
 import type { RefreshTokenStore } from "./jwt/interfaces/refresh-token-store.interface.js";
+import { SessionService } from "./session/services/session.service.js";
+import {
+  SESSION_CONFIG,
+  DEFAULT_SESSION_CONFIG,
+} from "./session/interfaces/session-config.interface.js";
+import { SESSION_STORE } from "./session/interfaces/session-store.interface.js";
+import type { SessionStore } from "./session/interfaces/session-store.interface.js";
 import type { AuthProvider } from "./interfaces/auth-provider.interface.js";
 import type { UserRepository } from "./interfaces/user-repository.interface.js";
 import type { PasswordHistoryStore } from "./password/interfaces/password-history-store.interface.js";
@@ -93,6 +100,30 @@ const DEFAULT_REFRESH_TOKEN_STORE: RefreshTokenStore = {
   },
 };
 
+const DEFAULT_SESSION_STORE: SessionStore = {
+  save(): never {
+    throw new Error("SessionStore not configured. Provide a custom SESSION_STORE provider.");
+  },
+  findById(): never {
+    throw new Error("SessionStore not configured. Provide a custom SESSION_STORE provider.");
+  },
+  findByUserId(): never {
+    throw new Error("SessionStore not configured. Provide a custom SESSION_STORE provider.");
+  },
+  updateLastActivity(): never {
+    throw new Error("SessionStore not configured. Provide a custom SESSION_STORE provider.");
+  },
+  revoke(): never {
+    throw new Error("SessionStore not configured. Provide a custom SESSION_STORE provider.");
+  },
+  revokeAllByUserId(): never {
+    throw new Error("SessionStore not configured. Provide a custom SESSION_STORE provider.");
+  },
+  deleteExpired(): never {
+    throw new Error("SessionStore not configured. Provide a custom SESSION_STORE provider.");
+  },
+};
+
 @Module({
   providers: [
     AuthService,
@@ -107,6 +138,7 @@ const DEFAULT_REFRESH_TOKEN_STORE: RefreshTokenStore = {
     PasswordExpirationService,
     PasswordManagementService,
     JwtService,
+    SessionService,
     {
       provide: USER_REPOSITORY,
       useValue: DEFAULT_USER_REPOSITORY,
@@ -130,6 +162,14 @@ const DEFAULT_REFRESH_TOKEN_STORE: RefreshTokenStore = {
     {
       provide: REFRESH_TOKEN_STORE,
       useValue: DEFAULT_REFRESH_TOKEN_STORE,
+    },
+    {
+      provide: SESSION_CONFIG,
+      useValue: DEFAULT_SESSION_CONFIG,
+    },
+    {
+      provide: SESSION_STORE,
+      useValue: DEFAULT_SESSION_STORE,
     },
     {
       provide: AUTH_PROVIDERS,
