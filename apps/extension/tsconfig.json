@@ -1,0 +1,12 @@
+{
+  "extends": "../../tooling/typescript/tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./entrypoints/*", "./components/*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "types/**/*.d.ts", ".wxt/wxt.d.ts"],
+  "exclude": ["node_modules"]
+}

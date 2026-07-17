@@ -1,0 +1,42 @@
+{
+  "name": "@atlas/extension",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "build": "wxt build",
+    "start": "wxt serve",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf .output .wxt dist coverage",
+    "zip": "wxt zip",
+    "submit": "wxt submit"
+  },
+  "dependencies": {
+    "wxt": "^0.19.0",
+    "@wxt-dev/module-react": "^1.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "@atlas/api": "workspace:*",
+    "@atlas/auth": "workspace:*",
+    "@atlas/ui": "workspace:*",
+    "@atlas/hooks": "workspace:*",
+    "@atlas/i18n": "workspace:*",
+    "@atlas/observability": "workspace:*",
+    "tamagui": "^2.0.0",
+    "@tamagui/core": "^2.0.0",
+    "@tanstack/react-query": "^5.70.0",
+    "zustand": "^5.0.0",
+    "i18next": "^24.0.0",
+    "react-i18next": "^15.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.24.0",
+    "vitest": "^3.1.0"
+  }
+}
