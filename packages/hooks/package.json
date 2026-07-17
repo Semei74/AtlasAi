@@ -1,0 +1,31 @@
+{
+  "name": "@atlas/hooks",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf dist coverage"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.70.0",
+    "@tanstack/react-query-devtools": "^5.70.0",
+    "@atlas/api": "workspace:*",
+    "@atlas/auth": "workspace:*",
+    "@atlas/types": "workspace:*",
+    "react": "^19.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "@types/react": "^19.0.0",
+    "eslint": "^9.24.0",
+    "vitest": "^3.1.0"
+  }
+}
