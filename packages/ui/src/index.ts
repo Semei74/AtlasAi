@@ -1,0 +1,12 @@
+export { TamaguiProvider } from "tamagui";
+export { tamaguiConfig, type AppConfig } from "./tamagui.config";
+export { Button } from "./primitives/button";
+export { Text } from "./primitives/text";
+export { Heading } from "./primitives/heading";
+export { Stack } from "./primitives/stack";
+export { Card } from "./primitives/card";
+export { Input } from "./primitives/input";
+export { Surface } from "./primitives/surface";
+export { Avatar } from "./primitives/avatar";
+export { Spinner } from "./primitives/spinner";
+export { Divider } from "./primitives/divider";
