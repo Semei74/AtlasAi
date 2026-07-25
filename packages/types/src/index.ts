@@ -45,3 +45,17 @@ export interface OrderBy<T> {
 }
 
 export type Result<T, E = Error> = { success: true; data: T } | { success: false; error: E };
+
+export interface User {
+  id: string;
+  email: string;
+  displayName: string;
+  avatarUrl: string | null;
+  status: "active" | "suspended" | "deleted";
+  preferences: {
+    theme: "light" | "dark" | "system";
+    locale: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}

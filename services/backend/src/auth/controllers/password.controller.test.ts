@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 import { describe, it, expect, vi } from "vitest";
 import { UnauthorizedException, BadRequestException } from "@nestjs/common";
 import type { FastifyRequest } from "fastify";
@@ -24,7 +23,9 @@ describe("PasswordController", () => {
   } as unknown as PasswordResetService;
   const userRepo = { findByEmail: mockFindByEmail } as unknown as UserRepository;
 
-  const controller = new PasswordController(passwordManagement, passwordReset, userRepo);
+  const mockMetrics = { authPasswordResetTotal: { inc: () => {} } } as never;
+
+  const controller = new PasswordController(passwordManagement, passwordReset, userRepo, mockMetrics);
 
   const testRequest = {} as unknown as FastifyRequest;
   const testRequestWithUser = { user: { sub: "user-1" } } as unknown as FastifyRequest;
@@ -61,6 +62,23 @@ describe("PasswordController", () => {
           {
             currentPassword: "wrong",
             newPassword: "NewStrongP@ss1",
+          } as unknown as ChangePasswordRequest,
+          testRequestWithUser,
+        ),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it("should throw BadRequestException when new password fails policy", async () => {
+      mockChangePassword.mockResolvedValueOnce({
+        success: false,
+        failureReason: "Password must be at least 12 characters long",
+      });
+
+      await expect(
+        controller.changePassword(
+          {
+            currentPassword: "old",
+            newPassword: "short",
           } as unknown as ChangePasswordRequest,
           testRequestWithUser,
         ),
@@ -114,6 +132,20 @@ describe("PasswordController", () => {
       await expect(
         controller.resetPassword({
           token: "bad-token",
+          newPassword: "NewStrongP@ss1",
+        } as unknown as never),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it("should throw BadRequestException when reset token is expired", async () => {
+      mockResetPassword.mockResolvedValueOnce({
+        success: false,
+        failureReason: "Invalid or expired reset token",
+      });
+
+      await expect(
+        controller.resetPassword({
+          token: "expired-token",
           newPassword: "NewStrongP@ss1",
         } as unknown as never),
       ).rejects.toThrow(BadRequestException);

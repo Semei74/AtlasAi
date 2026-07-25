@@ -1,53 +1,52 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "mcp": {
-    "TestSprite": {
-      "type": "local",
-      "command": ["npx", "@testsprite/testsprite-mcp@latest"],
-      "enabled": true,
-      "environment": {
-        "API_KEY": "sk-user-BjH2ipj4qIbDQlNVEw79y2Kkp27clx3El24NIRqYiHZEeMMla8PFI3EG0H2tuZKUY_Z7ycM2RMG08hBE0UahyJAe5hfPvmbtwnDT76mQIsjn1DyAsyeEdPhM1jtiUJJnM1g"
-      }
+
+  // Project-local OpenCode configuration.
+  // This ensures the workspace uses the same Ollama provider and model settings
+  // regardless of global user config.
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Local Ollama",
+      "options": {
+        "baseURL": "http://127.0.0.1:11434/v1",
+        // Optional: project-level model template file for provider-specific model prompts.
+        // OpenCode/ai-sdk may pick this up to enforce tool-calling/function-calling templates.
+        "modelTemplateFile": "./Modelfile",
+        // Inline model template fallback: short system prompt guiding tool-calling behavior.
+        "modelTemplate": "You are a tools-enabled coding assistant for this workspace. For any file or directory task, call the available tool directly and use the OpenCode tool schema exactly: {\"name\":\"<ToolName>\",\"arguments\":{...}}. For repository analysis requests, begin with ls/read/search tools immediately and continue with multiple sequential tool calls. Do not stop after the first tool call. Inspect the project root, package.json, README, config files, and major directories such as apps, packages, services, configs, tools, tests, docs, scripts, prompts, and tasks. Prefer workspace-relative paths such as ./package.json or ./src. For listing the project root, use {\"name\":\"ls\",\"arguments\":{\"path\":\"./\"}}. Never output placeholder paths like {projectPath}, /path/to/your/project, or /absolute/path/to/project/root. Do not ask the user for an absolute path or suggest WebFetch for local files. If a tool returns success, use that result and do not retry unnecessarily.",
+      },
+      "models": {
+        "qwen2.5:7b": {
+          "name": "Qwen 2.5 7B",
+        },
+        "qwen2.5-coder:7b": {
+          "name": "Qwen 2.5 Coder 7B",
+        },
+        "qwen2.5-coder:14b": {
+          "name": "Qwen 2.5 Coder 14B",
+        },
+      },
     },
+  },
+
+  "model": "ollama/qwen2.5-coder:14b",
+
+  "mcp": {
     "context7": {
       "type": "remote",
       "url": "https://mcp.context7.com/mcp",
-      "enabled": true
-    }
-  }
+      "enabled": true,
+    },
+
+    "TestSprite": {
+      "type": "local",
+      "enabled": true,
+      "command": ["npx", "-y", "@testsprite/testsprite-mcp@latest"],
+      "environment": {
+        "API_KEY": "sk-user-HmbDAmZVtikAiXD5ZppgIzkepLtw3Y03NneW8gM1zhFAa1_rlu0Haw7hwd82HaY3vy7f4qYH2tM1bZKpzxlaL029KcDcM7XnPQGILX_EutL0fpGhcd9dhWMe4Wle_FLSYMo",
+        // "NPM_CONFIG_CACHE": "/Volumes/KINGSTON/AtlasAi/.npm-cache",
+      },
+    },
+  },
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// {
-//   "$schema": "https://opencode.ai/config.json",
-//   "mcp": {
-//     "TestSprite": {
-//       "type": "local",
-//       "command": ["npx", "@testsprite/testsprite-mcp@latest"],
-//       "enabled": true,
-//       "environment": {
-//         "API_KEY": "sk-user-BjH2ipj4qIbDQlNVEw79y2Kkp27clx3El24NIRqYiHZEeMMla8PFI3EG0H2tuZKUY_Z7ycM2RMG08hBE0UahyJAe5hfPvmbtwnDT76mQIsjn1DyAsyeEdPhM1jtiUJJnM1g",
-//       },
-//     },
-//   },
-// }

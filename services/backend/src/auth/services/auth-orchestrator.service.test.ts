@@ -10,14 +10,17 @@ import { SessionService } from "../session/services/session.service.js";
 import type { Session } from "../session/interfaces/session.interface.js";
 import { USER_REPOSITORY } from "../providers/email-password.provider.js";
 import { REFRESH_TOKEN_STORE } from "../jwt/interfaces/refresh-token-store.interface.js";
-import type { RefreshTokenStore } from "../jwt/interfaces/refresh-token-store.interface.js";
-import { JWT_CONFIG, DEFAULT_JWT_CONFIG } from "../jwt/interfaces/jwt-config.interface.js";
+import type { RefreshTokenStore, RefreshTokenData } from "../jwt/interfaces/refresh-token-store.interface.js";
+import { JWT_CONFIG } from "../jwt/interfaces/jwt-config.interface.js";
 import {
   SESSION_CONFIG,
   DEFAULT_SESSION_CONFIG,
 } from "../session/interfaces/session-config.interface.js";
 import { SESSION_STORE } from "../session/interfaces/session-store.interface.js";
 import type { UserRepository, UserRecord } from "../interfaces/user-repository.interface.js";
+import { AccountLockoutService } from "./account-lockout.service.js";
+import { AuthAuditService } from "./auth-audit.service.js";
+import { RedisService } from "../../redis/redis.service.js";
 
 const TEST_USER_ID = "550e8400-e29b-41d4-a716-446655440000";
 const TEST_EMAIL = "test@example.com";
@@ -45,18 +48,23 @@ function makeUser(overrides: Partial<UserRecord> = {}): UserRecord {
 class MockRefreshTokenStore implements RefreshTokenStore {
   private readonly tokens = new Map<
     string,
-    { userId: string; expiresAt: Date; consumed: boolean }
+    { userId: string; expiresAt: Date; consumed: boolean; tokenFamily: string }
   >();
 
-  public save(token: string, userId: string, expiresAt: Date): Promise<void> {
-    this.tokens.set(token, { userId, expiresAt, consumed: false });
+  public save(token: string, userId: string, expiresAt: Date, tokenFamily: string): Promise<void> {
+    this.tokens.set(token, { userId, expiresAt, consumed: false, tokenFamily });
     return Promise.resolve();
   }
 
-  public find(
-    token: string,
-  ): Promise<{ userId: string; expiresAt: Date; consumed: boolean } | null> {
-    return Promise.resolve(this.tokens.get(token) ?? null);
+  public find(token: string): Promise<RefreshTokenData | null> {
+    const entry = this.tokens.get(token) ?? null;
+    if (!entry) return Promise.resolve(null);
+    return Promise.resolve({
+      userId: entry.userId,
+      expiresAt: entry.expiresAt,
+      consumed: entry.consumed,
+      tokenFamily: entry.tokenFamily,
+    });
   }
 
   public markConsumed(token: string): Promise<void> {
@@ -67,7 +75,18 @@ class MockRefreshTokenStore implements RefreshTokenStore {
     return Promise.resolve();
   }
 
+  public consume(token: string): Promise<boolean> {
+    const entry = this.tokens.get(token);
+    if (entry === undefined || entry.consumed) return Promise.resolve(false);
+    entry.consumed = true;
+    return Promise.resolve(true);
+  }
+
   public invalidateByUser(_userId: string): Promise<void> {
+    return Promise.resolve();
+  }
+
+  public invalidateFamily(_tokenFamily: string): Promise<void> {
     return Promise.resolve();
   }
 
@@ -75,7 +94,7 @@ class MockRefreshTokenStore implements RefreshTokenStore {
     token: string,
     data: { userId: string; expiresAt: Date; consumed: boolean },
   ): void {
-    this.tokens.set(token, data);
+    this.tokens.set(token, { ...data, tokenFamily: "test-family" });
   }
 }
 
@@ -185,9 +204,12 @@ describe("AuthOrchestratorService", () => {
         SessionService,
         { provide: USER_REPOSITORY, useValue: mockUserRepo },
         { provide: REFRESH_TOKEN_STORE, useValue: mockRefreshStore },
-        { provide: JWT_CONFIG, useValue: DEFAULT_JWT_CONFIG },
+        { provide: JWT_CONFIG, useValue: { secret: "test-secret-key-at-least-32-characters-long!", accessTokenExpiresIn: "15m", refreshTokenExpiresIn: "30d", algorithm: "HS256" as const, issuer: "atlas-ai", audience: "atlas-api" } },
         { provide: SESSION_CONFIG, useValue: DEFAULT_SESSION_CONFIG },
         { provide: SESSION_STORE, useClass: MockSessionStore },
+        AccountLockoutService,
+        AuthAuditService,
+        { provide: RedisService, useValue: { incr: async () => 1, pexpire: async () => {}, hset: async () => {}, hgetall: async () => ({}), get: async () => null, del: async () => {}, pttl: async () => 0 } },
         { provide: AUTH_PROVIDERS, useValue: [mockAuthProvider] },
       ],
     }).compile();
@@ -228,11 +250,44 @@ describe("AuthOrchestratorService", () => {
         }),
       ).rejects.toThrow("Invalid email or password");
     });
+
+    it("should propagate device info and IP to session creation", async () => {
+      mockUserRepo.setUser(makeUser());
+
+      const result = await service.login({
+        email: TEST_EMAIL,
+        password: "correct-password",
+        deviceName: "Test Device",
+        devicePlatform: "Android",
+        ipAddress: "10.0.0.1",
+      });
+
+      expect(result.accessToken).toBeDefined();
+      expect(result.user.email).toBe(TEST_EMAIL);
+    });
+
+    it("should use viewer role for non-active user", async () => {
+      mockUserRepo.setUser(makeUser({ status: "suspended" }));
+
+      const result = await service.login({
+        email: TEST_EMAIL,
+        password: "correct-password",
+        deviceName: undefined,
+        devicePlatform: undefined,
+        ipAddress: "127.0.0.1",
+      });
+
+      expect(result.user.status).toBe("suspended");
+    });
   });
 
   describe("logout", () => {
     it("should not throw for valid session", async () => {
       await expect(service.logout(TEST_USER_ID, "session-123")).resolves.toBeUndefined();
+    });
+
+    it("should not throw for non-existent session (catches errors)", async () => {
+      await expect(service.logout(TEST_USER_ID, "non-existent")).resolves.toBeUndefined();
     });
   });
 

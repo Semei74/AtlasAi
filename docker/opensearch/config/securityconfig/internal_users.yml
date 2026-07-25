@@ -1,0 +1,36 @@
+# OpenSearch internal users configuration
+# Default users for Atlas AI cluster
+
+_meta:
+  type: "internalusers"
+  config_version: 2
+
+# Admin user
+admin:
+  hash: "$2y$12$KQx4K.4K4K4K4K4K4K4K4eJZ4K4K4K4K4K4K4K4K4K4K4K4K4K4"
+  reserved: true
+  backend_roles:
+    - "admin"
+  description: "Atlas AI Admin"
+
+# OpenSearch Dashboards user
+kibanaserver:
+  hash: "$2y$12$KQx4K.4K4K4K4K4K4K4K4eJZ4K4K4K4K4K4K4K4K4K4K4K4K4K4"
+  reserved: true
+  description: "OpenSearch Dashboards server"
+
+# Read-only user for monitoring
+readall:
+  hash: "$2y$12$KQx4K.4K4K4K4K4K4K4K4eJZ4K4K4K4K4K4K4K4K4K4K4K4K4K4"
+  reserved: true
+  backend_roles:
+    - "readall"
+  description: "Read-all user for monitoring"
+
+# Atlas AI application user
+atlas_search:
+  hash: "$2y$12$KQx4K.4K4K4K4K4K4K4K4eJZ4K4K4K4K4K4K4K4K4K4K4K4K4K4"
+  reserved: false
+  backend_roles:
+    - "atlas_search_role"
+  description: "Atlas AI application search user"

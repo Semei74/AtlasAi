@@ -62,6 +62,16 @@ function createMockOrganization(): Organization {
         blockedModels: [],
         maxInputTokens: null,
         maxOutputTokens: null,
+        allowImageGeneration: false,
+        allowAudioGeneration: false,
+        allowEmbeddings: false,
+        allowModeration: false,
+        allowTools: false,
+        allowMcp: false,
+        allowRag: false,
+        allowPromptTemplates: false,
+        allowConversationMemory: false,
+        allowStreaming: false,
       },
       storage: {
         maxStorageBytes: null,
@@ -78,9 +88,27 @@ function createMockOrganization(): Organization {
         dateFormat: "YYYY-MM-DD",
         timeFormat: "24h",
         firstDayOfWeek: 1,
+        country: "US",
+        region: "us-east",
+        currency: "USD",
+        language: "en",
+        legalRegion: "US",
+        billingRegion: "US",
+        paymentRegion: "US",
+        privacyRegion: "US",
+        dataResidencyRegion: "US",
       },
       featureFlags: {},
-      billing: {},
+      billing: {
+        enabledProviders: [],
+        defaultCurrency: "USD",
+        billingEmail: null,
+        invoicePrefix: null,
+        taxId: null,
+        paymentTermsDays: 30,
+        autoInvoicing: false,
+        currency: {},
+      },
     },
     metadata: {},
     createdAt: new Date("2026-01-01"),
@@ -135,6 +163,9 @@ class InMemoryOrgRepo implements OrganizationRepository {
       if (o.id === id) return Promise.resolve(o);
     }
     return Promise.resolve(null);
+  }
+  public findByIds(ids: string[]): Promise<Organization[]> {
+    return Promise.resolve([...this.data.values()].filter((o) => ids.includes(o.id)));
   }
   public findBySlug(slug: string): Promise<Organization | null> {
     for (const org of this.data.values()) {

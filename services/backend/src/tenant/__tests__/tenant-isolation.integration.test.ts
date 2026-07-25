@@ -58,6 +58,16 @@ function baseOrg(id: string): Organization {
         blockedModels: [],
         maxInputTokens: null,
         maxOutputTokens: null,
+        allowImageGeneration: false,
+        allowAudioGeneration: false,
+        allowEmbeddings: false,
+        allowModeration: false,
+        allowTools: false,
+        allowMcp: false,
+        allowRag: false,
+        allowPromptTemplates: false,
+        allowConversationMemory: false,
+        allowStreaming: false,
       },
       storage: {
         maxStorageBytes: null,
@@ -74,9 +84,27 @@ function baseOrg(id: string): Organization {
         dateFormat: "YYYY-MM-DD",
         timeFormat: "24h",
         firstDayOfWeek: 1,
+        country: "US",
+        region: "us-east",
+        currency: "USD",
+        language: "en",
+        legalRegion: "US",
+        billingRegion: "US",
+        paymentRegion: "US",
+        privacyRegion: "US",
+        dataResidencyRegion: "US",
       },
       featureFlags: {},
-      billing: {},
+      billing: {
+        enabledProviders: [],
+        defaultCurrency: "USD",
+        billingEmail: null,
+        invoicePrefix: null,
+        taxId: null,
+        paymentTermsDays: 30,
+        autoInvoicing: false,
+        currency: {},
+      },
     },
     metadata: {},
     createdAt: new Date(),
@@ -127,6 +155,11 @@ class InMemoryOrgRepo implements OrganizationRepository {
   public data = new Map<string, Organization>();
   public findById(id: string): Promise<Organization | null> {
     return Promise.resolve(this.data.get(id) ?? null);
+  }
+  public findByIds(ids: string[]): Promise<Organization[]> {
+    return Promise.resolve(
+      ids.map((id) => this.data.get(id)).filter((o): o is Organization => o !== undefined),
+    );
   }
   public findBySlug(slug: string): Promise<Organization | null> {
     for (const o of this.data.values()) {

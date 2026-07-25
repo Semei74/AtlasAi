@@ -4,6 +4,14 @@
 > считается завершённой (TASK-1128 = CLOSED), за исключением нативного рантайма mobile
 > (документировано в MOBILE_INSPECTION.md / FINAL_PROJECT_STATUS.md).
 
+> **СТАТУС P3: FROZEN.** Подпоток «Dashboard Backend API» (эндпоинты
+> `GET /projects/recent`, `GET /activity/recent`, `GET /dashboard/statistics`) —
+> заморожен, так как в текущей Prisma-схеме отсутствуют модели `Project` и
+> `ActivityLog`. Это архитектурное ограничение, а не ошибка реализации.
+> См. `ADR_P3_FREEZE.md` (ADR-034) и `PROJECT_ROADMAP.md`. Работа над доменом
+> Project теперь ведётся в рамках **P4**; после завершения P4 P3 автоматически
+> размораживается.
+
 ---
 
 ## 1. Цели Phase 3

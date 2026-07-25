@@ -1,0 +1,46 @@
+# OpenSearch roles configuration
+
+_meta:
+  type: "roles"
+  config_version: 2
+
+# Admin role
+all_access:
+  reserved: true
+  cluster_permissions:
+    - "*"
+  index_permissions:
+    - index_patterns:
+        - "*"
+      allowed_actions:
+        - "*"
+
+# Read-only role
+readall:
+  reserved: true
+  cluster_permissions:
+    - "cluster:monitor/health"
+    - "cluster:monitor/nodes/stats"
+    - "cluster:monitor/cluster/stats"
+    - "cluster:monitor/state"
+  index_permissions:
+    - index_patterns:
+        - "*"
+      allowed_actions:
+        - "read"
+        - "indices:monitor/*"
+
+# Atlas search role for application
+atlas_search_role:
+  reserved: false
+  cluster_permissions:
+    - "cluster:monitor/health"
+    - "cluster:monitor/nodes/info"
+  index_permissions:
+    - index_patterns:
+        - "atlas-*"
+      allowed_actions:
+        - "read"
+        - "indices:data/read/search"
+        - "indices:data/read/msearch"
+        - "indices:monitor/settings/get"

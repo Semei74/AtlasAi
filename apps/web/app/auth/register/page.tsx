@@ -30,7 +30,7 @@ export default function RegisterPage(): React.ReactElement {
       return await registerRequest(values);
     },
     onSuccess: (data) => {
-      login(data.accessToken, data.refreshToken, data.user);
+      login(data.accessToken, data.user);
       router.replace("/dashboard");
     },
     onError: (error) => {

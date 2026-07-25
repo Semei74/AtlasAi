@@ -18,7 +18,7 @@ function createMockHost(url = "/test"): ArgumentsHost {
   return {
     switchToHttp: () => ({
       getResponse: () => mockResponse,
-      getRequest: () => ({ url }),
+      getRequest: () => ({ url, headers: {} }),
     }),
     switchToRpc: () => {
       throw new Error("Not implemented");
@@ -33,7 +33,6 @@ function createMockHost(url = "/test"): ArgumentsHost {
 }
 
 function getResponse(host: ArgumentsHost): MockResponse {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   return host.switchToHttp().getResponse() as MockResponse;
 }
 

@@ -1,0 +1,3138 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "HealthController_check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Service is healthy — includes uptime, version, build info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Health check",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/ready": {
+      "get": {
+        "operationId": "HealthController_readiness",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Service is ready — includes dependency status (database, redis)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service is not ready — one or more dependencies are down"
+          }
+        },
+        "summary": "Readiness check",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/live": {
+      "get": {
+        "operationId": "HealthController_liveness",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Service is live — includes memory usage",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Liveness check",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/metrics": {
+      "get": {
+        "operationId": "MetricsController_metrics",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Metrics in Prometheus format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Expose Prometheus metrics",
+        "tags": [
+          "Metrics"
+        ]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email already registered"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "summary": "Register a new user",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "422": {
+            "description": "Validation error"
+          },
+          "423": {
+            "description": "Account locked due to too many failed attempts"
+          }
+        },
+        "summary": "Login with email and password",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Logout successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Logout current session",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/logout/all": {
+      "post": {
+        "operationId": "AuthController_logoutAll",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "All sessions logged out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Logout all active sessions",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Token refreshed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid refresh token"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "summary": "Refresh access token",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "AuthController_getProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get current user profile",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/verify-email": {
+      "post": {
+        "operationId": "AuthController_verifyEmail",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Email verified successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or expired verification token"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "summary": "Verify email address with verification token",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/sessions": {
+      "get": {
+        "operationId": "AuthController_listSessions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of active sessions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List active sessions for current user",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/users/me": {
+      "patch": {
+        "operationId": "UserController_updateProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Profile updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update current user profile",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/preferences": {
+      "get": {
+        "operationId": "UserController_getPreferences",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User preferences",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get current user preferences",
+        "tags": [
+          "Users"
+        ]
+      },
+      "patch": {
+        "operationId": "UserController_updatePreferences",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Preferences updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update current user preferences",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/auth/change-password": {
+      "post": {
+        "operationId": "PasswordController_changePassword",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Password changed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Change current user password",
+        "tags": [
+          "Password"
+        ]
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "operationId": "PasswordController_forgotPassword",
+        "parameters": [],
+        "responses": {
+          "202": {
+            "description": "Reset email sent if account exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "summary": "Request password reset",
+        "tags": [
+          "Password"
+        ]
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "operationId": "PasswordController_resetPassword",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Password reset successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or expired token"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "summary": "Reset password using reset token",
+        "tags": [
+          "Password"
+        ]
+      }
+    },
+    "/organizations": {
+      "post": {
+        "operationId": "OrganizationController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Organization created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Organization slug already exists"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new organization",
+        "tags": [
+          "Organizations"
+        ]
+      },
+      "get": {
+        "operationId": "OrganizationController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of organizations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List organizations for the current user",
+        "tags": [
+          "Organizations"
+        ]
+      }
+    },
+    "/organizations/{id}": {
+      "get": {
+        "operationId": "OrganizationController_findById",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Organization details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organization not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get organization by ID",
+        "tags": [
+          "Organizations"
+        ]
+      },
+      "patch": {
+        "operationId": "OrganizationController_update",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Organization updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organization not found"
+          },
+          "409": {
+            "description": "Organization slug already exists"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update organization",
+        "tags": [
+          "Organizations"
+        ]
+      },
+      "delete": {
+        "operationId": "OrganizationController_delete",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Organization deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organization not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete organization",
+        "tags": [
+          "Organizations"
+        ]
+      }
+    },
+    "/organizations/{orgId}/memberships": {
+      "post": {
+        "operationId": "MembershipController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Member added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User is already a member"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Add a member to an organization",
+        "tags": [
+          "Memberships"
+        ]
+      },
+      "get": {
+        "operationId": "MembershipController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of members",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List members of an organization",
+        "tags": [
+          "Memberships"
+        ]
+      }
+    },
+    "/organizations/{orgId}/memberships/{id}": {
+      "patch": {
+        "operationId": "MembershipController_update",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Member role updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Membership not found"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a member's role",
+        "tags": [
+          "Memberships"
+        ]
+      },
+      "delete": {
+        "operationId": "MembershipController_delete",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Member removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Membership not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remove a member from an organization",
+        "tags": [
+          "Memberships"
+        ]
+      }
+    },
+    "/invitations": {
+      "post": {
+        "operationId": "InvitationController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Invitation created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Invitation already exists"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create an invitation",
+        "tags": [
+          "Invitations"
+        ]
+      },
+      "get": {
+        "operationId": "InvitationController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of invitations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List invitations for the current organization",
+        "tags": [
+          "Invitations"
+        ]
+      }
+    },
+    "/invitations/{id}/accept": {
+      "post": {
+        "operationId": "InvitationController_accept",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Invitation accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invitation is not pending or expired"
+          },
+          "404": {
+            "description": "Invitation not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Accept an invitation",
+        "tags": [
+          "Invitations"
+        ]
+      }
+    },
+    "/invitations/{id}/revoke": {
+      "patch": {
+        "operationId": "InvitationController_revoke",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Invitation revoked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invitation is not pending"
+          },
+          "404": {
+            "description": "Invitation not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Revoke an invitation",
+        "tags": [
+          "Invitations"
+        ]
+      }
+    },
+    "/workspaces": {
+      "post": {
+        "operationId": "WorkspaceController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Workspace created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new workspace",
+        "tags": [
+          "Workspaces"
+        ]
+      },
+      "get": {
+        "operationId": "WorkspaceController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of workspaces",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List workspaces for the current organization",
+        "tags": [
+          "Workspaces"
+        ]
+      }
+    },
+    "/workspaces/{id}": {
+      "get": {
+        "operationId": "WorkspaceController_findById",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Workspace details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Workspace not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get workspace by ID",
+        "tags": [
+          "Workspaces"
+        ]
+      },
+      "patch": {
+        "operationId": "WorkspaceController_update",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Workspace updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Workspace not found"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update workspace",
+        "tags": [
+          "Workspaces"
+        ]
+      },
+      "delete": {
+        "operationId": "WorkspaceController_delete",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Workspace deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Workspace not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete workspace",
+        "tags": [
+          "Workspaces"
+        ]
+      }
+    },
+    "/api/v1/ai/chat": {
+      "post": {
+        "operationId": "AiGatewayController_chat",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Chat completion response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/_ChatCompletionResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Send a chat completion request",
+        "tags": [
+          "AI Gateway"
+        ]
+      }
+    },
+    "/api/v1/ai/chat/stream": {
+      "post": {
+        "operationId": "AiGatewayController_chatStream",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "SSE stream of chat completion chunks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Stream a chat completion response via SSE",
+        "tags": [
+          "AI Gateway"
+        ]
+      }
+    },
+    "/api/v1/prompts": {
+      "post": {
+        "operationId": "PromptLibraryController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Prompt created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Prompt slug already exists"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new prompt",
+        "tags": [
+          "Prompt Library"
+        ]
+      },
+      "get": {
+        "operationId": "PromptLibraryController_list",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {}
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {}
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {}
+          },
+          {
+            "name": "categoryId",
+            "required": false,
+            "in": "query",
+            "schema": {}
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List prompts",
+        "tags": [
+          "Prompt Library"
+        ]
+      }
+    },
+    "/api/v1/prompts/categories": {
+      "get": {
+        "operationId": "PromptLibraryController_getCategories",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List prompt categories",
+        "tags": [
+          "Prompt Library"
+        ]
+      }
+    },
+    "/api/v1/prompts/{id}": {
+      "get": {
+        "operationId": "PromptLibraryController_getById",
+        "parameters": [],
+        "responses": {
+          "404": {
+            "description": "Prompt not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get prompt by ID",
+        "tags": [
+          "Prompt Library"
+        ]
+      },
+      "patch": {
+        "operationId": "PromptLibraryController_update",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update prompt metadata",
+        "tags": [
+          "Prompt Library"
+        ]
+      },
+      "delete": {
+        "operationId": "PromptLibraryController_delete",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Soft-delete a prompt",
+        "tags": [
+          "Prompt Library"
+        ]
+      }
+    },
+    "/api/v1/prompts/{id}/versions": {
+      "get": {
+        "operationId": "PromptLibraryController_getVersions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get prompt version history",
+        "tags": [
+          "Prompt Library"
+        ]
+      },
+      "post": {
+        "operationId": "PromptLibraryController_createVersion",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new version of a prompt",
+        "tags": [
+          "Prompt Library"
+        ]
+      }
+    },
+    "/api/v1/prompts/{id}/validate": {
+      "get": {
+        "operationId": "PromptLibraryController_validate",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Validate prompt templates",
+        "tags": [
+          "Prompt Library"
+        ]
+      }
+    },
+    "/api/v1/prompts/{id}/render": {
+      "post": {
+        "operationId": "PromptLibraryController_render",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Render a prompt with variables",
+        "tags": [
+          "Prompt Library"
+        ]
+      }
+    },
+    "/api/v1/prompts/preview": {
+      "post": {
+        "operationId": "PromptLibraryController_preview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview template rendering",
+        "tags": [
+          "Prompt Library"
+        ]
+      }
+    },
+    "/api/v1/prompts/{id}/publish": {
+      "post": {
+        "operationId": "PromptLibraryController_publish",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Publish a prompt",
+        "tags": [
+          "Prompt Library"
+        ]
+      }
+    },
+    "/api/v1/prompts/{id}/archive": {
+      "post": {
+        "operationId": "PromptLibraryController_archive",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Archive a prompt",
+        "tags": [
+          "Prompt Library"
+        ]
+      }
+    },
+    "/api/v1/prompts/{id}/restore": {
+      "post": {
+        "operationId": "PromptLibraryController_restore",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Restore an archived prompt",
+        "tags": [
+          "Prompt Library"
+        ]
+      }
+    },
+    "/api/v1/prompts/{id}/rollback": {
+      "post": {
+        "operationId": "PromptLibraryController_rollback",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Rollback to a previous version",
+        "tags": [
+          "Prompt Library"
+        ]
+      }
+    },
+    "/api/v1/prompts/{id}/compare": {
+      "get": {
+        "operationId": "PromptLibraryController_compare",
+        "parameters": [
+          {
+            "name": "versionB",
+            "required": true,
+            "in": "query",
+            "schema": {}
+          },
+          {
+            "name": "versionA",
+            "required": true,
+            "in": "query",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Compare two versions of a prompt",
+        "tags": [
+          "Prompt Library"
+        ]
+      }
+    },
+    "/api/v1/knowledge/documents": {
+      "post": {
+        "operationId": "DocumentController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Document uploaded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Upload a document",
+        "tags": [
+          "Knowledge Documents"
+        ]
+      },
+      "get": {
+        "operationId": "DocumentController_findMany",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List documents",
+        "tags": [
+          "Knowledge Documents"
+        ]
+      }
+    },
+    "/api/v1/knowledge/documents/{id}": {
+      "get": {
+        "operationId": "DocumentController_findById",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Document found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Document not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get document by ID",
+        "tags": [
+          "Knowledge Documents"
+        ]
+      },
+      "patch": {
+        "operationId": "DocumentController_update",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update document metadata",
+        "tags": [
+          "Knowledge Documents"
+        ]
+      },
+      "delete": {
+        "operationId": "DocumentController_delete",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Document deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Soft-delete a document",
+        "tags": [
+          "Knowledge Documents"
+        ]
+      }
+    },
+    "/api/v1/knowledge/documents/{id}/archive": {
+      "post": {
+        "operationId": "DocumentController_archive",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Archive a document",
+        "tags": [
+          "Knowledge Documents"
+        ]
+      }
+    },
+    "/api/v1/knowledge/documents/{id}/restore": {
+      "post": {
+        "operationId": "DocumentController_restore",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Restore a deleted document",
+        "tags": [
+          "Knowledge Documents"
+        ]
+      }
+    },
+    "/api/v1/knowledge/documents/{id}/download": {
+      "get": {
+        "operationId": "DocumentController_download",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Download a document",
+        "tags": [
+          "Knowledge Documents"
+        ]
+      }
+    },
+    "/api/v1/knowledge/documents/{id}/metadata": {
+      "get": {
+        "operationId": "MetadataController_getMetadata",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Metadata returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Document not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get document metadata (auto + custom)",
+        "tags": [
+          "Knowledge Document Metadata"
+        ]
+      },
+      "patch": {
+        "operationId": "MetadataController_updateMetadata",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Overwrite custom metadata",
+        "tags": [
+          "Knowledge Document Metadata"
+        ]
+      },
+      "delete": {
+        "operationId": "MetadataController_deleteMetadata",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete specific custom metadata keys",
+        "tags": [
+          "Knowledge Document Metadata"
+        ]
+      }
+    },
+    "/api/v1/knowledge/documents/{id}/metadata/merge": {
+      "post": {
+        "operationId": "MetadataController_mergeMetadata",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Merge custom metadata with existing",
+        "tags": [
+          "Knowledge Document Metadata"
+        ]
+      }
+    },
+    "/api/v1/knowledge/documents/{id}/metadata/rebuild": {
+      "post": {
+        "operationId": "MetadataController_rebuildMetadata",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Rebuild custom metadata (remove invalid entries)",
+        "tags": [
+          "Knowledge Document Metadata"
+        ]
+      }
+    },
+    "/api/v1/knowledge/documents/{id}/metadata/history": {
+      "get": {
+        "operationId": "MetadataController_getMetadataHistory",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get metadata version history",
+        "tags": [
+          "Knowledge Document Metadata"
+        ]
+      }
+    },
+    "/api/v1/knowledge/documents/{id}/metadata/rollback/{version}": {
+      "post": {
+        "operationId": "MetadataController_rollbackMetadata",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Rollback metadata to a previous version",
+        "tags": [
+          "Knowledge Document Metadata"
+        ]
+      }
+    },
+    "/api/v1/knowledge/documents/{id}/ocr/process": {
+      "post": {
+        "operationId": "OcrController_processDocument",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OCR completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Document not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Run OCR on a document",
+        "tags": [
+          "Knowledge Document OCR"
+        ]
+      }
+    },
+    "/api/v1/knowledge/documents/{id}/ocr": {
+      "get": {
+        "operationId": "OcrController_getOcrResult",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OCR result returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "OCR result not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get OCR result for a document",
+        "tags": [
+          "Knowledge Document OCR"
+        ]
+      }
+    },
+    "/api/v1/knowledge/documents/{id}/parse/process": {
+      "post": {
+        "operationId": "ParserController_parseDocument",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Parsing completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Document not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Parse a document into structured content",
+        "tags": [
+          "Knowledge Document Parsing"
+        ]
+      }
+    },
+    "/api/v1/knowledge/documents/{id}/parse": {
+      "get": {
+        "operationId": "ParserController_getParseResult",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Parse result returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Parse result not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get parse result for a document",
+        "tags": [
+          "Knowledge Document Parsing"
+        ]
+      }
+    },
+    "/dashboard/statistics": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "summary": "Get dashboard statistics for the current organization",
+        "operationId": "DashboardController_getStatistics",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Dashboard statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardStatisticsResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/activity/recent": {
+      "get": {
+        "tags": [
+          "Activity"
+        ],
+        "summary": "List recent activity for the current organization",
+        "operationId": "ActivityController_findRecent",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "maximum": 50
+            },
+            "description": "Maximum number of activity entries to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of recent activity entries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ActivityEntryDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects": {
+      "post": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Create a new project",
+        "operationId": "ProjectController_create",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProjectDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Project created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectResponseDto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "List projects for the current organization with pagination, search, and filters",
+        "operationId": "ProjectController_findAll",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            },
+            "description": "Page number"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Items per page"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search term for name or description"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ACTIVE",
+                "DRAFT",
+                "ARCHIVED",
+                "COMPLETED"
+              ]
+            },
+            "description": "Filter by status"
+          },
+          {
+            "name": "workspaceId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Filter by workspace ID"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "updatedAt",
+                "createdAt",
+                "name"
+              ]
+            },
+            "description": "Sort field"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "description": "Sort order"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of projects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectListResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/recent": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "List recent projects for the current organization",
+        "operationId": "ProjectController_findRecent",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "maximum": 50
+            },
+            "description": "Maximum number of projects to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of recent projects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProjectResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{id}": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Get project by ID with full details",
+        "operationId": "ProjectController_findById",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project details with activity logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectDetailResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Update project",
+        "operationId": "ProjectController_update",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Project updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Soft-delete project",
+        "operationId": "ProjectController_delete",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Project archived"
+          },
+          "404": {
+            "description": "Project not found"
+          }
+        }
+      }
+    },
+    "/projects/{id}/archive": {
+      "patch": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Archive a project",
+        "operationId": "ProjectController_archive",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project archived",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found"
+          },
+          "409": {
+            "description": "Project is already archived"
+          }
+        }
+      }
+    },
+    "/projects/{id}/restore": {
+      "patch": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Restore an archived project",
+        "operationId": "ProjectController_restore",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project restored",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found"
+          },
+          "409": {
+            "description": "Project is not archived"
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "Atlas AI API",
+    "description": "Enterprise AI Platform API",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "TokenUsageDto": {
+        "type": "object",
+        "properties": {
+          "promptTokens": {
+            "type": "number",
+            "description": "Number of prompt tokens",
+            "example": 50
+          },
+          "completionTokens": {
+            "type": "number",
+            "description": "Number of completion tokens",
+            "example": 100
+          },
+          "totalTokens": {
+            "type": "number",
+            "description": "Total tokens used",
+            "example": 150
+          },
+          "estimatedCost": {
+            "type": "number",
+            "description": "Estimated cost in USD",
+            "example": 0.002
+          }
+        },
+        "required": [
+          "promptTokens",
+          "completionTokens",
+          "totalTokens",
+          "estimatedCost"
+        ]
+      },
+      "_ChatCompletionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Response ID"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used"
+          },
+          "provider": {
+            "type": "string",
+            "description": "Provider name"
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated content"
+          },
+          "finishReason": {
+            "type": "string",
+            "enum": [
+              "stop",
+              "length",
+              "error"
+            ],
+            "description": "Finish reason"
+          },
+          "usage": {
+            "description": "Token usage",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TokenUsageDto"
+              }
+            ]
+          },
+          "latency": {
+            "type": "number",
+            "description": "Latency in ms"
+          }
+        },
+        "required": [
+          "id",
+          "model",
+          "provider",
+          "content",
+          "finishReason",
+          "usage",
+          "latency"
+        ]
+      },
+      "DashboardStatisticsResponseDto": {
+        "type": "object",
+        "properties": {
+          "workspacesCount": {
+            "type": "integer",
+            "description": "Number of workspaces in the organization",
+            "example": 5
+          },
+          "organizationsCount": {
+            "type": "integer",
+            "description": "Number of organizations the user belongs to",
+            "example": 2
+          },
+          "projectsCount": {
+            "type": "integer",
+            "description": "Number of active projects in the organization",
+            "example": 12
+          },
+          "activeUsersCount": {
+            "type": "integer",
+            "description": "Number of active members in the organization",
+            "example": 8
+          }
+        },
+        "required": [
+          "workspacesCount",
+          "organizationsCount",
+          "projectsCount",
+          "activeUsersCount"
+        ]
+      },
+      "RecentActivityQueryDto": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of activity entries to return",
+            "default": 10,
+            "maximum": 50
+          }
+        }
+      },
+      "ActivityEntryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Activity entry ID"
+          },
+          "type": {
+            "type": "string",
+            "description": "Activity type",
+            "example": "CREATED"
+          },
+          "actor": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Actor user ID"
+              },
+              "displayName": {
+                "type": "string",
+                "description": "Actor display name",
+                "example": "Jane Doe"
+              }
+            },
+            "required": [
+              "id",
+              "displayName"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "Activity description",
+            "example": "Project \"Q4 Campaign\" created"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date the activity occurred",
+            "example": "2025-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "actor",
+          "description",
+          "createdAt"
+        ]
+      },
+      "RecentProjectsQueryDto": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of projects to return",
+            "default": 10,
+            "maximum": 50
+          }
+        }
+      },
+      "CreateProjectDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Project name"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Project description"
+          },
+          "workspaceId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Workspace ID"
+          }
+        },
+        "required": [
+          "name",
+          "workspaceId"
+        ]
+      },
+      "UpdateProjectStatusEnum": {
+        "type": "string",
+        "enum": [
+          "ACTIVE",
+          "ARCHIVED",
+          "DRAFT",
+          "COMPLETED"
+        ]
+      },
+      "UpdateProjectDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Project name"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Project description"
+          },
+          "status": {
+            "$ref": "#/components/schemas/UpdateProjectStatusEnum"
+          }
+        }
+      },
+      "ProjectOwnerDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Owner user ID"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Owner display name",
+            "example": "Jane Doe"
+          },
+          "avatarUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "Owner avatar URL"
+          }
+        },
+        "required": [
+          "id",
+          "displayName",
+          "avatarUrl"
+        ]
+      },
+      "ProjectResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Project ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Project name",
+            "example": "Q4 Campaign"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Project description"
+          },
+          "status": {
+            "type": "string",
+            "description": "Project status",
+            "enum": [
+              "ACTIVE",
+              "DRAFT",
+              "ARCHIVED",
+              "COMPLETED"
+            ]
+          },
+          "workspaceId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Workspace ID"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Organization ID"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/ProjectOwnerDto"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation date"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update date"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "status",
+          "workspaceId",
+          "organizationId",
+          "owner",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ProjectSortField": {
+        "type": "string",
+        "enum": [
+          "updatedAt",
+          "createdAt",
+          "name"
+        ]
+      },
+      "ProjectSortOrder": {
+        "type": "string",
+        "enum": [
+          "asc",
+          "desc"
+        ]
+      },
+      "ProjectListQueryDto": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "description": "Page number",
+            "default": 1,
+            "minimum": 1
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Items per page",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 100
+          },
+          "search": {
+            "type": "string",
+            "description": "Search term for name or description"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "DRAFT",
+              "ARCHIVED",
+              "COMPLETED"
+            ],
+            "description": "Filter by status"
+          },
+          "workspaceId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Filter by workspace ID"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/ProjectSortField"
+          },
+          "order": {
+            "$ref": "#/components/schemas/ProjectSortOrder"
+          }
+        }
+      },
+      "ProjectListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectResponseDto"
+            },
+            "description": "List of projects"
+          },
+          "total": {
+            "type": "integer",
+            "description": "Total number of projects matching the filter",
+            "example": 42
+          },
+          "page": {
+            "type": "integer",
+            "description": "Current page number",
+            "example": 1
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Items per page",
+            "example": 20
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "example": 3
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
+        ]
+      },
+      "ProjectActivityLogEntryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Activity entry ID"
+          },
+          "type": {
+            "type": "string",
+            "description": "Activity type",
+            "example": "CREATED"
+          },
+          "description": {
+            "type": "string",
+            "description": "Activity description",
+            "example": "Project \"Q4 Campaign\" created"
+          },
+          "actorName": {
+            "type": "string",
+            "description": "Actor display name",
+            "example": "Jane Doe"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date the activity occurred"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "description",
+          "actorName",
+          "createdAt"
+        ]
+      },
+      "ProjectDetailResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Project ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Project name",
+            "example": "Q4 Campaign"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Project description"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "DRAFT",
+              "ARCHIVED",
+              "COMPLETED"
+            ]
+          },
+          "workspaceId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Workspace ID"
+          },
+          "workspaceName": {
+            "type": "string",
+            "description": "Workspace name",
+            "example": "Marketing"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Organization ID"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/ProjectOwnerDto"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation date"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update date"
+          },
+          "isArchived": {
+            "type": "boolean",
+            "description": "Whether the project is archived"
+          },
+          "activityLogs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectActivityLogEntryDto"
+            },
+            "description": "Recent activity logs"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "status",
+          "workspaceId",
+          "workspaceName",
+          "organizationId",
+          "owner",
+          "createdAt",
+          "updatedAt",
+          "isArchived",
+          "activityLogs"
+        ]
+      }
+    }
+  }
+}

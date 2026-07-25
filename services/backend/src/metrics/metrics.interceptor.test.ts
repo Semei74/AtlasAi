@@ -19,7 +19,7 @@ describe("MetricsInterceptor", () => {
         getResponse: () => object;
       } => ({
         getRequest: (): { method: string; url: string } => ({ method: "GET", url: "/test" }),
-        getResponse: (): object => ({}),
+        getResponse: (): { statusCode: number } => ({ statusCode: 200 }),
       }),
       getHandler: (): object => ({}),
       getClass: (): object => ({}),

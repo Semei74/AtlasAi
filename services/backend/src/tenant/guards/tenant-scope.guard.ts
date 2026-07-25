@@ -10,6 +10,7 @@ import type { FastifyRequest } from "fastify";
 import { JwtService } from "../../auth/jwt/services/jwt.service.js";
 import { MEMBERSHIP_REPOSITORY } from "../../membership/interfaces/membership-repository.interface.js";
 import type { MembershipRepository } from "../../membership/interfaces/membership-repository.interface.js";
+import { MembershipStatus } from "../../membership/interfaces/membership-status.enum.js";
 import { SKIP_TENANT_KEY } from "../decorators/skip-tenant.decorator.js";
 import type { TenantContext } from "../interfaces/tenant-context.interface.js";
 import type { RequestWithTenant } from "../interfaces/request-with-tenant.interface.js";
@@ -69,6 +70,10 @@ export class TenantScopeGuard implements CanActivate {
       throw new ForbiddenException("User is not a member of this organization");
     }
 
+    if (membership.status !== MembershipStatus.Active) {
+      throw new ForbiddenException("User membership is not active");
+    }
+
     const tenant: TenantContext = {
       organizationId,
       workspaceId: workspaceId ?? null,
@@ -106,22 +111,21 @@ export class TenantScopeGuard implements CanActivate {
       return null;
     }
 
-    const decoded = this.jwtService.decodeAccessToken(token);
-
-    if (!decoded) {
+    try {
+      const decoded = this.jwtService.verifyAccessToken(token);
+      return {
+        sub: decoded.sub,
+        email: decoded.email,
+        role: decoded.role,
+        organizationId: decoded.organizationId,
+        workspaceId: decoded.workspaceId,
+        sessionId: decoded.sessionId,
+        tokenVersion: decoded.tokenVersion,
+        iat: decoded.iat,
+        exp: decoded.exp,
+      };
+    } catch {
       return null;
     }
-
-    return {
-      sub: decoded.sub,
-      email: decoded.email,
-      role: decoded.role,
-      organizationId: decoded.organizationId,
-      workspaceId: decoded.workspaceId,
-      sessionId: decoded.sessionId,
-      tokenVersion: decoded.tokenVersion,
-      iat: decoded.iat,
-      exp: decoded.exp,
-    };
   }
 }

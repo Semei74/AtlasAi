@@ -1,4 +1,5 @@
 import { Injectable, Inject } from "@nestjs/common";
+import { ConflictError, ValidationError } from "@atlas/errors";
 import crypto from "node:crypto";
 import { PasswordHashingService } from "../password/services/password-hashing.service.js";
 import { PasswordPolicyService } from "../password/services/password-policy.service.js";
@@ -7,6 +8,8 @@ import { SessionService } from "../session/services/session.service.js";
 import { USER_REPOSITORY } from "../providers/email-password.provider.js";
 import type { UserRepository, UserRecord } from "../interfaces/user-repository.interface.js";
 import type { AuthTokenResponse } from "../dto/auth-token-response.dto.js";
+import { EmailVerificationService } from "./email-verification.service.js";
+import { AuthAuditService } from "./auth-audit.service.js";
 
 export interface RegisterInput {
   readonly email: string;
@@ -32,13 +35,15 @@ export class UserRegistrationService {
     @Inject(JwtService) private readonly jwtService: JwtService,
     @Inject(SessionService) private readonly sessionService: SessionService,
     @Inject(USER_REPOSITORY) private readonly userRepository: UserRepository,
+    @Inject(EmailVerificationService) private readonly emailVerificationService: EmailVerificationService,
+    @Inject(AuthAuditService) private readonly auditService: AuthAuditService,
   ) {}
 
   public async register(input: RegisterInput): Promise<AuthTokenResponse> {
     const existing = await this.userRepository.findByEmail(input.email.toLowerCase().trim());
 
     if (existing !== null) {
-      throw new Error("Email already registered");
+      throw new ConflictError("Email already registered");
     }
 
     const validation = this.policyService.validate(input.password, {
@@ -46,7 +51,7 @@ export class UserRegistrationService {
     });
 
     if (!validation.valid) {
-      throw new Error(validation.errors.join("; "));
+      throw new ValidationError(validation.errors.join("; "));
     }
 
     const passwordHash = await this.hashingService.hash(input.password);
@@ -69,6 +74,8 @@ export class UserRegistrationService {
 
     const saved = await this.userRepository.create(newUser);
 
+    const verificationToken = await this.emailVerificationService.generateToken(userId, saved.email);
+
     const tokenPair = await this.jwtService.generateTokenPair({
       sub: userId,
       email: saved.email,
@@ -84,6 +91,14 @@ export class UserRegistrationService {
       },
       ipAddress: input.ipAddress,
       refreshToken: tokenPair.refreshToken,
+    });
+
+    this.auditService.register({
+      userId: saved.id,
+      email: saved.email,
+      ipAddress: input.ipAddress,
+      userAgent: "Unknown",
+      metadata: { verificationToken },
     });
 
     return {

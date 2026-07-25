@@ -1,0 +1,33 @@
+{
+  "name": "@atlas/api",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "generate": "bash ../../scripts/generate-api-types.sh",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf dist coverage"
+  },
+  "dependencies": {
+    "openapi-fetch": "^0.13.0",
+    "@atlas/types": "workspace:*",
+    "@atlas/errors": "workspace:*",
+    "@atlas/constants": "workspace:*",
+    "@atlas/logger": "workspace:*",
+    "@atlas/auth": "workspace:*",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.6.0",
+    "typescript": "^5.8.0",
+    "eslint": "^9.24.0",
+    "vitest": "^3.1.0"
+  }
+}

@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, Global } from "@nestjs/common";
 import { AuthService, AUTH_PROVIDERS } from "./auth.service.js";
 import { EmailPasswordProvider, USER_REPOSITORY } from "./providers/email-password.provider.js";
 import { OAuth2Provider } from "./providers/oauth2.provider.js";
@@ -17,127 +17,33 @@ import {
   DEFAULT_PASSWORD_POLICY,
 } from "./password/interfaces/password-policy.interface.js";
 import { JwtService } from "./jwt/services/jwt.service.js";
-import { JWT_CONFIG, DEFAULT_JWT_CONFIG } from "./jwt/interfaces/jwt-config.interface.js";
+import { JWT_CONFIG, createJwtConfig } from "./jwt/interfaces/jwt-config.interface.js";
 import { REFRESH_TOKEN_STORE } from "./jwt/interfaces/refresh-token-store.interface.js";
-import type { RefreshTokenStore } from "./jwt/interfaces/refresh-token-store.interface.js";
 import { SessionService } from "./session/services/session.service.js";
 import {
   SESSION_CONFIG,
   DEFAULT_SESSION_CONFIG,
 } from "./session/interfaces/session-config.interface.js";
 import { SESSION_STORE } from "./session/interfaces/session-store.interface.js";
-import type { SessionStore } from "./session/interfaces/session-store.interface.js";
 import { AuthorizationService } from "./authorization/services/authorization.service.js";
 import { AuthGuard } from "./authorization/guards/auth.guard.js";
 import { RolesGuard } from "./authorization/guards/roles.guard.js";
 import { UserRegistrationService } from "./services/user-registration.service.js";
 import { AuthOrchestratorService } from "./services/auth-orchestrator.service.js";
+import { AccountLockoutService } from "./services/account-lockout.service.js";
+import { EmailVerificationService } from "./services/email-verification.service.js";
+import { AuthAuditService } from "./services/auth-audit.service.js";
 import { AuthController } from "./controllers/auth.controller.js";
 import { UserController } from "./controllers/user.controller.js";
 import { PasswordController } from "./controllers/password.controller.js";
+import { UserRepositoryService } from "./services/user-repository.service.js";
+import { SessionStoreService } from "./services/session-store.service.js";
+import { RefreshTokenStoreService } from "./services/refresh-token-store.service.js";
+import { PasswordHistoryStoreService } from "./services/password-history-store.service.js";
+import { PasswordResetStoreService } from "./services/password-reset-store.service.js";
 import type { AuthProvider } from "./interfaces/auth-provider.interface.js";
-import type { UserRepository } from "./interfaces/user-repository.interface.js";
-import type { PasswordHistoryStore } from "./password/interfaces/password-history-store.interface.js";
-import type { PasswordResetStore } from "./password/interfaces/password-reset-store.interface.js";
 
-const DEFAULT_USER_REPOSITORY: UserRepository = {
-  findByEmail(): never {
-    throw new Error("UserRepository not configured. Provide a custom USER_REPOSITORY provider.");
-  },
-  findById(): never {
-    throw new Error("UserRepository not configured. Provide a custom USER_REPOSITORY provider.");
-  },
-  create(): never {
-    throw new Error("UserRepository not configured. Provide a custom USER_REPOSITORY provider.");
-  },
-  update(): never {
-    throw new Error("UserRepository not configured. Provide a custom USER_REPOSITORY provider.");
-  },
-};
-
-const DEFAULT_PASSWORD_HISTORY_STORE: PasswordHistoryStore = {
-  add(): never {
-    throw new Error(
-      "PasswordHistoryStore not configured. Provide a custom PASSWORD_HISTORY_STORE provider.",
-    );
-  },
-  getAll(): never {
-    throw new Error(
-      "PasswordHistoryStore not configured. Provide a custom PASSWORD_HISTORY_STORE provider.",
-    );
-  },
-};
-
-const DEFAULT_PASSWORD_RESET_STORE: PasswordResetStore = {
-  save(): never {
-    throw new Error(
-      "PasswordResetStore not configured. Provide a custom PASSWORD_RESET_STORE provider.",
-    );
-  },
-  find(): never {
-    throw new Error(
-      "PasswordResetStore not configured. Provide a custom PASSWORD_RESET_STORE provider.",
-    );
-  },
-  markConsumed(): never {
-    throw new Error(
-      "PasswordResetStore not configured. Provide a custom PASSWORD_RESET_STORE provider.",
-    );
-  },
-  invalidateByUser(): never {
-    throw new Error(
-      "PasswordResetStore not configured. Provide a custom PASSWORD_RESET_STORE provider.",
-    );
-  },
-};
-
-const DEFAULT_REFRESH_TOKEN_STORE: RefreshTokenStore = {
-  save(): never {
-    throw new Error(
-      "RefreshTokenStore not configured. Provide a custom REFRESH_TOKEN_STORE provider.",
-    );
-  },
-  find(): never {
-    throw new Error(
-      "RefreshTokenStore not configured. Provide a custom REFRESH_TOKEN_STORE provider.",
-    );
-  },
-  markConsumed(): never {
-    throw new Error(
-      "RefreshTokenStore not configured. Provide a custom REFRESH_TOKEN_STORE provider.",
-    );
-  },
-  invalidateByUser(): never {
-    throw new Error(
-      "RefreshTokenStore not configured. Provide a custom REFRESH_TOKEN_STORE provider.",
-    );
-  },
-};
-
-const DEFAULT_SESSION_STORE: SessionStore = {
-  save(): never {
-    throw new Error("SessionStore not configured. Provide a custom SESSION_STORE provider.");
-  },
-  findById(): never {
-    throw new Error("SessionStore not configured. Provide a custom SESSION_STORE provider.");
-  },
-  findByUserId(): never {
-    throw new Error("SessionStore not configured. Provide a custom SESSION_STORE provider.");
-  },
-  updateLastActivity(): never {
-    throw new Error("SessionStore not configured. Provide a custom SESSION_STORE provider.");
-  },
-  revoke(): never {
-    throw new Error("SessionStore not configured. Provide a custom SESSION_STORE provider.");
-  },
-  revokeAllByUserId(): never {
-    throw new Error("SessionStore not configured. Provide a custom SESSION_STORE provider.");
-  },
-  deleteExpired(): never {
-    throw new Error("SessionStore not configured. Provide a custom SESSION_STORE provider.");
-  },
-};
-
+@Global()
 @Module({
   controllers: [AuthController, UserController, PasswordController],
   providers: [
@@ -159,17 +65,20 @@ const DEFAULT_SESSION_STORE: SessionStore = {
     RolesGuard,
     UserRegistrationService,
     AuthOrchestratorService,
+    AccountLockoutService,
+    EmailVerificationService,
+    AuthAuditService,
     {
       provide: USER_REPOSITORY,
-      useValue: DEFAULT_USER_REPOSITORY,
+      useClass: UserRepositoryService,
     },
     {
       provide: PASSWORD_HISTORY_STORE,
-      useValue: DEFAULT_PASSWORD_HISTORY_STORE,
+      useClass: PasswordHistoryStoreService,
     },
     {
       provide: PASSWORD_RESET_STORE,
-      useValue: DEFAULT_PASSWORD_RESET_STORE,
+      useClass: PasswordResetStoreService,
     },
     {
       provide: PASSWORD_POLICY_CONFIG,
@@ -177,11 +86,13 @@ const DEFAULT_SESSION_STORE: SessionStore = {
     },
     {
       provide: JWT_CONFIG,
-      useValue: DEFAULT_JWT_CONFIG,
+      useFactory: (): ReturnType<typeof createJwtConfig> => {
+        return createJwtConfig();
+      },
     },
     {
       provide: REFRESH_TOKEN_STORE,
-      useValue: DEFAULT_REFRESH_TOKEN_STORE,
+      useClass: RefreshTokenStoreService,
     },
     {
       provide: SESSION_CONFIG,
@@ -189,7 +100,7 @@ const DEFAULT_SESSION_STORE: SessionStore = {
     },
     {
       provide: SESSION_STORE,
-      useValue: DEFAULT_SESSION_STORE,
+      useClass: SessionStoreService,
     },
     {
       provide: AUTH_PROVIDERS,

@@ -1,12 +1,14 @@
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import type { NestFastifyApplication } from "@nestjs/platform-fastify";
 
-const OPENAPI_PATH = "docs";
+const OPENAPI_PATH = "api-docs";
 const OPENAPI_TITLE = "Atlas AI API";
 const OPENAPI_DESCRIPTION = "Enterprise AI Platform API";
 const OPENAPI_VERSION = "1.0.0";
 
 export function setupOpenapi(app: NestFastifyApplication): void {
+  const isProduction = process.env["APP_ENV"] === "production";
+
   const config = new DocumentBuilder()
     .setTitle(OPENAPI_TITLE)
     .setDescription(OPENAPI_DESCRIPTION)
@@ -15,5 +17,8 @@ export function setupOpenapi(app: NestFastifyApplication): void {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(OPENAPI_PATH, app, document);
+
+  if (!isProduction) {
+    SwaggerModule.setup(OPENAPI_PATH, app, document);
+  }
 }

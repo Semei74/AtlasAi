@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "Atlas AI",
+    "slug": "atlas-ai",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "atlas",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "backgroundColor": "#4F46E5",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ai.atlas.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#4F46E5"
+      },
+      "package": "ai.atlas.app"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ]
+  }
+}

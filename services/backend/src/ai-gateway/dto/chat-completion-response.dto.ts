@@ -1,43 +1,32 @@
-import type { GatewayResponse } from "../interfaces/ai-gateway.interface.js";
+import { ApiProperty } from "@nestjs/swagger";
+import { TokenUsageDto } from "./token-usage.dto.js";
 
 export class ChatCompletionResponseDto {
-  public readonly id: string;
-  public readonly model: string;
-  public readonly provider: string;
-  public readonly content: string;
-  public readonly finishReason: "stop" | "length" | "error";
-  public readonly usage: {
-    readonly promptTokens: number;
-    readonly completionTokens: number;
-    readonly totalTokens: number;
-    readonly estimatedCost: number;
-  };
-  public readonly latency: number;
+  @ApiProperty({ description: "Response ID", type: String })
+  public readonly id!: string;
 
-  private constructor(data: ChatCompletionResponseDto) {
-    this.id = data.id;
-    this.model = data.model;
-    this.provider = data.provider;
-    this.content = data.content;
-    this.finishReason = data.finishReason;
-    this.usage = data.usage;
-    this.latency = data.latency;
-  }
+  @ApiProperty({ description: "Model used", type: String })
+  public readonly model!: string;
 
-  public static from(response: GatewayResponse): ChatCompletionResponseDto {
-    return new ChatCompletionResponseDto({
-      id: response.id,
-      model: response.model,
-      provider: response.provider,
-      content: response.content,
-      finishReason: response.finishReason,
-      usage: {
-        promptTokens: response.usage.promptTokens,
-        completionTokens: response.usage.completionTokens,
-        totalTokens: response.usage.totalTokens,
-        estimatedCost: response.usage.estimatedCost,
-      },
-      latency: response.latency,
-    });
+  @ApiProperty({ description: "Provider name", type: String })
+  public readonly provider!: string;
+
+  @ApiProperty({ description: "Generated content", type: String })
+  public readonly content!: string;
+
+  @ApiProperty({ enum: ["stop", "length", "error"], description: "Finish reason", type: String })
+  public readonly finishReason!: "stop" | "length" | "error";
+
+  @ApiProperty({ description: "Token usage", type: () => TokenUsageDto })
+  public readonly usage!: TokenUsageDto;
+
+  @ApiProperty({ description: "Latency in ms", type: Number })
+  public readonly latency!: number;
+
+  public static from(
+    data: { id: string; model: string; provider: string; content: string; finishReason: "stop" | "length" | "error"; usage: TokenUsageDto; latency: number },
+  ): ChatCompletionResponseDto {
+    const dto = new ChatCompletionResponseDto();
+    return Object.assign(dto, data);
   }
 }

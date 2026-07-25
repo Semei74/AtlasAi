@@ -1,4 +1,5 @@
 import { Injectable, Inject } from "@nestjs/common";
+import { NotFoundError } from "@atlas/errors";
 import type { AiProvider } from "../interfaces/ai-provider.interface.js";
 import type { ProviderResolver } from "./provider-resolver.interface.js";
 import { PROVIDER_REGISTRY } from "../registry/provider-registry.interface.js";
@@ -21,7 +22,7 @@ export class ProviderResolverService implements ProviderResolver {
     }
 
     if (!this.factory.supports(name)) {
-      throw new Error(`Provider '${name}' is not supported`);
+      throw new NotFoundError("Provider", name);
     }
 
     return this.factory.create(name);

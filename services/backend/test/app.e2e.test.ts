@@ -3,6 +3,7 @@ import { NestFactory } from "@nestjs/core";
 import type { NestFastifyApplication } from "@nestjs/platform-fastify";
 import { FastifyAdapter } from "@nestjs/platform-fastify";
 import compression from "@fastify/compress";
+import fastifyMultipart from "@fastify/multipart";
 import { AppModule } from "../src/app.module.js";
 import { setupOpenapi } from "../src/openapi/setup.js";
 
@@ -28,6 +29,10 @@ describe("App (e2e)", () => {
       new FastifyAdapter({ logger: false }),
     );
     await app.register(compression);
+    await app.register(fastifyMultipart, {
+      limits: { fileSize: 50 * 1024 * 1024, files: 1, fields: 20 },
+      throwFileSizeLimit: true,
+    });
     setupOpenapi(app);
     await app.init();
   });

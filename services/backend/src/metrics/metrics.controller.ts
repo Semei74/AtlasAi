@@ -1,9 +1,13 @@
 import { Controller, Get, Header, Inject } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { MetricsService } from "./metrics.service.js";
+import { SkipTenant } from "../tenant/decorators/skip-tenant.decorator.js";
+import { SkipAuth } from "../auth/authorization/decorators/skip-auth.decorator.js";
 
 @ApiTags("Metrics")
 @Controller()
+@SkipTenant()
+@SkipAuth()
 export class MetricsController {
   public constructor(@Inject(MetricsService) private readonly metricsService: MetricsService) {}
 

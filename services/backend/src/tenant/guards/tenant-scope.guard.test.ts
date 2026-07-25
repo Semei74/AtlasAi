@@ -35,7 +35,13 @@ function createMockJwtService(): JwtService {
     markConsumed(): Promise<void> {
       return Promise.resolve();
     },
+    consume(): Promise<boolean> {
+      return Promise.resolve(true);
+    },
     invalidateByUser(): Promise<void> {
+      return Promise.resolve();
+    },
+    invalidateFamily(): Promise<void> {
       return Promise.resolve();
     },
   };

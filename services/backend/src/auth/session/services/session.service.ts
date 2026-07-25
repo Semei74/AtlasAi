@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { NotFoundError, UnauthorizedError } from "@atlas/errors";
 import crypto from "node:crypto";
 import type { Session } from "../interfaces/session.interface.js";
 import type { DeviceInfo } from "../interfaces/device-info.interface.js";
@@ -12,6 +13,7 @@ export interface CreateSessionInput {
   readonly deviceInfo: DeviceInfo;
   readonly ipAddress: string;
   readonly refreshToken: string;
+  readonly rememberMe?: boolean | undefined;
 }
 
 @Injectable()
@@ -24,6 +26,7 @@ export class SessionService {
   public async createSession(input: CreateSessionInput): Promise<string> {
     const refreshTokenHash = this.hashRefreshToken(input.refreshToken);
     const now = new Date();
+    const ttl = input.rememberMe ? this.config.rememberMeTimeoutMs : this.config.absoluteTimeoutMs;
 
     const session: Session = {
       id: crypto.randomUUID(),
@@ -33,7 +36,7 @@ export class SessionService {
       refreshTokenHash,
       createdAt: now,
       lastActivityAt: now,
-      expiresAt: new Date(now.getTime() + this.config.absoluteTimeoutMs),
+      expiresAt: new Date(now.getTime() + ttl),
       revokedAt: null,
     };
 
@@ -46,27 +49,27 @@ export class SessionService {
     const session = await this.store.findById(sessionId);
 
     if (session === null) {
-      throw new Error("Session not found");
+      throw new NotFoundError("Session");
     }
 
     if (session.userId !== userId) {
-      throw new Error("Session user mismatch");
+      throw new UnauthorizedError("Session user mismatch");
     }
 
     if (session.revokedAt !== null) {
-      throw new Error("Session revoked");
+      throw new UnauthorizedError("Session revoked");
     }
 
     const now = new Date();
 
     if (now > session.expiresAt) {
-      throw new Error("Session expired");
+      throw new UnauthorizedError("Session expired");
     }
 
     const idleMs = now.getTime() - session.lastActivityAt.getTime();
 
     if (idleMs > this.config.idleTimeoutMs) {
-      throw new Error("Session idle timeout");
+      throw new UnauthorizedError("Session idle timeout");
     }
 
     return session;
@@ -81,11 +84,11 @@ export class SessionService {
     const session = await this.store.findById(sessionId);
 
     if (session === null) {
-      throw new Error("Session not found");
+      throw new NotFoundError("Session");
     }
 
     if (session.userId !== userId) {
-      throw new Error("Session user mismatch");
+      throw new UnauthorizedError("Session user mismatch");
     }
 
     await this.store.revoke(sessionId);

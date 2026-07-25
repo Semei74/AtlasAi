@@ -1,4 +1,4 @@
-export { initSentry } from "./sentry";
+export { initSentry, setSentryUser, captureError } from "./sentry";
 export { PostHogProvider } from "./posthog";
 export { useFeatureFlag } from "./feature-flags";
-export { trackEvent } from "./analytics";
+export { trackEvent, identifyUser, resetIdentity } from "./analytics";

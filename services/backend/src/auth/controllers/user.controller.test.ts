@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 import { describe, it, expect, vi } from "vitest";
 import { NotFoundException, UnauthorizedException } from "@nestjs/common";
 import type { FastifyRequest } from "fastify";
@@ -49,6 +48,34 @@ describe("UserController", () => {
       const result = await controller.updateProfile(body, testRequestWithUser);
 
       expect(result).toHaveProperty("displayName", "New Name");
+    });
+
+    it("should update all optional profile fields", async () => {
+      const existing = makeUser();
+      const updated = makeUser({
+        displayName: "Full Update",
+        bio: "Updated bio",
+        avatarUrl: "https://example.com/new-avatar.png",
+        timezone: "Europe/London",
+        updatedAt: new Date(),
+      });
+
+      mockFindById.mockResolvedValueOnce(existing);
+      mockUpdate.mockResolvedValueOnce(updated);
+
+      const body: UpdateProfileRequest = {
+        displayName: "Full Update",
+        bio: "Updated bio",
+        avatarUrl: "https://example.com/new-avatar.png",
+        timezone: "Europe/London",
+      } as UpdateProfileRequest;
+
+      const result = await controller.updateProfile(body, testRequestWithUser);
+
+      expect(result).toHaveProperty("displayName", "Full Update");
+      expect(result).toHaveProperty("bio", "Updated bio");
+      expect(result).toHaveProperty("avatarUrl", "https://example.com/new-avatar.png");
+      expect(result).toHaveProperty("timezone", "Europe/London");
     });
 
     it("should throw UnauthorizedException when no user", async () => {

@@ -78,8 +78,15 @@ Every implementation must conform to the approved architecture before developmen
 
 ✅ Documentation Framework
 
-Current architectural documentation consists of the complete specification set located in the
-`docs/` directory.
+Current architectural documentation consists of the complete specification set located in
+the `docs/` directory.
+
+> **Note — P3 Dashboard stream status:** The P3 Dashboard Backend integration
+> (`/projects/recent`, `/activity/recent`, `/dashboard/statistics`) is **FROZEN**,
+> pending implementation of the new Project domain (`Project` + `ActivityLog`
+> models). This is an architectural constraint, not a defect. See
+> `ADR_P3_FREEZE.md` (ADR-034) and `PROJECT_ROADMAP.md`. The current active stream
+> is **P4 — Project Domain & Dashboard Backend**.
 
 ---
 

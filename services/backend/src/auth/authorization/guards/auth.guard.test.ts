@@ -25,7 +25,13 @@ function createMockJwtService(shouldSucceed: boolean): JwtService {
     markConsumed() {
       return Promise.resolve();
     },
+    consume() {
+      return Promise.resolve(true);
+    },
     invalidateByUser() {
+      return Promise.resolve();
+    },
+    invalidateFamily() {
       return Promise.resolve();
     },
   };
@@ -143,5 +149,35 @@ describe("AuthGuard", () => {
     });
 
     expect(() => guard.canActivate(context)).toThrow(UnauthorizedError);
+  });
+
+  it("should throw UnauthorizedError for lowercase bearer scheme", () => {
+    const jwtService = createMockJwtService(true);
+    const guard = new AuthGuard(jwtService);
+
+    const token = jwtService.generateAccessToken({
+      sub: "user-123",
+      email: "user@test.com",
+      role: "admin",
+    });
+
+    const context = createMockContext({ authorization: `bearer ${token}` });
+
+    expect(() => guard.canActivate(context)).toThrow(UnauthorizedError);
+  });
+
+  it("should pass for token with empty sub claim (guard does not validate claims)", () => {
+    const jwtService = createMockJwtService(true);
+    const guard = new AuthGuard(jwtService);
+
+    const token = jwtService.generateAccessToken({
+      sub: "",
+      email: "user@test.com",
+      role: "admin",
+    });
+
+    const context = createMockContext({ authorization: `Bearer ${token}` });
+
+    expect(guard.canActivate(context)).toBe(true);
   });
 });

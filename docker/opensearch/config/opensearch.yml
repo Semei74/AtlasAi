@@ -1,0 +1,41 @@
+cluster.name: atlas-ai
+network.host: 0.0.0.0
+
+# Security plugin configuration
+plugins.security.disabled: false
+plugins.security.ssl.http.enabled: true
+plugins.security.ssl.transport.enabled: true
+plugins.security.ssl.http.pemcert_filepath: /usr/share/opensearch/config/certs/node.pem
+plugins.security.ssl.http.pemkey_filepath: /usr/share/opensearch/config/certs/node-key.pem
+plugins.security.ssl.http.pemtrustedcas_filepath: /usr/share/opensearch/config/certs/root-ca.pem
+plugins.security.ssl.transport.pemcert_filepath: /usr/share/opensearch/config/certs/node.pem
+plugins.security.ssl.transport.pemkey_filepath: /usr/share/opensearch/config/certs/node-key.pem
+plugins.security.ssl.transport.pemtrustedcas_filepath: /usr/share/opensearch/config/certs/root-ca.pem
+plugins.security.allow_unsafe_democertificates: false
+plugins.security.allow_default_init_securityindex: true
+plugins.security.authcz.admin_dn:
+  - "CN=admin,OU=AtlasAI,O=AtlasAI,L=City,ST=State,C=US"
+
+# Security configuration
+plugins.security.config.dynamic.authc:
+  basic_internal_auth_domain:
+    http_enabled: true
+    transport_enabled: true
+    order: 0
+    http_authenticator:
+      type: basic
+      challenge: true
+    authentication_backend:
+      type: intern
+
+# Security configuration index
+plugins.security.system_indices.enabled: true
+plugins.security.system_indices.indices:
+  - ".security"
+  - ".opensearch"
+  - ".opensearch-dashboards"
+
+# Audit logging
+plugins.security.audit.type: internal_opensearch
+plugins.security.audit.config.disabled_rest_categories: NONE
+plugins.security.audit.config.disabled_transport_categories: NONE

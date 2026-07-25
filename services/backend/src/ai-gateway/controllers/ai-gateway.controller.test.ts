@@ -19,6 +19,7 @@ const mockGatewayResponse: GatewayResponse = {
     estimatedCost: 0.001,
   },
   latency: 100,
+  policyViolations: undefined,
 };
 
 describe("AiGatewayController", () => {

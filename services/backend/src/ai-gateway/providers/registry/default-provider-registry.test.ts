@@ -16,6 +16,14 @@ const dummyProvider: AiProvider = {
     embeddings: false,
     imageGeneration: false,
     audioTranscription: false,
+    toolCalling: false,
+    audioGeneration: false,
+    moderation: false,
+    reasoning: false,
+    mcp: false,
+    rag: false,
+    promptTemplates: false,
+    conversationMemory: false,
     maxModels: 0,
     supportedModels: [],
   },
@@ -38,6 +46,9 @@ const dummyProvider: AiProvider = {
   },
   configure(_config: Partial<ProviderConfiguration>): void {
     /* no-op */
+  },
+  initialize(): Promise<void> {
+    return Promise.resolve();
   },
 };
 
@@ -89,5 +100,108 @@ describe("DefaultProviderRegistry", () => {
     registry.register("test", other);
 
     expect(registry.get("test")?.metadata.name).toBe("other");
+  });
+
+  it("should expose a full registration entry", () => {
+    const registry = new DefaultProviderRegistry();
+    registry.register("test", dummyProvider);
+
+    const entry = registry.getEntry("test");
+
+    expect(entry).not.toBeNull();
+    expect(entry?.name).toBe("test");
+    expect(entry?.metadata).toBe(dummyProvider.metadata);
+    expect(entry?.enabled).toBe(true);
+    expect(entry?.initialized).toBe(false);
+    expect(entry?.health).toBeNull();
+    expect(entry?.registeredAt).toBeInstanceOf(Date);
+  });
+
+  it("should default to enabled and support runtime enable/disable", () => {
+    const registry = new DefaultProviderRegistry();
+    registry.register("test", dummyProvider, { enabled: false });
+
+    expect(registry.isEnabled("test")).toBe(false);
+
+    registry.setEnabled("test", true);
+    expect(registry.isEnabled("test")).toBe(true);
+  });
+
+  it("should throw when enabling an unregistered provider", () => {
+    const registry = new DefaultProviderRegistry();
+
+    expect(() => { registry.setEnabled("missing", true); }).toThrow(/not found/);
+  });
+
+  it("should unregister a provider", () => {
+    const registry = new DefaultProviderRegistry();
+    registry.register("test", dummyProvider);
+
+    expect(registry.unregister("test")).toBe(true);
+    expect(registry.has("test")).toBe(false);
+    expect(registry.unregister("test")).toBe(false);
+  });
+
+  it("should filter providers by capability", () => {
+    const registry = new DefaultProviderRegistry();
+    const chatOnly: AiProvider = {
+      ...dummyProvider,
+      capabilities: { ...dummyProvider.capabilities, chat: true, embeddings: false },
+    };
+    const embeddingOnly: AiProvider = {
+      ...dummyProvider,
+      capabilities: { ...dummyProvider.capabilities, chat: false, embeddings: true },
+    };
+
+    registry.register("chat", chatOnly);
+    registry.register("embedding", embeddingOnly);
+
+    expect(registry.findByCapability("chat").map((e) => e.name)).toEqual(["chat"]);
+    expect(registry.findByCapability("embeddings").map((e) => e.name)).toEqual(["embedding"]);
+    expect(registry.listEnabled().map((e) => e.name).sort()).toEqual(["chat", "embedding"]);
+  });
+
+  it("should expose metadata for a registered provider", () => {
+    const registry = new DefaultProviderRegistry();
+    registry.register("test", dummyProvider);
+
+    expect(registry.getMetadata("test")).toBe(dummyProvider.metadata);
+    expect(registry.getMetadata("missing")).toBeNull();
+  });
+
+  it("should track lifecycle initialization", async () => {
+    const registry = new DefaultProviderRegistry();
+    let initialized = false;
+    const trackable: AiProvider = {
+      ...dummyProvider,
+      initialize: () => {
+        initialized = true;
+
+        return Promise.resolve();
+      },
+    };
+
+    registry.register("track", trackable);
+    await registry.initialize("track");
+
+    expect(initialized).toBe(true);
+    expect(registry.getEntry("track")?.initialized).toBe(true);
+  });
+
+  it("should track provider health", async () => {
+    const registry = new DefaultProviderRegistry();
+    const trackable: AiProvider = {
+      ...dummyProvider,
+      health: () =>
+        Promise.resolve({ status: "healthy", latency: 12, lastChecked: new Date() }),
+    };
+
+    registry.register("track", trackable);
+    const health = await registry.getHealth("track");
+
+    expect(health?.status).toBe("healthy");
+    expect(health?.latency).toBe(12);
+    expect(registry.getEntry("track")?.health?.status).toBe("healthy");
+    expect(await registry.getHealth("missing")).toBeNull();
   });
 });

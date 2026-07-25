@@ -1,0 +1,7 @@
+# Ignore generated certificates — they are environment-specific.
+*.pem
+*.csr
+*.srl
+# Keep the generation script and this gitignore.
+!generate-certs.sh
+!.gitignore

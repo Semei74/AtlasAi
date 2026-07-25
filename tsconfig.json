@@ -13,9 +13,19 @@
     { "path": "packages/config" },
     { "path": "packages/testing" },
     { "path": "packages/user" },
+    { "path": "packages/api" },
+    { "path": "packages/auth" },
+    { "path": "packages/ui" },
+    { "path": "packages/hooks" },
+    { "path": "packages/observability" },
+    { "path": "packages/i18n" },
+    { "path": "apps/extension" },
     { "path": "services/backend" }
   ],
   "compilerOptions": {
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
     "noEmit": true,
     "outDir": "dist",
     "rootDir": "."

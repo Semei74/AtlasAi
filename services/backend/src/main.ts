@@ -4,6 +4,8 @@ import type { NestFastifyApplication } from "@nestjs/platform-fastify";
 import { FastifyAdapter } from "@nestjs/platform-fastify";
 import compression from "@fastify/compress";
 import cors from "@fastify/cors";
+import fastifyMultipart from "@fastify/multipart";
+import fastifyCookie from "@fastify/cookie";
 import { AppModule } from "./app.module.js";
 import { setupOpenapi } from "./openapi/setup.js";
 import { registerResponseTiming } from "./common/middleware/response-timing.middleware.js";
@@ -11,11 +13,21 @@ import { CONFIG_LOADER } from "./config/config.module.js";
 import type { ConfigLoader } from "@atlas/config";
 import type { ConfigSchema } from "@atlas/config";
 import { rootLogger } from "@atlas/logger";
+import { ConfigurationError } from "@atlas/errors";
+import { validateSecrets } from "./config/validate-secrets.js";
 
 async function bootstrap(): Promise<void> {
+  const isProduction = process.env["APP_ENV"] === "production";
+  if (isProduction) {
+    validateSecrets();
+  }
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter({ logger: false }),
+    new FastifyAdapter({
+      logger: false,
+      trustProxy: true,
+    }),
+    { forceCloseConnections: true },
   );
 
   app.enableShutdownHooks();
@@ -40,11 +52,31 @@ async function bootstrap(): Promise<void> {
   const host = config["HOST"] as string;
 
   await app.register(compression);
+  await app.register(fastifyMultipart, {
+    limits: {
+      fileSize: 50 * 1024 * 1024,
+      files: 1,
+      fields: 20,
+    },
+    throwFileSizeLimit: true,
+  });
+  const corsOrigin = process.env["CORS_ORIGIN"] ?? "http://localhost:3000";
+
+  if (corsOrigin === "*") {
+    throw new ConfigurationError("Wildcard CORS origin is not allowed in production");
+  }
+
   await app.register(cors, {
-    origin: true,
+    origin: corsOrigin.split(",").map((o) => o.trim()),
     methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Correlation-Id"],
     credentials: true,
+  });
+
+  const cookieSecret = process.env["COOKIE_SECRET"] ?? process.env["JWT_SECRET"] ?? "";
+
+  await app.register(fastifyCookie, {
+    secret: cookieSecret,
   });
 
   setupOpenapi(app);

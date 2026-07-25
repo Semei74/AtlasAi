@@ -1,0 +1,47 @@
+export { KnowledgeModule } from "./knowledge.module.js";
+export { FILE_STORAGE, DOCUMENT_SERVICE, METADATA_SERVICE, OCR_PROVIDER, OCR_SERVICE, PARSER_PROVIDER, PARSER_SERVICE } from "./interfaces/index.js";
+export type {
+  FileStorage,
+  FileUpload,
+  FileUploadResult,
+  DocumentService,
+  DocumentFilter,
+  PaginatedDocuments,
+  CreateDocumentInput,
+  UpdateDocumentInput,
+  MetadataService,
+  DocumentMetadata,
+  AutoMetadata,
+  MetadataHistoryEntry,
+  MetadataValidationResult,
+  OcrProvider,
+  OcrService,
+  OcrResult,
+  OcrPageResult,
+  OcrJobResult,
+  OcrOptions,
+  ParserProvider,
+  ParserService,
+  ParsedDocument,
+  ParsedSection,
+  ParsedHeading,
+  ParsedTable,
+  ParseStatistics,
+  ParseOptions,
+} from "./interfaces/index.js";
+export {
+  RESERVED_METADATA_KEYS,
+  METADATA_KEY_PATTERN,
+  MAX_METADATA_BYTES,
+  SUPPORTED_OCR_MIME_TYPES,
+  SUPPORTED_PARSE_MIME_TYPES,
+} from "./interfaces/index.js";
+export {
+  CreateDocumentDto,
+  UpdateDocumentDto,
+  DocumentFilterDto,
+  UpdateMetadataDto,
+  MergeMetadataDto,
+  DeleteMetadataDto,
+  MetadataFilterDto,
+} from "./dto/index.js";

@@ -39,6 +39,16 @@ function createMockOrganization(overrides?: Partial<Organization>): Organization
         blockedModels: [],
         maxInputTokens: null,
         maxOutputTokens: null,
+        allowImageGeneration: false,
+        allowAudioGeneration: false,
+        allowEmbeddings: false,
+        allowModeration: false,
+        allowTools: false,
+        allowMcp: false,
+        allowRag: false,
+        allowPromptTemplates: false,
+        allowConversationMemory: false,
+        allowStreaming: false,
       },
       storage: {
         maxStorageBytes: null,
@@ -55,9 +65,27 @@ function createMockOrganization(overrides?: Partial<Organization>): Organization
         dateFormat: "YYYY-MM-DD",
         timeFormat: "24h",
         firstDayOfWeek: 1,
+        country: "US",
+        region: "us-east",
+        currency: "USD",
+        language: "en",
+        legalRegion: "US",
+        billingRegion: "US",
+        paymentRegion: "US",
+        privacyRegion: "US",
+        dataResidencyRegion: "US",
       },
       featureFlags: {},
-      billing: {},
+      billing: {
+        enabledProviders: [],
+        defaultCurrency: "USD",
+        billingEmail: null,
+        invoicePrefix: null,
+        taxId: null,
+        paymentTermsDays: 30,
+        autoInvoicing: false,
+        currency: {},
+      },
     },
     metadata: {},
     createdAt: new Date("2026-01-01"),
@@ -137,15 +165,24 @@ describe("OrganizationController", () => {
     it("should return organization by id", async () => {
       mockFindById.mockResolvedValue(mockOrg);
 
-      const result = await controller.findById("org-456");
+      const result = await controller.findById("org-456", createRequestWithUser(TEST_USER_ID));
 
       expect(result.id).toBe("org-456");
+      expect(mockFindById).toHaveBeenCalledWith("org-456", TEST_USER_ID);
+    });
+
+    it("should throw UnauthorizedException when user is not available", async () => {
+      await expect(controller.findById("org-456", createRequestWithoutUser())).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it("should propagate service errors", async () => {
       mockFindById.mockRejectedValue(new Error("Not found"));
 
-      await expect(controller.findById("nonexistent")).rejects.toThrow("Not found");
+      await expect(
+        controller.findById("nonexistent", createRequestWithUser(TEST_USER_ID)),
+      ).rejects.toThrow("Not found");
     });
   });
 

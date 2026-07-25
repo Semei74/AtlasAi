@@ -13,6 +13,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagg
 import type { FastifyRequest } from "fastify";
 import { AuthGuard } from "../authorization/guards/auth.guard.js";
 import type { RequestWithUser } from "../authorization/guards/auth.guard.js";
+import { SkipTenant } from "../../tenant/decorators/skip-tenant.decorator.js";
 import { USER_REPOSITORY } from "../providers/email-password.provider.js";
 import type { UserRepository } from "../interfaces/user-repository.interface.js";
 import { UpdateProfileRequest } from "../dto/update-profile-request.dto.js";
@@ -21,6 +22,7 @@ import { UpdatePreferencesRequest } from "../dto/update-preferences-request.dto.
 @ApiTags("Users")
 @Controller()
 @UseGuards(AuthGuard)
+@SkipTenant()
 @ApiBearerAuth()
 export class UserController {
   public constructor(@Inject(USER_REPOSITORY) private readonly userRepository: UserRepository) {}

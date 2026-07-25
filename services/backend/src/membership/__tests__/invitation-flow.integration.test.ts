@@ -29,6 +29,9 @@ class StubOrgRepo implements OrganizationRepository {
   public findBySlug(_slug: string): Promise<Organization | null> {
     return Promise.resolve(null);
   }
+  public findByIds(_ids: string[]): Promise<Organization[]> {
+    return Promise.resolve([]);
+  }
   public create(_d: Omit<Organization, "id" | "createdAt" | "updatedAt">): Promise<Organization> {
     return Promise.reject(new Error("not used"));
   }
@@ -202,7 +205,7 @@ describe("Invitation Lifecycle Integration", () => {
     const invitations = await invitationService.findByOrganizationId(TEST_ORG_ID, OWNER_ID);
     expect(invitations).toHaveLength(1);
 
-    await invitationService.accept(invitation.id, NEW_USER_ID);
+    await invitationService.accept(invitation.id, NEW_USER_ID, NEW_USER_EMAIL);
 
     const acceptedInvite = await invRepo.findById(invitation.id);
     expect(acceptedInvite?.status).toBe(InvitationStatus.Accepted);
@@ -241,7 +244,7 @@ describe("Invitation Lifecycle Integration", () => {
     });
     expect(expiredInvitation.expiresAt.getTime()).toBeLessThan(Date.now());
 
-    await expect(invitationService.accept(invitation.id, NEW_USER_ID)).rejects.toThrow(
+    await expect(invitationService.accept(invitation.id, NEW_USER_ID, NEW_USER_EMAIL)).rejects.toThrow(
       BadRequestException,
     );
 
@@ -258,7 +261,7 @@ describe("Invitation Lifecycle Integration", () => {
 
     await invitationService.revoke(invitation.id, OWNER_ID);
 
-    await expect(invitationService.accept(invitation.id, NEW_USER_ID)).rejects.toThrow(
+    await expect(invitationService.accept(invitation.id, NEW_USER_ID, NEW_USER_EMAIL)).rejects.toThrow(
       BadRequestException,
     );
   });
@@ -309,14 +312,14 @@ describe("Invitation Lifecycle Integration", () => {
       joinedAt: new Date(),
     });
 
-    await invitationService.accept(invitation.id, NEW_USER_ID);
+    await invitationService.accept(invitation.id, NEW_USER_ID, NEW_USER_EMAIL);
 
     const accepted = await invRepo.findById(invitation.id);
     expect(accepted?.status).toBe(InvitationStatus.Accepted);
   });
 
   it("should throw NotFoundException for non-existent invitation", async () => {
-    await expect(invitationService.accept("nonexistent", NEW_USER_ID)).rejects.toThrow(
+    await expect(invitationService.accept("nonexistent", NEW_USER_ID, NEW_USER_EMAIL)).rejects.toThrow(
       NotFoundException,
     );
     await expect(invitationService.revoke("nonexistent", OWNER_ID)).rejects.toThrow(

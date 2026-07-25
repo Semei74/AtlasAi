@@ -1,0 +1,75 @@
+# Production multi-stage build for the Atlas AI backend.
+# Build context is the repository root.
+#   docker build -f docker/Dockerfile.prod -t atlas-backend:prod .
+# Runtime requires DATABASE_URL and a reachable PostgreSQL.
+
+# syntax=docker/dockerfile:1
+
+# ───────────────────────────── base ─────────────────────────────
+FROM node:20-alpine AS base
+ENV NODE_ENV=production
+RUN corepack enable && corepack prepare pnpm@10.8.0 --activate
+WORKDIR /app
+
+# ────────────────────────── install deps ──────────────────────────
+FROM base AS deps
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY packages/types/package.json ./packages/types/
+COPY packages/constants/package.json ./packages/constants/
+COPY packages/errors/package.json ./packages/errors/
+COPY packages/logger/package.json ./packages/logger/
+COPY packages/validation/package.json ./packages/validation/
+COPY packages/utils/package.json ./packages/utils/
+COPY packages/config/package.json ./packages/config/
+COPY packages/config-vitest/package.json ./packages/config-vitest/
+COPY packages/testing/package.json ./packages/testing/
+COPY packages/user/package.json ./packages/user/
+COPY services/backend/package.json ./services/backend/
+COPY configs/tsconfig.base.json ./configs/
+COPY tsconfig.json ./
+RUN pnpm install --frozen-lockfile
+
+# ───────────────────────────── build ─────────────────────────────
+FROM deps AS build
+COPY . .
+RUN pnpm --filter @atlas/backend exec prisma generate
+RUN pnpm --filter @atlas/backend build
+
+# ─────────────────────────── production ───────────────────────────
+FROM node:20-alpine AS production
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOST=0.0.0.0
+
+# Install tini for proper PID-1 signal forwarding.
+RUN apk add --no-cache tini
+
+# Enable pnpm for pruning dev dependencies.
+RUN corepack enable && corepack prepare pnpm@10.8.0 --activate
+
+# Non-root runtime user.
+RUN addgroup -S atlas && adduser -S atlas -G atlas
+
+WORKDIR /app
+
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/packages ./packages
+COPY --from=build /app/configs ./configs
+COPY --from=build /app/services/backend/dist ./services/backend/dist
+COPY --from=build /app/services/backend/prisma ./services/backend/prisma
+COPY --from=build /app/services/backend/package.json ./services/backend/package.json
+COPY --from=build /app/package.json /app/pnpm-workspace.yaml ./
+
+# Remove devDependencies — smaller image, reduced attack surface.
+RUN pnpm prune --prod
+
+COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+USER atlas
+EXPOSE 3000
+
+ENTRYPOINT ["/sbin/tini", "--", "/docker-entrypoint.sh"]
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1

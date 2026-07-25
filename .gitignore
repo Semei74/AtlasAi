@@ -54,3 +54,6 @@ npm-debug.log*
 tmp/
 temp/
 .cache/
+.npm-cache/
+
+testsprite_tests/tmp/config.json

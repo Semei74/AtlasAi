@@ -9,6 +9,8 @@ export const ValidationPipeProvider: Provider = {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
+      stopAtFirstError: true,
+      disableErrorMessages: false,
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
     });
   },

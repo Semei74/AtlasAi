@@ -14,4 +14,5 @@ export interface AiProvider {
   chat(request: ProviderChatRequest): Promise<ProviderResult<ProviderChatResponse>>;
   health(): Promise<ProviderHealth>;
   configure(config: Partial<ProviderConfiguration>): void;
+  initialize(): Promise<void>;
 }

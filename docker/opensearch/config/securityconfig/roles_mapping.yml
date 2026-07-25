@@ -1,0 +1,29 @@
+# OpenSearch roles mapping configuration
+
+_meta:
+  type: "rolesmapping"
+  config_version: 2
+
+# Admin role
+all_access:
+  reserved: true
+  backend_roles:
+    - "admin"
+  users:
+    - "admin"
+
+# Read-only role
+readall:
+  reserved: true
+  backend_roles:
+    - "readall"
+  users:
+    - "readall"
+
+# Atlas search role
+atlas_search_role:
+  reserved: false
+  backend_roles:
+    - "atlas_search_role"
+  users:
+    - "atlas_search"

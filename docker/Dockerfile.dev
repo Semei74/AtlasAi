@@ -2,17 +2,38 @@ FROM node:20-alpine AS base
 
 RUN corepack enable && corepack prepare pnpm@10.8.0 --activate
 
+# Install tini for proper PID-1 signal forwarding.
+RUN apk add --no-cache tini
+
 WORKDIR /app
 
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
-COPY packages/ ./packages/
-COPY apps/ ./apps/
-COPY services/ ./services/
-COPY configs/ ./configs/
+COPY packages/types/package.json ./packages/types/
+COPY packages/constants/package.json ./packages/constants/
+COPY packages/errors/package.json ./packages/errors/
+COPY packages/logger/package.json ./packages/logger/
+COPY packages/validation/package.json ./packages/validation/
+COPY packages/utils/package.json ./packages/utils/
+COPY packages/config/package.json ./packages/config/
+COPY packages/config-vitest/package.json ./packages/config-vitest/
+COPY packages/testing/package.json ./packages/testing/
+COPY packages/user/package.json ./packages/user/
+COPY services/backend/package.json ./services/backend/
+COPY configs/tsconfig.base.json ./configs/
 COPY tsconfig.json ./
 
 RUN pnpm install --frozen-lockfile
 
+COPY . .
+
+# Non-root runtime user.
+RUN chown -R node:node /app
+USER node
+
 EXPOSE 3000
 
-CMD ["pnpm", "run", "dev"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+  CMD node -e "fetch('http://localhost:3000/health').then(r => process.exit(r.ok?0:1)).catch(() => process.exit(1))"
+
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["pnpm", "run", "--filter", "@atlas/backend", "dev"]

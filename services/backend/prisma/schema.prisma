@@ -1,0 +1,532 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                  String               @id @default(uuid()) @db.Uuid
+  email               String               @unique
+  passwordHash        String               @map("password_hash")
+  displayName         String               @map("display_name")
+  status              UserStatus           @default(Active)
+  avatarUrl           String?              @map("avatar_url")
+  bio                 String?
+  timezone            String?
+  theme               String               @default("system")
+  locale              String               @default("en")
+  emailNotifications  Boolean              @default(true) @map("email_notifications")
+  pushNotifications   Boolean              @default(true) @map("push_notifications")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  actorLogs           ActivityLog[]
+  sentInvitations     Invitation[]         @relation("InvitationSender")
+  knowledgeDocuments  KnowledgeDocument[]
+  memberships         Membership[]
+  ownedOrganizations  Organization[]       @relation("OrganizationOwner")
+  passwordHistory     PasswordHistory[]
+  passwordResetTokens PasswordResetToken[]
+  ownedProjects       Project[]
+  promptVersions      PromptVersion[]      @relation("PromptVersionCreatedBy")
+  prompts             Prompt[]             @relation("PromptOwner")
+
+  @@map("users")
+}
+
+model PasswordHistory {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("password_history")
+}
+
+model PasswordResetToken {
+  token     String   @id
+  userId    String   @map("user_id") @db.Uuid
+  expiresAt DateTime @map("expires_at")
+  consumed  Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("password_reset_tokens")
+}
+
+model Organization {
+  id                 String              @id @default(uuid()) @db.Uuid
+  name               String
+  slug               String              @unique
+  ownerId            String              @map("owner_id") @db.Uuid
+  branding           Json                @default("{}")
+  settings           Json                @default("{}")
+  metadata           Json                @default("{}")
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+  activityLogs       ActivityLog[]
+  invitations        Invitation[]
+  knowledgeDocuments KnowledgeDocument[]
+  members            Membership[]
+  owner              User                @relation("OrganizationOwner", fields: [ownerId], references: [id])
+  projects           Project[]
+  prompts            Prompt[]            @relation("PromptOrganization")
+  workspaces         Workspace[]
+
+  @@index([ownerId])
+  @@index([slug])
+  @@map("organizations")
+}
+
+model Workspace {
+  id                 String              @id @default(uuid()) @db.Uuid
+  organizationId     String              @map("organization_id") @db.Uuid
+  name               String
+  description        String?
+  color              String?
+  icon               String?
+  settings           Json                @default("{}")
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+  activityLogs       ActivityLog[]
+  invitations        Invitation[]
+  knowledgeDocuments KnowledgeDocument[]
+  projects           Project[]
+  prompts            Prompt[]            @relation("PromptWorkspace")
+  organization       Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("workspaces")
+}
+
+model Membership {
+  id             String           @id @default(uuid()) @db.Uuid
+  organizationId String           @map("organization_id") @db.Uuid
+  userId         String           @map("user_id") @db.Uuid
+  role           MembershipRole
+  status         MembershipStatus
+  joinedAt       DateTime         @default(now()) @map("joined_at")
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@index([organizationId])
+  @@index([userId])
+  @@map("memberships")
+}
+
+model Invitation {
+  id             String           @id @default(uuid()) @db.Uuid
+  organizationId String           @map("organization_id") @db.Uuid
+  workspaceId    String?          @map("workspace_id") @db.Uuid
+  email          String?
+  userId         String?          @map("user_id") @db.Uuid
+  inviterId      String           @map("inviter_id") @db.Uuid
+  role           MembershipRole
+  status         InvitationStatus @default(Pending)
+  expiresAt      DateTime         @map("expires_at")
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  inviter        User             @relation("InvitationSender", fields: [inviterId], references: [id], onDelete: Cascade)
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspace      Workspace?       @relation(fields: [workspaceId], references: [id])
+
+  @@index([organizationId])
+  @@index([inviterId])
+  @@index([workspaceId])
+  @@index([email])
+  @@index([userId])
+  @@index([status])
+  @@map("invitations")
+}
+
+model AiRequest {
+  id               String   @id @default(uuid()) @db.Uuid
+  organizationId   String   @map("organization_id") @db.Uuid
+  workspaceId      String?  @map("workspace_id") @db.Uuid
+  userId           String   @map("user_id") @db.Uuid
+  provider         String
+  model            String
+  promptTokens     Int      @map("prompt_tokens")
+  completionTokens Int      @map("completion_tokens")
+  totalTokens      Int      @map("total_tokens")
+  estimatedCost    Float    @default(0) @map("estimated_cost")
+  duration         Int      @map("duration_ms")
+  success          Boolean  @default(true)
+  errorCode        String?  @map("error_code")
+  streaming        Boolean  @default(false)
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@index([organizationId])
+  @@index([workspaceId])
+  @@index([userId])
+  @@index([provider])
+  @@index([model])
+  @@index([createdAt])
+  @@map("ai_requests")
+}
+
+model PromptCategory {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String   @unique
+  description String?
+  slug        String   @unique
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  prompts     Prompt[]
+
+  @@map("prompt_categories")
+}
+
+model Prompt {
+  id               String            @id @default(uuid()) @db.Uuid
+  slug             String
+  name             String
+  description      String?
+  categoryId       String            @map("category_id") @db.Uuid
+  ownerId          String            @map("owner_id") @db.Uuid
+  organizationId   String?           @map("organization_id") @db.Uuid
+  workspaceId      String?           @map("workspace_id") @db.Uuid
+  currentVersionId String?           @unique @map("current_version_id") @db.Uuid
+  status           PromptStatus      @default(Draft)
+  visibility       PromptVisibility  @default(Workspace)
+  tags             String[]
+  metadata         Json              @default("{}")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  deletedAt        DateTime?         @map("deleted_at")
+  executions       PromptExecution[]
+  versions         PromptVersion[]   @relation("PromptVersions")
+  category         PromptCategory    @relation(fields: [categoryId], references: [id])
+  currentVersion   PromptVersion?    @relation("CurrentVersion", fields: [currentVersionId], references: [id])
+  organization     Organization?     @relation("PromptOrganization", fields: [organizationId], references: [id])
+  owner            User              @relation("PromptOwner", fields: [ownerId], references: [id])
+  workspace        Workspace?        @relation("PromptWorkspace", fields: [workspaceId], references: [id])
+
+  @@unique([slug, organizationId])
+  @@index([organizationId])
+  @@index([workspaceId])
+  @@index([ownerId])
+  @@index([categoryId])
+  @@index([status])
+  @@index([tags], type: Gin)
+  @@map("prompts")
+}
+
+model PromptVersion {
+  id                String            @id @default(uuid()) @db.Uuid
+  promptId          String            @map("prompt_id") @db.Uuid
+  version           String
+  systemTemplate    String?           @map("system_template")
+  userTemplate      String?           @map("user_template")
+  assistantTemplate String?           @map("assistant_template")
+  variables         Json              @default("[]")
+  schema            Json?
+  changelog         String?
+  checksum          String
+  createdById       String            @map("created_by") @db.Uuid
+  createdAt         DateTime          @default(now()) @map("created_at")
+  executions        PromptExecution[]
+  createdBy         User              @relation("PromptVersionCreatedBy", fields: [createdById], references: [id])
+  prompt            Prompt            @relation("PromptVersions", fields: [promptId], references: [id], onDelete: Cascade)
+  currentOf         Prompt?           @relation("CurrentVersion")
+
+  @@unique([promptId, version])
+  @@index([promptId])
+  @@index([createdById])
+  @@index([createdAt])
+  @@map("prompt_versions")
+}
+
+model PromptExecution {
+  id               String        @id @default(uuid()) @db.Uuid
+  promptId         String        @map("prompt_id") @db.Uuid
+  versionId        String        @map("version_id") @db.Uuid
+  provider         String?
+  model            String?
+  variables        Json          @default("{}")
+  renderedPrompt   String?       @map("rendered_prompt")
+  latencyMs        Int?          @map("latency_ms")
+  promptTokens     Int?          @map("prompt_tokens")
+  completionTokens Int?          @map("completion_tokens")
+  totalTokens      Int?          @map("total_tokens")
+  estimatedCost    Float?        @map("estimated_cost")
+  success          Boolean       @default(true)
+  errorCode        String?       @map("error_code")
+  organizationId   String?       @map("organization_id") @db.Uuid
+  workspaceId      String?       @map("workspace_id") @db.Uuid
+  userId           String?       @map("user_id") @db.Uuid
+  createdAt        DateTime      @default(now()) @map("created_at")
+  prompt           Prompt        @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  version          PromptVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+
+  @@index([promptId])
+  @@index([versionId])
+  @@index([workspaceId])
+  @@index([userId])
+  @@index([organizationId])
+  @@index([createdAt])
+  @@map("prompt_executions")
+}
+
+model KnowledgeDocument {
+  id              String                             @id @default(uuid()) @db.Uuid
+  organizationId  String                             @map("organization_id") @db.Uuid
+  workspaceId     String?                            @map("workspace_id") @db.Uuid
+  ownerId         String                             @map("owner_id") @db.Uuid
+  originalName    String                             @map("original_name")
+  mimeType        String                             @map("mime_type")
+  size            Int
+  storagePath     String                             @map("storage_path")
+  checksum        String?
+  metadata        Json                               @default("{}")
+  classification  String?
+  tags            String[]
+  status          DocumentStatus                     @default(Uploading)
+  version         Int                                @default(1)
+  createdAt       DateTime                           @default(now()) @map("created_at")
+  updatedAt       DateTime                           @updatedAt @map("updated_at")
+  deletedAt       DateTime?                          @map("deleted_at")
+  metadataHistory KnowledgeDocumentMetadataHistory[]
+  ocrResults      KnowledgeDocumentOcr[]
+  parseResults    KnowledgeDocumentParse[]
+  organization    Organization                       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  owner           User                               @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  workspace       Workspace?                         @relation(fields: [workspaceId], references: [id])
+
+  @@index([organizationId])
+  @@index([organizationId, deletedAt])
+  @@index([workspaceId])
+  @@index([ownerId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([tags], type: Gin)
+  @@map("knowledge_documents")
+}
+
+model KnowledgeDocumentMetadataHistory {
+  id         String            @id @default(uuid()) @db.Uuid
+  documentId String            @map("document_id") @db.Uuid
+  version    Int
+  custom     Json              @default("{}")
+  createdAt  DateTime          @default(now()) @map("created_at")
+  document   KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, version])
+  @@index([documentId])
+  @@map("knowledge_document_metadata_history")
+}
+
+model KnowledgeDocumentOcr {
+  id               String            @id @default(uuid()) @db.Uuid
+  documentId       String            @map("document_id") @db.Uuid
+  status           OcrStatus         @default(Pending)
+  extractedText    String?           @map("extracted_text")
+  confidence       Float?
+  detectedLanguage String?           @map("detected_language")
+  pages            Int               @default(0)
+  pageResults      Json              @default("[]")
+  processingTimeMs Int?              @map("processing_time_ms")
+  errorMessage     String?           @map("error_message")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  document         KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@map("knowledge_document_ocr")
+}
+
+model KnowledgeDocumentParse {
+  id               String            @id @default(uuid()) @db.Uuid
+  documentId       String            @map("document_id") @db.Uuid
+  status           ParseStatus       @default(Pending)
+  parser           String            @default("")
+  parserVersion    String            @default("") @map("parser_version")
+  mimeType         String            @map("mime_type")
+  extractedText    String?           @map("extracted_text")
+  language         String?
+  pageCount        Int               @default(0)
+  sectionCount     Int               @default(0)
+  headings         Json              @default("[]")
+  tables           Json              @default("[]")
+  sections         Json              @default("[]")
+  statistics       Json              @default("{}")
+  metadata         Json?             @map("metadata")
+  processingTimeMs Int?              @map("processing_time_ms")
+  errorMessage     String?           @map("error_message")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  document         KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@map("knowledge_document_parse")
+}
+
+model Project {
+  id             String        @id @default(uuid()) @db.Uuid
+  name           String
+  description    String?
+  status         ProjectStatus @default(DRAFT)
+  workspaceId    String        @map("workspace_id") @db.Uuid
+  organizationId String        @map("organization_id") @db.Uuid
+  ownerId        String        @map("owner_id") @db.Uuid
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  deletedAt      DateTime?     @map("deleted_at")
+  activityLogs   ActivityLog[]
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  owner          User          @relation(fields: [ownerId], references: [id])
+  workspace      Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+  @@index([organizationId])
+  @@index([organizationId, status, updatedAt])
+  @@index([organizationId, workspaceId])
+  @@index([organizationId, deletedAt, status, updatedAt])
+  @@index([ownerId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@index([deletedAt])
+  @@index([organizationId, deletedAt])
+  @@map("projects")
+}
+
+model ActivityLog {
+  id             String       @id @default(uuid()) @db.Uuid
+  projectId      String       @map("project_id") @db.Uuid
+  workspaceId    String       @map("workspace_id") @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  actorId        String       @map("actor_id") @db.Uuid
+  type           ActivityType
+  description    String
+  metadata       Json         @default("{}")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  actor          User         @relation(fields: [actorId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  project        Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workspace      Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([workspaceId])
+  @@index([organizationId])
+  @@index([actorId])
+  @@index([type])
+  @@index([createdAt])
+  @@map("activity_logs")
+}
+
+enum UserStatus {
+  Active
+  Inactive
+  Suspended
+  Deleted
+}
+
+enum MembershipRole {
+  Owner
+  Admin
+  Manager
+  Member
+  Viewer
+
+  @@map("membership_role")
+}
+
+enum MembershipStatus {
+  Active
+  Invited
+
+  @@map("membership_status")
+}
+
+enum InvitationStatus {
+  Pending
+  Accepted
+  Expired
+  Revoked
+
+  @@map("invitation_status")
+}
+
+enum PromptStatus {
+  Draft
+  Published
+  Archived
+
+  @@map("prompt_status")
+}
+
+enum PromptVisibility {
+  Private
+  Workspace
+  Organization
+  Public
+
+  @@map("prompt_visibility")
+}
+
+enum PromptRole {
+  Viewer
+  Editor
+  Publisher
+  Admin
+  Owner
+
+  @@map("prompt_role")
+}
+
+enum DocumentStatus {
+  Uploading
+  Processing
+  Ready
+  Archived
+  Failed
+  Deleted
+
+  @@map("document_status")
+}
+
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+  DRAFT
+  COMPLETED
+
+  @@map("project_status")
+}
+
+enum ActivityType {
+  CREATED
+  UPDATED
+  STATUS_CHANGED
+  MEMBER_ADDED
+  MEMBER_REMOVED
+  ARCHIVED
+  RESTORED
+
+  @@map("activity_type")
+}
+
+enum OcrStatus {
+  Pending
+  Processing
+  Completed
+  Failed
+
+  @@map("ocr_status")
+}
+
+enum ParseStatus {
+  Pending
+  Processing
+  Completed
+  Failed
+
+  @@map("parse_status")
+}

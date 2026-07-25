@@ -271,6 +271,7 @@ describe("SessionService", () => {
       const idleConfig: SessionConfig = {
         idleTimeoutMs: 100,
         absoluteTimeoutMs: 86400000,
+        rememberMeTimeoutMs: 2592000000,
       };
       const idleStore = new MockSessionStore();
       const oldActivity = new Date(Date.now() - 5000);
@@ -311,6 +312,7 @@ describe("SessionService", () => {
       const boundaryConfig: SessionConfig = {
         idleTimeoutMs: 5000,
         absoluteTimeoutMs: 86400000,
+        rememberMeTimeoutMs: 2592000000,
       };
       const boundaryStore = new MockSessionStore();
       const session: Session = {
@@ -366,6 +368,7 @@ describe("SessionService", () => {
       const idleConfig: SessionConfig = {
         idleTimeoutMs: 50,
         absoluteTimeoutMs: 86400000,
+        rememberMeTimeoutMs: 2592000000,
       };
       const localService = new SessionService(idleConfig, mockStore);
 

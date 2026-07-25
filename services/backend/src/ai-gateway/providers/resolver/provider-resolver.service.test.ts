@@ -13,6 +13,14 @@ const dummyProvider: AiProvider = {
     embeddings: false,
     imageGeneration: false,
     audioTranscription: false,
+    toolCalling: false,
+    audioGeneration: false,
+    moderation: false,
+    reasoning: false,
+    mcp: false,
+    rag: false,
+    promptTemplates: false,
+    conversationMemory: false,
     maxModels: 0,
     supportedModels: [],
   },
@@ -20,6 +28,7 @@ const dummyProvider: AiProvider = {
   chat: vi.fn(),
   health: vi.fn(),
   configure: vi.fn(),
+  initialize: vi.fn(),
 };
 
 describe("ProviderResolverService", () => {
@@ -54,7 +63,7 @@ describe("ProviderResolverService", () => {
     const factory = { create: vi.fn(), supports: vi.fn().mockReturnValue(false) };
     const resolver = new ProviderResolverService(registry, factory);
 
-    expect(() => resolver.resolve("openai")).toThrow("Provider 'openai' is not supported");
+    expect(() => resolver.resolve("openai")).toThrow("not found");
     expect(factory.create).not.toHaveBeenCalled();
   });
 

@@ -1,4 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { UnauthorizedError } from "@atlas/errors";
+import { rootLogger } from "@atlas/logger";
 import jwt from "jsonwebtoken";
 import crypto from "node:crypto";
 import type { JwtConfig } from "../interfaces/jwt-config.interface.js";
@@ -47,15 +49,16 @@ export class JwtService {
     return crypto.randomBytes(REFRESH_TOKEN_BYTES).toString("hex");
   }
 
-  public async generateTokenPair(claims: TokenClaimsInput): Promise<TokenPair> {
+  public async generateTokenPair(claims: TokenClaimsInput, tokenFamily?: string): Promise<TokenPair> {
     const accessToken = this.generateAccessToken(claims);
     const refreshToken = this.generateRefreshToken();
+    const family = tokenFamily ?? crypto.randomUUID();
 
     const expiresAt = new Date(
       Date.now() + this.parseExpirationMs(this.config.refreshTokenExpiresIn),
     );
 
-    await this.refreshStore.save(refreshToken, claims.sub, expiresAt);
+    await this.refreshStore.save(refreshToken, claims.sub, expiresAt, family);
 
     return { accessToken, refreshToken, expiresAt };
   }
@@ -70,7 +73,7 @@ export class JwtService {
 
       return decoded;
     } catch {
-      throw new Error("Invalid or expired access token");
+      throw new UnauthorizedError("Invalid or expired access token");
     }
   }
 
@@ -89,24 +92,37 @@ export class JwtService {
     const oldData = await this.refreshStore.find(oldRefreshToken);
 
     if (!oldData) {
-      throw new Error("Invalid refresh token");
+      throw new UnauthorizedError("Invalid refresh token");
     }
 
     if (oldData.consumed) {
-      throw new Error("Refresh token already consumed");
+      await this.refreshStore.invalidateFamily(oldData.tokenFamily);
+      rootLogger.warn("Token replay detected — invalidated token family", {
+        userId: oldData.userId,
+        tokenFamily: oldData.tokenFamily,
+      });
+      throw new UnauthorizedError("Refresh token already consumed — all sessions invalidated due to suspected token theft");
     }
 
     if (Date.now() > oldData.expiresAt.getTime()) {
-      throw new Error("Refresh token expired");
+      throw new UnauthorizedError("Refresh token expired");
     }
 
     if (oldData.userId !== claims.sub) {
-      throw new Error("Refresh token user mismatch");
+      throw new UnauthorizedError("Refresh token user mismatch");
     }
 
-    await this.refreshStore.markConsumed(oldRefreshToken);
+    const consumed = await this.refreshStore.consume(oldRefreshToken);
+    if (!consumed) {
+      await this.refreshStore.invalidateFamily(oldData.tokenFamily);
+      rootLogger.warn("Token replay detected — invalidated token family", {
+        userId: oldData.userId,
+        tokenFamily: oldData.tokenFamily,
+      });
+      throw new UnauthorizedError("Refresh token already consumed — all sessions invalidated due to suspected token theft");
+    }
 
-    return this.generateTokenPair(claims);
+    return this.generateTokenPair(claims, oldData.tokenFamily);
   }
 
   public async revokeRefreshToken(token: string): Promise<void> {

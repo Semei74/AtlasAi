@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "scripts": {
     "build": "nest build",
     "dev": "nest start --watch",
@@ -13,33 +16,53 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "vitest run --config ./vitest.e2e.config.ts",
+    "prisma:seed": "prisma db seed",
     "clean": "rm -rf dist"
   },
   "dependencies": {
     "@atlas/config": "workspace:*",
     "@atlas/errors": "workspace:*",
     "@atlas/logger": "workspace:*",
+    "@aws-sdk/client-s3": "^3.1085.0",
+    "@aws-sdk/s3-request-presigner": "^3.1085.0",
     "@fastify/compress": "^8.0.0",
+    "@fastify/cookie": "^11.1.2",
     "@fastify/cors": "^11.0.0",
+    "@fastify/multipart": "^9.0.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-fastify": "^11.0.0",
     "@nestjs/swagger": "^11.0.0",
-    "@types/jsonwebtoken": "^9.0.10",
+    "@nestjs/terminus": "^11.1.1",
+    "@nestjs/throttler": "^6.5.0",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "@prisma/instrumentation": "^7.8.0",
     "argon2": "^0.44.0",
     "class-transformer": "^0.5.0",
     "class-validator": "^0.14.0",
     "fastify": "^5.0.0",
+    "handlebars": "^4.7.9",
+    "ioredis": "^5.11.1",
     "jsonwebtoken": "^9.0.3",
+    "jszip": "^3.10.1",
+    "mammoth": "^1.12.0",
+    "node-html-parser": "^9.0.0",
+    "pg": "^8.22.0",
+    "prisma": "^7.8.0",
     "prom-client": "^15.0.0",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.0"
+    "rxjs": "^7.8.0",
+    "semver": "^7.8.5",
+    "tesseract.js": "^7.0.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@atlas/testing": "workspace:*",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/testing": "^11.0.0",
-    "@types/argon2": "^0.15.4",
+    "@types/jsonwebtoken": "^9.0.10",
+    "tsx": "^4.19.0",
     "vitest": "^3.1.0"
   }
 }

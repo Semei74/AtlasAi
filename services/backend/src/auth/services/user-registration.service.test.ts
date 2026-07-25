@@ -6,9 +6,9 @@ import { PasswordPolicyService } from "../password/services/password-policy.serv
 import { JwtService } from "../jwt/services/jwt.service.js";
 import { SessionService } from "../session/services/session.service.js";
 import { USER_REPOSITORY } from "../providers/email-password.provider.js";
-import { JWT_CONFIG, DEFAULT_JWT_CONFIG } from "../jwt/interfaces/jwt-config.interface.js";
+import { JWT_CONFIG } from "../jwt/interfaces/jwt-config.interface.js";
 import { REFRESH_TOKEN_STORE } from "../jwt/interfaces/refresh-token-store.interface.js";
-import type { RefreshTokenStore } from "../jwt/interfaces/refresh-token-store.interface.js";
+import type { RefreshTokenStore, RefreshTokenData } from "../jwt/interfaces/refresh-token-store.interface.js";
 import {
   SESSION_CONFIG,
   DEFAULT_SESSION_CONFIG,
@@ -20,22 +20,30 @@ import {
   DEFAULT_PASSWORD_POLICY,
 } from "../password/interfaces/password-policy.interface.js";
 import type { UserRepository, UserRecord } from "../interfaces/user-repository.interface.js";
+import { EmailVerificationService } from "./email-verification.service.js";
+import { AuthAuditService } from "./auth-audit.service.js";
+import { RedisService } from "../../redis/redis.service.js";
 
 class InMemoryRefreshTokenStore implements RefreshTokenStore {
   private readonly tokens = new Map<
     string,
-    { userId: string; expiresAt: Date; consumed: boolean }
+    { userId: string; expiresAt: Date; consumed: boolean; tokenFamily: string }
   >();
 
-  public save(token: string, userId: string, expiresAt: Date): Promise<void> {
-    this.tokens.set(token, { userId, expiresAt, consumed: false });
+  public save(token: string, userId: string, expiresAt: Date, tokenFamily: string): Promise<void> {
+    this.tokens.set(token, { userId, expiresAt, consumed: false, tokenFamily });
     return Promise.resolve();
   }
 
-  public find(
-    token: string,
-  ): Promise<{ userId: string; expiresAt: Date; consumed: boolean } | null> {
-    return Promise.resolve(this.tokens.get(token) ?? null);
+  public find(token: string): Promise<RefreshTokenData | null> {
+    const entry = this.tokens.get(token) ?? null;
+    if (!entry) return Promise.resolve(null);
+    return Promise.resolve({
+      userId: entry.userId,
+      expiresAt: entry.expiresAt,
+      consumed: entry.consumed,
+      tokenFamily: entry.tokenFamily,
+    });
   }
 
   public markConsumed(token: string): Promise<void> {
@@ -46,12 +54,23 @@ class InMemoryRefreshTokenStore implements RefreshTokenStore {
     return Promise.resolve();
   }
 
+  public consume(token: string): Promise<boolean> {
+    const entry = this.tokens.get(token);
+    if (entry === undefined || entry.consumed) return Promise.resolve(false);
+    entry.consumed = true;
+    return Promise.resolve(true);
+  }
+
   public invalidateByUser(userId: string): Promise<void> {
     for (const [key, val] of this.tokens) {
       if (val.userId === userId) {
         this.tokens.set(key, { ...val, consumed: true });
       }
     }
+    return Promise.resolve();
+  }
+
+  public invalidateFamily(_tokenFamily: string): Promise<void> {
     return Promise.resolve();
   }
 }
@@ -112,6 +131,18 @@ class MockUserRepo implements UserRepository {
   }
 }
 
+const mockRedis = {
+  incr: async () => 1,
+  pexpire: async () => {},
+  hset: async () => {},
+  hgetall: async () => ({}),
+  get: async () => null,
+  del: async () => {},
+  pttl: async () => 0,
+  set: async () => {},
+  expire: async () => {},
+};
+
 describe("UserRegistrationService", () => {
   let moduleRef: TestingModule;
   let service: UserRegistrationService;
@@ -127,11 +158,14 @@ describe("UserRegistrationService", () => {
         JwtService,
         SessionService,
         { provide: USER_REPOSITORY, useValue: mockUserRepo },
-        { provide: JWT_CONFIG, useValue: DEFAULT_JWT_CONFIG },
+        { provide: JWT_CONFIG, useValue: { secret: "test-secret-key-at-least-32-characters-long!", accessTokenExpiresIn: "15m", refreshTokenExpiresIn: "30d", algorithm: "HS256" as const, issuer: "atlas-ai", audience: "atlas-api" } },
         { provide: REFRESH_TOKEN_STORE, useClass: InMemoryRefreshTokenStore },
         { provide: SESSION_CONFIG, useValue: DEFAULT_SESSION_CONFIG },
         { provide: SESSION_STORE, useClass: InMemorySessionStore },
         { provide: PASSWORD_POLICY_CONFIG, useValue: DEFAULT_PASSWORD_POLICY },
+        EmailVerificationService,
+        AuthAuditService,
+        { provide: RedisService, useValue: mockRedis },
       ],
     }).compile();
 
@@ -143,11 +177,43 @@ describe("UserRegistrationService", () => {
   });
 
   describe("register", () => {
-    it("should register a new user and return tokens", async () => {
+    it("should register a new user and return tokens with optional fields", async () => {
       const result = await service.register({
         email: "newuser@example.com",
         password: "StrongP@ss1aaa",
         displayName: "New User",
+        avatarUrl: "https://example.com/avatar.png",
+        bio: "A test user",
+        timezone: "America/New_York",
+        theme: "dark",
+        locale: "en-US",
+        emailNotifications: true,
+        pushNotifications: false,
+        deviceName: undefined,
+        devicePlatform: undefined,
+        ipAddress: "127.0.0.1",
+      });
+
+      expect(result.accessToken).toBeDefined();
+      expect(result.refreshToken).toBeDefined();
+      expect(result.expiresAt).toBeInstanceOf(Date);
+      expect(result.user.email).toBe("newuser@example.com");
+      expect(result.user.displayName).toBe("New User");
+      expect(result.user.status).toBe("active");
+      expect(result.user.avatarUrl).toBe("https://example.com/avatar.png");
+      expect(result.user.bio).toBe("A test user");
+      expect(result.user.timezone).toBe("America/New_York");
+      expect(result.user.theme).toBe("dark");
+      expect(result.user.locale).toBe("en-US");
+      expect(result.user.emailNotifications).toBe(true);
+      expect(result.user.pushNotifications).toBe(false);
+    });
+
+    it("should register even with missing email (no email validation)", async () => {
+      const result = await service.register({
+        email: "",
+        password: "StrongP@ss1aaa",
+        displayName: "No Email",
         avatarUrl: undefined,
         bio: undefined,
         timezone: undefined,
@@ -161,11 +227,52 @@ describe("UserRegistrationService", () => {
       });
 
       expect(result.accessToken).toBeDefined();
-      expect(result.refreshToken).toBeDefined();
-      expect(result.expiresAt).toBeInstanceOf(Date);
-      expect(result.user.email).toBe("newuser@example.com");
-      expect(result.user.displayName).toBe("New User");
-      expect(result.user.status).toBe("active");
+    });
+
+    it("should register even with invalid email format (no email validation)", async () => {
+      const result = await service.register({
+        email: "not-an-email",
+        password: "StrongP@ss1aaa",
+        displayName: "Bad Email",
+        avatarUrl: undefined,
+        bio: undefined,
+        timezone: undefined,
+        theme: undefined,
+        locale: undefined,
+        emailNotifications: undefined,
+        pushNotifications: undefined,
+        deviceName: undefined,
+        devicePlatform: undefined,
+        ipAddress: "127.0.0.1",
+      });
+
+      expect(result.accessToken).toBeDefined();
+    });
+
+    it("should use defaults for unspecified optional fields", async () => {
+      const result = await service.register({
+        email: "defaults@example.com",
+        password: "StrongP@ss1aaa",
+        displayName: "Defaults",
+        avatarUrl: undefined,
+        bio: undefined,
+        timezone: undefined,
+        theme: undefined,
+        locale: undefined,
+        emailNotifications: undefined,
+        pushNotifications: undefined,
+        deviceName: undefined,
+        devicePlatform: undefined,
+        ipAddress: "127.0.0.1",
+      });
+
+      expect(result.user.avatarUrl).toBeNull();
+      expect(result.user.bio).toBeNull();
+      expect(result.user.timezone).toBeNull();
+      expect(result.user.theme).toBe("system");
+      expect(result.user.locale).toBe("en-US");
+      expect(result.user.emailNotifications).toBe(true);
+      expect(result.user.pushNotifications).toBe(true);
     });
 
     it("should throw on duplicate email", async () => {

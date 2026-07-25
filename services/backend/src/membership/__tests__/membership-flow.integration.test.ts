@@ -24,6 +24,9 @@ class InMemoryOrgRepo implements OrganizationRepository {
     }
     return Promise.resolve(null);
   }
+  public findByIds(ids: string[]): Promise<Organization[]> {
+    return Promise.resolve([...this.data.values()].filter((o) => ids.includes(o.id)));
+  }
   public findBySlug(slug: string): Promise<Organization | null> {
     for (const o of this.data.values()) {
       if (o.slug === slug) return Promise.resolve(o);

@@ -1,0 +1,145 @@
+# P4_3_OPENAPI_VALIDATION.md
+
+> **P4.3 — OpenAPI Spec and Client Generation Validation**
+> Review Date: 2026-07-22
+
+---
+
+## 1. OpenAPI Spec Validation
+
+### 1.1 New endpoints present
+
+| Endpoint | Method | In spec |
+|---|---|---|
+| `/dashboard/statistics` | GET | ✅ — Proper requestBody (never), response with `DashboardStatisticsResponseDto` schema |
+| `/activity/recent` | GET | ✅ — Query parameter `limit`, response with `ActivityEntryDto[]` |
+| `/projects` | POST | ✅ — Request body with `CreateProjectDto`, response with `ProjectResponseDto` |
+| `/projects` | GET | ✅ — Response with `ProjectResponseDto[]` |
+| `/projects/recent` | GET | ✅ — Query parameter `limit`, response with `ProjectResponseDto[]` |
+| `/projects/{id}` | GET | ✅ — Path parameter `id`, response with `ProjectResponseDto` |
+| `/projects/{id}` | PATCH | ✅ — Request body with `UpdateProjectDto`, response with `ProjectResponseDto` |
+| `/projects/{id}` | DELETE | ✅ — Path parameter `id`, response 204 (no content) |
+
+### 1.2 Schemas present
+
+| Schema | In `components.schemas` |
+|---|---|
+| `DashboardStatisticsResponseDto` | ✅ — 4 integer properties, all required |
+| `ActivityEntryDto` | ✅ — id, type, actor (nested `ActivityActorDto`), description, createdAt |
+| `ProjectResponseDto` | ✅ — 9 properties, nested `ProjectOwnerDto` |
+| `ProjectOwnerDto` | ✅ — id, displayName, avatarUrl |
+| `CreateProjectDto` | ✅ — name (min/max length), description (nullable), workspaceId (uuid) |
+| `UpdateProjectDto` | ✅ — name, description, status (via `UpdateProjectStatusEnum`) |
+| `UpdateProjectStatusEnum` | ✅ — enum: ACTIVE, ARCHIVED, DRAFT, COMPLETED |
+| `RecentProjectsQueryDto` | ✅ — limit (int, max 50) |
+| `RecentActivityQueryDto` | ✅ — limit (int, max 50) |
+
+### 1.3 Content validation
+
+| Check | Result |
+|---|---|
+| All 2xx responses have `content` | ✅ (11 new schemas added, all existing 2xx responses patched) |
+| `content?: never` on any 2xx response | ✅ None |
+| 204 No Content has no content | ✅ Correct (DELETE /projects/{id}) |
+| All GET endpoints have `requestBody?: never` | ✅ Correct |
+
+### 1.4 Security
+
+| Check | Result |
+|---|---|
+| Bearer auth declared | ✅ — `security: [{ bearer: [] }]` on all new endpoints |
+| Global `components.securitySchemes` | ✅ — Already present in spec (bearer JWT) |
+
+### 1.5 Spec metadata
+
+| Field | Value |
+|---|---|
+| openapi | `3.0.0` |
+| title | `Atlas AI API` |
+| version | `1.0.0` |
+| Total paths | 59 |
+| Total schemas | 11 |
+
+---
+
+## 2. packages/api Generated Client Validation
+
+### 2.1 New operations present
+
+| Operation ID | In `operations` type |
+|---|---|
+| `DashboardController_getStatistics` | ✅ — `get` under `/dashboard/statistics` |
+| `ActivityController_findRecent` | ✅ — `get` under `/activity/recent` |
+| `ProjectController_findRecent` | ✅ — `get` under `/projects/recent` |
+| `ProjectController_create` | ✅ — `post` under `/projects` |
+| `ProjectController_findAll` | ✅ — `get` under `/projects` |
+| `ProjectController_findById` | ✅ — `get` under `/projects/{id}` |
+| `ProjectController_update` | ✅ — `patch` under `/projects/{id}` |
+| `ProjectController_delete` | ✅ — `delete` under `/projects/{id}` |
+
+### 2.2 Response types
+
+| Operation | Response type | `content?: never`? |
+|---|---|---|
+| `DashboardController_getStatistics` | `components["schemas"]["DashboardStatisticsResponseDto"]` | ✅ No |
+| `ActivityController_findRecent` | `components["schemas"]["ActivityEntryDto"][]` | ✅ No |
+| `ProjectController_findRecent` | `components["schemas"]["ProjectResponseDto"][]` | ✅ No |
+| `ProjectController_create` | `components["schemas"]["ProjectResponseDto"]` | ✅ No |
+| `ProjectController_findAll` | `components["schemas"]["ProjectResponseDto"][]` | ✅ No |
+| `ProjectController_findById` | `components["schemas"]["ProjectResponseDto"]` | ✅ No |
+| `ProjectController_update` | `components["schemas"]["ProjectResponseDto"]` | ✅ No |
+| `ProjectController_delete` | `void` (204) | ✅ Correct |
+
+### 2.3 Request body types
+
+| Operation | Request body type | `requestBody?: never`? |
+|---|---|---|
+| `DashboardController_getStatistics` | — | ✅ (GET, no body) |
+| `ActivityController_findRecent` | — | ✅ (GET, no body) |
+| `ProjectController_findRecent` | — | ✅ (GET, no body) |
+| `ProjectController_create` | `components["schemas"]["CreateProjectDto"]` | ✅ Has proper type |
+| `ProjectController_update` | `components["schemas"]["UpdateProjectDto"]` | ✅ Has proper type |
+| `ProjectController_delete` | — | ✅ (DELETE, no body) |
+
+### 2.4 Query parameter types
+
+| Operation | Query params | Type |
+|---|---|---|
+| `ActivityController_findRecent` | `limit?: number` | ✅ Optional integer |
+| `ProjectController_findRecent` | `limit?: number` | ✅ Optional integer |
+
+### 2.5 TypeScript compilation
+
+| Check | Result |
+|---|---|
+| `pnpm --filter @atlas/api typecheck` | ✅ Passes |
+| `pnpm --filter @atlas/api lint` | ✅ Passes |
+
+---
+
+## 3. Issues Found
+
+### 3.1 Manual spec generation (pre-existing)
+The `openapi.json` was generated by a manual script (`scripts/generate-openapi.mjs`) rather than by `SwaggerModule.createDocument()` at runtime. This is due to a pre-existing DI bug in `PromptLibraryModule` (`PromptService` injects `PiiRedactorService` by class token but the module provides it under the `PII_REDACTOR` string token). The generated spec matches what `@nestjs/swagger` would produce, but future DTO changes require syncing the script.
+
+**Severity**: Low (manual process, not correctness)
+
+### 3.2 `types.openapi.ts` still stale
+The file `packages/api/src/types.openapi.ts` contains `export type paths = Record<string, never>;` and was never regenerated. It appears to be a stale artifact. The actual generated types live in `packages/api/src/generated.ts`.
+
+**Severity**: Low (dead file, not imported by any consumer)
+
+---
+
+## 4. Summary
+
+| Category | Result |
+|---|---|
+| New endpoints in OpenAPI spec | ✅ 8 operations across 5 paths |
+| New DTO schemas | ✅ 9 schemas |
+| All 2xx responses have `content` | ✅ (spec-wide fix) |
+| Client types generated | ✅ 8 new operations |
+| Client typecheck passes | ✅ |
+| `content?: never` eliminated | ✅ |
+| `requestBody` correct for all methods | ✅ |
+| Bearer auth on all protected endpoints | ✅ |

@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
 import { Test, type TestingModule } from "@nestjs/testing";
+import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
 import { JwtService } from "./jwt.service.js";
 import { JWT_CONFIG, type JwtConfig } from "../interfaces/jwt-config.interface.js";
@@ -32,11 +33,11 @@ const TEST_CLAIMS = {
 class MockRefreshTokenStore implements RefreshTokenStore {
   public readonly tokens = new Map<
     string,
-    { userId: string; expiresAt: Date; consumed: boolean }
+    { userId: string; expiresAt: Date; consumed: boolean; tokenFamily: string }
   >();
 
-  public save(token: string, userId: string, expiresAt: Date): Promise<void> {
-    this.tokens.set(token, { userId, expiresAt, consumed: false });
+  public save(token: string, userId: string, expiresAt: Date, tokenFamily: string): Promise<void> {
+    this.tokens.set(token, { userId, expiresAt, consumed: false, tokenFamily });
     return Promise.resolve();
   }
 
@@ -47,6 +48,7 @@ class MockRefreshTokenStore implements RefreshTokenStore {
       userId: entry.userId,
       expiresAt: entry.expiresAt,
       consumed: entry.consumed,
+      tokenFamily: entry.tokenFamily,
     });
   }
 
@@ -58,9 +60,25 @@ class MockRefreshTokenStore implements RefreshTokenStore {
     return Promise.resolve();
   }
 
+  public consume(token: string): Promise<boolean> {
+    const entry = this.tokens.get(token);
+    if (!entry || entry.consumed) return Promise.resolve(false);
+    entry.consumed = true;
+    return Promise.resolve(true);
+  }
+
   public invalidateByUser(userId: string): Promise<void> {
     for (const [token, entry] of this.tokens) {
       if (entry.userId === userId) {
+        this.tokens.delete(token);
+      }
+    }
+    return Promise.resolve();
+  }
+
+  public invalidateFamily(tokenFamily: string): Promise<void> {
+    for (const [token, entry] of this.tokens) {
+      if (entry.tokenFamily === tokenFamily) {
         this.tokens.delete(token);
       }
     }
@@ -246,6 +264,31 @@ describe("JwtService", () => {
     it("should throw for an empty token", () => {
       expect(() => jwtService.verifyAccessToken("")).toThrow("Invalid or expired access token");
     });
+
+    it("should throw for a token with nbf in the future", () => {
+      const futureNbf = Math.floor(Date.now() / 1000) + 3600;
+      const token = jwt.sign(
+        { sub: "test", email: "a@b.com", role: "user", nbf: futureNbf },
+        TEST_SECRET,
+      );
+
+      expect(() => jwtService.verifyAccessToken(token)).toThrow(
+        "Invalid or expired access token",
+      );
+    });
+
+    it("should throw for a token signed with RS256 (wrong algorithm)", () => {
+      const { privateKey } = crypto.generateKeyPairSync("rsa", { modulusLength: 2048 });
+      const token = jwt.sign(
+        { sub: "test", email: "a@b.com", role: "user" },
+        privateKey,
+        { algorithm: "RS256" },
+      );
+
+      expect(() => jwtService.verifyAccessToken(token)).toThrow(
+        "Invalid or expired access token",
+      );
+    });
   });
 
   describe("decodeAccessToken", () => {
@@ -309,7 +352,7 @@ describe("JwtService", () => {
 
     it("should throw for an expired token", async () => {
       const expiredStore = new MockRefreshTokenStore();
-      await expiredStore.save("expired-token", TEST_CLAIMS.sub, new Date(Date.now() - 1000));
+      await expiredStore.save("expired-token", TEST_CLAIMS.sub, new Date(Date.now() - 1000), "expired-family");
 
       const localService = new JwtService(TEST_CONFIG, expiredStore);
 
@@ -339,6 +382,17 @@ describe("JwtService", () => {
       const newStored = await mockStore.find(rotated.refreshToken);
       expect(newStored).not.toBeNull();
     });
+
+    it("should handle rotation of the same token (first wins)", async () => {
+      const pair = await jwtService.generateTokenPair(TEST_CLAIMS);
+
+      const result1 = await jwtService.rotateRefreshToken(pair.refreshToken, TEST_CLAIMS);
+      expect(result1.accessToken).toBeTruthy();
+
+      await expect(
+        jwtService.rotateRefreshToken(pair.refreshToken, TEST_CLAIMS),
+      ).rejects.toThrow("Refresh token already consumed");
+    });
   });
 
   describe("revokeRefreshToken", () => {
@@ -353,6 +407,15 @@ describe("JwtService", () => {
 
     it("should not throw for a non-existent token", async () => {
       await expect(jwtService.revokeRefreshToken("non-existent")).resolves.toBeUndefined();
+    });
+
+    it("should mark old token as consumed after rotation", async () => {
+      const pair = await jwtService.generateTokenPair(TEST_CLAIMS);
+      await jwtService.rotateRefreshToken(pair.refreshToken, TEST_CLAIMS);
+
+      const oldEntry = mockStore.tokens.get(pair.refreshToken);
+      expect(oldEntry).toBeDefined();
+      expect(oldEntry?.consumed).toBe(true);
     });
   });
 

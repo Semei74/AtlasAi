@@ -15,6 +15,18 @@
   },
   "type": "module",
   "packageManager": "pnpm@10.8.0",
+  "pnpm": {
+    "overrides": {
+      "tar": ">=7.5.19",
+      "shell-quote": ">=1.9.0",
+      "@hono/node-server": ">=2.0.5",
+      "js-yaml": ">=4.3.0",
+      "brace-expansion": ">=1.1.16",
+      "sharp": ">=0.35.0",
+      "fast-uri": ">=3.1.4",
+      "adm-zip": ">=0.6.0"
+    }
+  },
   "scripts": {
     "install:all": "pnpm install",
     "build": "turbo run build",

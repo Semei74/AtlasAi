@@ -9,6 +9,7 @@ import { MembershipRole } from "../interfaces/membership-role.enum.js";
 import type { CreateInvitationDto } from "../dto/create-invitation.dto.js";
 
 const TEST_USER_ID = "user-123";
+const TEST_USER_EMAIL = "user@example.com";
 const TEST_ORG_ID = "org-456";
 const TEST_INVITATION_ID = "invitation-1";
 const TEST_EMAIL = "test@example.com";
@@ -29,7 +30,7 @@ function createMockInvitation(overrides?: Partial<Invitation>): Invitation {
 }
 
 function createRequestWithUser(userId: string, orgId?: string): FastifyRequest {
-  return { user: { sub: userId, organizationId: orgId ?? null } } as unknown as FastifyRequest;
+  return { user: { sub: userId, email: TEST_USER_EMAIL, organizationId: orgId ?? null } } as unknown as FastifyRequest;
 }
 
 function createRequestWithoutUser(): FastifyRequest {
@@ -115,7 +116,7 @@ describe("InvitationController", () => {
         controller.accept(TEST_INVITATION_ID, createRequestWithUser(TEST_USER_ID)),
       ).resolves.toBeUndefined();
 
-      expect(mockAccept).toHaveBeenCalledWith(TEST_INVITATION_ID, TEST_USER_ID);
+      expect(mockAccept).toHaveBeenCalledWith(TEST_INVITATION_ID, TEST_USER_ID, TEST_USER_EMAIL);
     });
 
     it("should throw UnauthorizedException when user is not available", async () => {

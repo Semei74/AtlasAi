@@ -10,10 +10,13 @@ import {
   BadRequestException,
 } from "@nestjs/common";
 import { IsString, MinLength } from "class-validator";
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
+import { ApiProperty, ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
+import { Throttle, seconds } from "@nestjs/throttler";
 import type { FastifyRequest } from "fastify";
 import { AuthGuard } from "../authorization/guards/auth.guard.js";
 import type { RequestWithUser } from "../authorization/guards/auth.guard.js";
+import { SkipTenant } from "../../tenant/decorators/skip-tenant.decorator.js";
+import { MetricsService } from "../../metrics/metrics.service.js";
 import { PasswordManagementService } from "../password/services/password-management.service.js";
 import { PasswordResetService } from "../password/services/password-reset.service.js";
 import { USER_REPOSITORY } from "../providers/email-password.provider.js";
@@ -22,10 +25,12 @@ import { ChangePasswordRequest } from "../dto/change-password-request.dto.js";
 import { ForgotPasswordRequest } from "../dto/forgot-password-request.dto.js";
 
 class ResetPasswordBody {
+  @ApiProperty({ description: "Password reset token" })
   @IsString()
   @MinLength(1)
   public readonly token!: string;
 
+  @ApiProperty({ description: "New password (min 8 characters)", minLength: 8 })
   @IsString()
   @MinLength(8)
   public readonly newPassword!: string;
@@ -33,12 +38,14 @@ class ResetPasswordBody {
 
 @ApiTags("Password")
 @Controller()
+@SkipTenant()
 export class PasswordController {
   public constructor(
     @Inject(PasswordManagementService)
     private readonly passwordManagement: PasswordManagementService,
     @Inject(PasswordResetService) private readonly passwordReset: PasswordResetService,
     @Inject(USER_REPOSITORY) private readonly userRepository: UserRepository,
+    @Inject(MetricsService) private readonly metricsService: MetricsService,
   ) {}
 
   @Post("/auth/change-password")
@@ -74,6 +81,7 @@ export class PasswordController {
 
   @Post("/auth/forgot-password")
   @HttpCode(202)
+  @Throttle({ default: { limit: 3, ttl: seconds(60), blockDuration: seconds(300) } })
   @ApiOperation({ summary: "Request password reset" })
   @ApiResponse({ status: 202, description: "Reset email sent if account exists" })
   @ApiResponse({ status: 422, description: "Validation error" })
@@ -82,6 +90,7 @@ export class PasswordController {
 
     if (user !== null) {
       await this.passwordReset.createResetToken(user.id);
+      this.metricsService.authPasswordResetTotal.inc({ status: "requested" });
     }
 
     return { message: "If the email exists, a reset link has been sent" };
@@ -89,6 +98,7 @@ export class PasswordController {
 
   @Post("/auth/reset-password")
   @HttpCode(200)
+  @Throttle({ default: { limit: 3, ttl: seconds(60), blockDuration: seconds(300) } })
   @ApiOperation({ summary: "Reset password using reset token" })
   @ApiResponse({ status: 200, description: "Password reset successfully" })
   @ApiResponse({ status: 400, description: "Invalid or expired token" })
@@ -100,8 +110,11 @@ export class PasswordController {
     });
 
     if (!result.success) {
+      this.metricsService.authPasswordResetTotal.inc({ status: "failure" });
       throw new BadRequestException(result.failureReason ?? "Password reset failed");
     }
+
+    this.metricsService.authPasswordResetTotal.inc({ status: "success" });
 
     return { success: true };
   }

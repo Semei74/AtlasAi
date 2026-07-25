@@ -21,11 +21,19 @@ export class ProviderStub implements AiProvider {
 
   public readonly capabilities: ProviderCapabilities = {
     chat: true,
-    streaming: false,
+    streaming: true,
     functionCalling: false,
     embeddings: false,
     imageGeneration: false,
     audioTranscription: false,
+    toolCalling: false,
+    audioGeneration: false,
+    moderation: false,
+    reasoning: false,
+    mcp: false,
+    rag: false,
+    promptTemplates: false,
+    conversationMemory: false,
     maxModels: Infinity,
     supportedModels: [],
   };
@@ -63,5 +71,17 @@ export class ProviderStub implements AiProvider {
 
   public configure(config: Partial<ProviderConfiguration>): void {
     Object.assign(this.configuration, config);
+  }
+
+  private initialized = false;
+
+  public initialize(): Promise<void> {
+    if (this.initialized) {
+      return Promise.resolve();
+    }
+
+    this.initialized = true;
+
+    return Promise.resolve();
   }
 }

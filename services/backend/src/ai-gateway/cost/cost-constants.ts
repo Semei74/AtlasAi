@@ -1,0 +1,7 @@
+export const CURRENCY = "USD";
+
+export const CHARS_PER_TOKEN = 4;
+
+export const FALLBACK_INPUT_PER_TOKEN = 0.000001;
+export const FALLBACK_OUTPUT_PER_TOKEN = 0.000002;
+export const FALLBACK_CACHED_INPUT_PER_TOKEN = 0.0000005;

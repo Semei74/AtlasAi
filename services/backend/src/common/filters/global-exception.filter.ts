@@ -15,6 +15,7 @@ interface ErrorResponse {
   readonly message: string;
   readonly timestamp: string;
   readonly path: string;
+  readonly correlationId?: string;
   readonly details?: Record<string, unknown>;
 }
 
@@ -51,6 +52,9 @@ function getErrorCode(exception: unknown): string {
       [HttpStatus.NOT_FOUND]: "NOT_FOUND",
       [HttpStatus.CONFLICT]: "CONFLICT",
       [HttpStatus.TOO_MANY_REQUESTS]: "RATE_LIMITED",
+      [HttpStatus.UNPROCESSABLE_ENTITY]: "VALIDATION_ERROR",
+      [HttpStatus.SERVICE_UNAVAILABLE]: "SERVICE_UNAVAILABLE",
+      [HttpStatus.GATEWAY_TIMEOUT]: "GATEWAY_TIMEOUT",
     };
     return statusMap[status] ?? "HTTP_ERROR";
   }
@@ -81,6 +85,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const code = getErrorCode(exception);
     const details = getDetails(exception);
     const timestamp = new Date().toISOString();
+    const correlationId = request.headers["x-correlation-id"] as string | undefined;
 
     const body: ErrorResponse & { details?: Record<string, unknown> } = {
       statusCode,
@@ -88,6 +93,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       message: statusMessage,
       timestamp,
       path: request.url,
+      ...(correlationId !== undefined ? { correlationId } : {}),
     };
 
     if (details !== undefined) {

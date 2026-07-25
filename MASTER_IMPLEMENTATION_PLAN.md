@@ -1,16 +1,124 @@
 # Atlas AI
 
-# MASTER_IMPLEMENTATION_PLAN.md
+---
 
-**Version:** 1.0.0  
-**Status:** Draft  
-**Document Type:** Master Implementation Plan  
-**Owner:** Atlas AI Architecture Team  
+## MASTER_IMPLEMENTATION_PLAN.md
+
+**Version:** 1.0.0
+**Status:** Draft
+**Document Type:** Master Implementation Plan
+**Owner:** Atlas AI Architecture Team
 **Last Updated:** 2026-06-29
 
 ---
 
-# 1. Purpose
+MANDATORY DEVELOPMENT WORKFLOW
+
+For every implementation task the following workflow SHALL be used.
+
+PHASE 1 — Analysis
+
+- Review MASTER_IMPLEMENTATION_PLAN.md
+- Review existing architecture
+- Review related modules
+- Review interfaces
+- Review dependencies
+
+PHASE 2 — Documentation Verification
+Use Context7 whenever implementation depends on:
+
+- NestJS
+- Fastify
+- TypeScript
+- Prisma
+- PostgreSQL
+- Redis
+- Docker
+- Kubernetes
+- JWT
+- OAuth
+- OpenAI
+- Anthropic
+- Gemini
+- Ollama
+- OpenRouter
+- DeepSeek
+- Mistral
+- Groq
+- xAI
+- Apple App Store
+- Google Play Billing
+- Stripe
+- YooKassa
+- SBP
+- CloudPayments
+
+Never rely on outdated memory when official documentation is available.
+
+PHASE 3 — Implementation
+
+Implement according to:
+
+- Clean Architecture
+- SOLID
+- Interface First
+- Dependency Injection
+- Existing project conventions
+
+PHASE 4 — Testing
+
+Generate or extend:
+
+- Unit Tests
+- Integration Tests
+- API Tests
+- Regression Tests
+
+Use TestSprite whenever end-to-end or integration validation can improve coverage.
+
+PHASE 5 — Security Audit
+
+Perform complete review including:
+
+- Authentication
+- Authorization
+- Tenant Isolation
+- OWASP Top 10
+- API Security
+- AI Security
+- Prompt Injection
+- Secret Leakage
+- Privacy
+- Billing
+- App Store compliance
+
+Fix every High and Critical finding before continuing.
+
+PHASE 6 — Repository Validation
+
+Run:
+
+pnpm -r lint
+pnpm -r typecheck
+pnpm -r test
+pnpm -r build
+
+PHASE 7 — Final Review
+
+Verify:
+
+- no duplicated logic
+- no dead code
+- no architecture violations
+- no breaking changes
+- backward compatibility
+- documentation updated
+
+Only then mark the task COMPLETE.
+
+---
+
+## 1. Purpose
 
 This document is the authoritative implementation guide for the Atlas AI platform.
 
@@ -24,7 +132,7 @@ No implementation may deviate from this plan without an approved Architecture De
 
 ---
 
-# 2. Mission
+## 2. Mission
 
 The objective of this document is to ensure that Atlas AI is developed in a predictable,
 maintainable, secure, and fully testable manner.
@@ -40,7 +148,7 @@ The implementation process shall:
 
 ---
 
-# 3. Golden Rule
+## 3. Golden Rule
 
 > **No implementation task may be considered complete until every required quality gate has passed
 > successfully.**
@@ -50,7 +158,7 @@ infrastructure change.
 
 ---
 
-# 4. Scope
+## 4. Scope
 
 This implementation plan governs the complete lifecycle of the Atlas AI platform, including:
 
@@ -74,7 +182,7 @@ This implementation plan governs the complete lifecycle of the Atlas AI platform
 
 ---
 
-# 5. Development Philosophy
+## 5. Development Philosophy
 
 Atlas AI shall be developed according to the following principles:
 
@@ -97,7 +205,7 @@ Technical debt shall not be intentionally introduced.
 
 ---
 
-# 6. Development Contract
+## 6. Development Contract
 
 This document is considered the development contract between the architecture team and the
 implementation team.
@@ -112,9 +220,9 @@ No undocumented functionality may be introduced.
 
 ---
 
-# 7. Mandatory Development Rules
+## 7. Mandatory Development Rules
 
-## Rule 1 — One Active Task
+### Rule 1 — One Active Task
 
 Only one implementation task may be active at any given time.
 
@@ -122,7 +230,7 @@ Parallel implementation of unrelated features is prohibited unless explicitly de
 
 ---
 
-## Rule 2 — Sequential Development
+### Rule 2 — Sequential Development
 
 Every phase must be completed before the next phase begins.
 
@@ -130,7 +238,7 @@ Dependencies shall always be respected.
 
 ---
 
-## Rule 3 — Documentation First
+### Rule 3 — Documentation First
 
 Implementation shall never begin before the required documentation exists.
 
@@ -140,7 +248,7 @@ If documentation is incomplete, implementation shall stop until the documentatio
 
 ---
 
-## Rule 4 — Architecture Compliance
+### Rule 4 — Architecture Compliance
 
 All implementations shall comply with:
 
@@ -152,7 +260,7 @@ All implementations shall comply with:
 
 ---
 
-## Rule 5 — Preserve Existing Business Logic
+### Rule 5 — Preserve Existing Business Logic
 
 Existing business logic shall never be broken.
 
@@ -162,7 +270,7 @@ Bug fixes must not introduce regressions.
 
 ---
 
-## Rule 6 — No Assumptions
+### Rule 6 — No Assumptions
 
 The implementation agent shall never invent:
 
@@ -181,7 +289,7 @@ Request clarification.
 
 ---
 
-## Rule 7 — Small Incremental Changes
+### Rule 7 — Small Incremental Changes
 
 Each task shall introduce the smallest possible logical change.
 
@@ -189,7 +297,7 @@ Large multi-purpose commits are prohibited.
 
 ---
 
-## Rule 8 — Continuous Verification
+### Rule 8 — Continuous Verification
 
 Every completed task shall be verified before closure.
 
@@ -201,7 +309,7 @@ Failure to verify shall be treated as an incomplete implementation.
 
 ---
 
-# 8. Mandatory Testing Policy
+## 8. Mandatory Testing Policy
 
 Testing is mandatory for every implementation task.
 
@@ -218,7 +326,7 @@ Testing shall verify:
 
 ---
 
-## 8.1 Required Test Types
+### 8.1 Required Test Types
 
 Depending on the implemented component, the following tests shall be created:
 
@@ -236,7 +344,7 @@ Every new feature must include the minimum set of tests required to validate its
 
 ---
 
-## 8.2 Test-First Verification
+### 8.2 Test-First Verification
 
 After implementation, OpenCode shall immediately create or update all affected automated tests.
 
@@ -246,7 +354,7 @@ A feature without tests is considered incomplete.
 
 ---
 
-## 8.3 Failure Handling
+### 8.3 Failure Handling
 
 If any test fails:
 
@@ -262,7 +370,7 @@ No exceptions are permitted.
 
 ---
 
-## 8.4 Regression Protection
+### 8.4 Regression Protection
 
 Every bug fix shall include a regression test.
 
@@ -270,7 +378,7 @@ Regression tests ensure that previously fixed defects cannot reappear in future 
 
 ---
 
-# 9. Business Logic Protection Policy
+## 9. Business Logic Protection Policy
 
 Business logic is considered the most valuable asset of the platform.
 
@@ -289,7 +397,7 @@ before implementation begins.
 
 ---
 
-# 10. Quality Gates
+## 10. Quality Gates
 
 Every implementation task shall successfully pass all applicable quality gates before completion.
 
@@ -312,7 +420,7 @@ A failed quality gate blocks progression to the next task.
 
 ---
 
-# 11. Development Lifecycle
+## 11. Development Lifecycle
 
 Every implementation task shall follow the same lifecycle.
 
@@ -366,7 +474,7 @@ No implementation may bypass any stage of this lifecycle.
 
 ---
 
-# 12. Definition of Done
+## 12. Definition of Done
 
 A task is considered complete only if all of the following conditions are satisfied:
 
@@ -388,7 +496,7 @@ Only after every condition has been satisfied may the task be marked as complete
 
 ---
 
-# 13. OpenCode Operating Rules
+## 13. OpenCode Operating Rules
 
 OpenCode shall operate according to the following mandatory principles:
 
@@ -409,7 +517,7 @@ Violation of any rule requires the task to remain open until compliance is resto
 
 ---
 
-# 14. Repository Governance
+## 14. Repository Governance
 
 The repository is the single source of truth for the Atlas AI platform.
 
@@ -429,7 +537,7 @@ Repository history shall remain clean and meaningful.
 
 ---
 
-# 15. Git Workflow
+## 15. Git Workflow
 
 The project shall follow a structured Git workflow.
 
@@ -456,7 +564,7 @@ Every branch shall have a single responsibility.
 
 ---
 
-# 16. Commit Standards
+## 16. Commit Standards
 
 Every commit shall represent one logical change.
 
@@ -482,7 +590,7 @@ Large mixed-purpose commits are prohibited.
 
 ---
 
-# 17. Pull Request Requirements
+## 17. Pull Request Requirements
 
 Every Pull Request shall include:
 
@@ -503,7 +611,7 @@ A Pull Request may not be merged until:
 
 ---
 
-# 18. Code Review Policy
+## 18. Code Review Policy
 
 Every code change shall undergo review before merging.
 
@@ -521,7 +629,7 @@ Approval does not replace automated testing.
 
 ---
 
-# 19. Coding Standards
+## 19. Coding Standards
 
 All source code shall adhere to the project's coding standards.
 
@@ -545,7 +653,7 @@ Every public interface shall be documented where appropriate.
 
 ---
 
-# 20. Error Handling Policy
+## 20. Error Handling Policy
 
 Every recoverable error shall be handled gracefully.
 
@@ -561,7 +669,7 @@ Unhandled exceptions are considered implementation defects.
 
 ---
 
-# 21. Logging Policy
+## 21. Logging Policy
 
 Logging shall support debugging, monitoring, auditing, and incident response.
 
@@ -578,7 +686,7 @@ Sensitive information shall never be written to logs.
 
 ---
 
-# 22. Configuration Management
+## 22. Configuration Management
 
 Application configuration shall be externalized.
 
@@ -597,7 +705,7 @@ Configuration changes shall not require application recompilation whenever possi
 
 ---
 
-# 23. Security Requirements
+## 23. Security Requirements
 
 Security shall be implemented throughout the entire software development lifecycle.
 
@@ -622,7 +730,7 @@ Security shall never be postponed to a later phase.
 
 ---
 
-# 24. Dependency Management
+## 24. Dependency Management
 
 All dependencies shall be actively maintained.
 
@@ -638,7 +746,7 @@ Every dependency shall have a documented purpose.
 
 ---
 
-# 25. Performance Policy
+## 25. Performance Policy
 
 Performance shall be considered during implementation, not after development.
 
@@ -655,7 +763,7 @@ Performance optimizations shall never reduce code maintainability without docume
 
 ---
 
-# 26. Documentation Policy
+## 26. Documentation Policy
 
 Documentation is part of the implementation.
 
@@ -675,7 +783,7 @@ Implementation and documentation shall always remain synchronized.
 
 ---
 
-# 27. Phase Completion Rules
+## 27. Phase Completion Rules
 
 A development phase may only be closed when:
 
@@ -691,7 +799,7 @@ Incomplete phases shall not be bypassed.
 
 ---
 
-# 28. Task Template
+## 28. Task Template
 
 Every implementation task in this plan shall use the following structure.
 
@@ -739,7 +847,7 @@ Every task shall be self-contained and independently verifiable.
 
 ---
 
-# 29. Phase Structure
+## 29. Phase Structure
 
 Each implementation phase shall contain:
 
@@ -755,7 +863,7 @@ No phase may begin until all prerequisite phases have been successfully complete
 
 ---
 
-# 30. Project Roadmap Overview
+## 30. Project Roadmap Overview
 
 The implementation of Atlas AI shall follow this sequence:
 
@@ -825,9 +933,9 @@ Phase 30 — Maintenance & Continuous Improvement
 
 ---
 
-# 31. Phase 00 — Project Initialization
+## 31. Phase 00 — Project Initialization
 
-## Objective
+### Objective
 
 Establish a clean, standardized, reproducible, and enterprise-grade foundation for the Atlas AI
 platform.
@@ -836,7 +944,7 @@ No application code shall be written until this phase has been completed success
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Repository initialized
 - Folder structure created
@@ -847,13 +955,13 @@ No application code shall be written until this phase has been completed success
 
 ---
 
-## Task 0001 — Initialize Repository
+### Task 0001 — Initialize Repository
 
-### Purpose
+#### Purpose
 
 Create the official Atlas AI repository.
 
-### Implementation
+#### Implementation
 
 - Initialize Git repository
 - Configure default branch
@@ -861,7 +969,7 @@ Create the official Atlas AI repository.
 - Configure `.gitattributes`
 - Configure `.editorconfig`
 
-### Acceptance Criteria
+#### Acceptance Criteria
 
 - Repository initializes successfully
 - Git status is clean
@@ -869,13 +977,13 @@ Create the official Atlas AI repository.
 
 ---
 
-## Task 0002 — Create Project Structure
+### Task 0002 — Create Project Structure
 
-### Purpose
+#### Purpose
 
 Create the complete enterprise directory structure.
 
-### Directories
+#### Directories
 
 ```text
 apps/
@@ -895,7 +1003,7 @@ No business logic shall be added during this task.
 
 ---
 
-## Task 0003 — Configure Package Manager
+### Task 0003 — Configure Package Manager
 
 Implementation shall include:
 
@@ -906,7 +1014,7 @@ Implementation shall include:
 
 ---
 
-## Task 0004 — Configure TypeScript
+### Task 0004 — Configure TypeScript
 
 Implementation includes:
 
@@ -918,7 +1026,7 @@ Implementation includes:
 
 ---
 
-## Task 0005 — Configure ESLint
+### Task 0005 — Configure ESLint
 
 Requirements:
 
@@ -931,7 +1039,7 @@ Lint warnings shall be treated as errors where practical.
 
 ---
 
-## Task 0006 — Configure Prettier
+### Task 0006 — Configure Prettier
 
 Implementation:
 
@@ -941,7 +1049,7 @@ Implementation:
 
 ---
 
-## Task 0007 — Configure Husky
+### Task 0007 — Configure Husky
 
 Implementation:
 
@@ -952,7 +1060,7 @@ Hooks shall prevent invalid commits.
 
 ---
 
-## Task 0008 — Configure Commitlint
+### Task 0008 — Configure Commitlint
 
 Commit messages shall follow Conventional Commits.
 
@@ -960,7 +1068,7 @@ Invalid commit messages shall be rejected automatically.
 
 ---
 
-## Task 0009 — Configure GitHub Templates
+### Task 0009 — Configure GitHub Templates
 
 Create:
 
@@ -971,7 +1079,7 @@ Create:
 
 ---
 
-## Task 0010 — Verify Phase 00
+### Task 0010 — Verify Phase 00
 
 Mandatory verification:
 
@@ -993,22 +1101,22 @@ Mandatory verification:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 Phase 00 is complete only when every initialization task has passed validation and all quality gates
 are green.
 
 ---
 
-# 32. Phase 01 — Repository Foundation
+## 32. Phase 01 — Repository Foundation
 
-## Objective
+### Objective
 
 Prepare the repository for long-term enterprise development.
 
 ---
 
-## Task 0101 — Configure Workspace Layout
+### Task 0101 — Configure Workspace Layout
 
 Define workspace boundaries.
 
@@ -1023,7 +1131,7 @@ Separate:
 
 ---
 
-## Task 0102 — Shared Configuration
+### Task 0102 — Shared Configuration
 
 Create centralized configuration packages for:
 
@@ -1036,7 +1144,7 @@ Create centralized configuration packages for:
 
 ---
 
-## Task 0103 — Common Utility Packages
+### Task 0103 — Common Utility Packages
 
 Create shared packages for:
 
@@ -1051,7 +1159,7 @@ Business logic is not permitted in shared utility packages.
 
 ---
 
-## Task 0104 — Version Management
+### Task 0104 — Version Management
 
 Configure:
 
@@ -1061,7 +1169,7 @@ Configure:
 
 ---
 
-## Task 0105 — Repository Health Validation
+### Task 0105 — Repository Health Validation
 
 Verify:
 
@@ -1072,7 +1180,7 @@ Verify:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 Repository foundation shall support scalable development before infrastructure implementation
 begins.
@@ -1081,9 +1189,9 @@ begins.
 
 ---
 
-# 33. Phase 02 — Development Environment
+## 33. Phase 02 — Development Environment
 
-## Objective
+### Objective
 
 Create a fully reproducible development environment that enables any developer or implementation
 agent to build, run, test, and debug Atlas AI with minimal setup.
@@ -1093,7 +1201,7 @@ begins.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Development environment standardized
 - Local infrastructure operational
@@ -1103,13 +1211,13 @@ begins.
 
 ---
 
-## Task 0201 — Environment Requirements
+### Task 0201 — Environment Requirements
 
-### Purpose
+#### Purpose
 
 Define the minimum supported development environment.
 
-### Requirements
+#### Requirements
 
 - Node.js LTS
 - pnpm
@@ -1119,7 +1227,7 @@ Define the minimum supported development environment.
 - TypeScript
 - VS Code (recommended)
 
-### Documentation
+#### Documentation
 
 Create:
 
@@ -1129,11 +1237,11 @@ Create:
 
 ---
 
-## Task 0202 — Environment Variables
+### Task 0202 — Environment Variables
 
 Create standardized environment configuration.
 
-### Implementation
+#### Implementation
 
 Create:
 
@@ -1153,7 +1261,7 @@ Hardcoded secrets are strictly prohibited.
 
 ---
 
-## Task 0203 — Local Development Scripts
+### Task 0203 — Local Development Scripts
 
 Create standardized commands for:
 
@@ -1173,7 +1281,7 @@ All scripts shall produce deterministic results.
 
 ---
 
-## Task 0204 — Docker Development Environment
+### Task 0204 — Docker Development Environment
 
 Create local Docker configuration for all required services.
 
@@ -1186,7 +1294,7 @@ Development containers shall support:
 
 ---
 
-## Task 0205 — IDE Configuration
+### Task 0205 — IDE Configuration
 
 Provide recommended IDE configuration.
 
@@ -1208,7 +1316,7 @@ Recommended extensions shall be documented.
 
 ---
 
-## Task 0206 — Development Validation
+### Task 0206 — Development Validation
 
 Verify:
 
@@ -1232,16 +1340,16 @@ Verify:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The complete development environment shall be reproducible on a clean machine using only documented
 instructions.
 
 ---
 
-# 34. Phase 03 — Infrastructure
+## 34. Phase 03 — Infrastructure
 
-## Objective
+### Objective
 
 Implement the complete infrastructure layer required by Atlas AI.
 
@@ -1249,7 +1357,7 @@ No application services shall depend on unmanaged infrastructure.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Infrastructure containers
 - Persistent storage
@@ -1259,7 +1367,7 @@ No application services shall depend on unmanaged infrastructure.
 
 ---
 
-## Task 0301 — Docker Compose
+### Task 0301 — Docker Compose
 
 Create enterprise Docker Compose configuration.
 
@@ -1275,7 +1383,7 @@ Required services:
 
 ---
 
-## Task 0302 — PostgreSQL
+### Task 0302 — PostgreSQL
 
 Implementation includes:
 
@@ -1287,7 +1395,7 @@ Implementation includes:
 
 ---
 
-## Task 0303 — Redis
+### Task 0303 — Redis
 
 Configure:
 
@@ -1298,7 +1406,7 @@ Configure:
 
 ---
 
-## Task 0304 — MinIO
+### Task 0304 — MinIO
 
 Configure object storage.
 
@@ -1311,7 +1419,7 @@ Required features:
 
 ---
 
-## Task 0305 — OpenSearch
+### Task 0305 — OpenSearch
 
 Prepare search infrastructure.
 
@@ -1324,7 +1432,7 @@ Implementation includes:
 
 ---
 
-## Task 0306 — Reverse Proxy
+### Task 0306 — Reverse Proxy
 
 Configure Traefik.
 
@@ -1338,7 +1446,7 @@ Features:
 
 ---
 
-## Task 0307 — Monitoring Stack
+### Task 0307 — Monitoring Stack
 
 Deploy:
 
@@ -1356,7 +1464,7 @@ Create dashboards for:
 
 ---
 
-## Task 0308 — Logging Stack
+### Task 0308 — Logging Stack
 
 Deploy centralized logging.
 
@@ -1369,7 +1477,7 @@ Requirements:
 
 ---
 
-## Task 0309 — Infrastructure Health Checks
+### Task 0309 — Infrastructure Health Checks
 
 Every infrastructure service shall expose:
 
@@ -1379,7 +1487,7 @@ Every infrastructure service shall expose:
 
 ---
 
-## Task 0310 — Infrastructure Testing
+### Task 0310 — Infrastructure Testing
 
 Execute:
 
@@ -1392,7 +1500,7 @@ Execute:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 Infrastructure shall be fully operational, fault tolerant for development purposes, reproducible,
 documented, and capable of supporting all subsequent implementation phases.
@@ -1401,9 +1509,9 @@ documented, and capable of supporting all subsequent implementation phases.
 
 ---
 
-# 35. Phase 04 — Shared Libraries
+## 35. Phase 04 — Shared Libraries
 
-## Objective
+### Objective
 
 Create reusable, framework-agnostic shared libraries that provide common functionality across the
 Atlas AI platform.
@@ -1412,7 +1520,7 @@ No business logic shall reside in shared libraries.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Shared Types
 - Shared Utilities
@@ -1424,11 +1532,11 @@ No business logic shall reside in shared libraries.
 
 ---
 
-## Task 0401 — Shared Types Package
+### Task 0401 — Shared Types Package
 
 Create a centralized package for shared type definitions.
 
-### Implementation
+#### Implementation
 
 Include:
 
@@ -1441,7 +1549,7 @@ Include:
 - Error Types
 - Event Types
 
-### Requirements
+#### Requirements
 
 - No implementation logic
 - No framework dependencies
@@ -1449,7 +1557,7 @@ Include:
 
 ---
 
-## Task 0402 — Shared Constants Package
+### Task 0402 — Shared Constants Package
 
 Create reusable constants.
 
@@ -1467,11 +1575,11 @@ Magic values are prohibited throughout the project.
 
 ---
 
-## Task 0403 — Logger Package
+### Task 0403 — Logger Package
 
 Implement a centralized logging package.
 
-### Features
+#### Features
 
 - Structured Logging
 - Log Levels
@@ -1485,11 +1593,11 @@ The logger shall be provider-independent.
 
 ---
 
-## Task 0404 — Configuration Package
+### Task 0404 — Configuration Package
 
 Create a unified configuration management system.
 
-### Responsibilities
+#### Responsibilities
 
 - Environment Loading
 - Validation
@@ -1502,7 +1610,7 @@ Configuration shall never be accessed directly from environment variables outsid
 
 ---
 
-## Task 0405 — Validation Package
+### Task 0405 — Validation Package
 
 Create reusable validation utilities.
 
@@ -1518,7 +1626,7 @@ Validation logic shall be reusable across services.
 
 ---
 
-## Task 0406 — Error Package
+### Task 0406 — Error Package
 
 Create standardized error handling.
 
@@ -1543,7 +1651,7 @@ Every error shall include:
 
 ---
 
-## Task 0407 — Utility Package
+### Task 0407 — Utility Package
 
 Implement reusable utilities.
 
@@ -1561,7 +1669,7 @@ Utilities shall remain generic.
 
 ---
 
-## Task 0408 — Shared Testing Utilities
+### Task 0408 — Shared Testing Utilities
 
 Create testing helpers.
 
@@ -1575,7 +1683,7 @@ Include:
 
 ---
 
-## Task 0409 — Shared Library Testing
+### Task 0409 — Shared Library Testing
 
 Mandatory testing:
 
@@ -1591,16 +1699,16 @@ Mandatory testing:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 Shared libraries shall be reusable, fully documented, independently testable, and free of business
 logic.
 
 ---
 
-# 36. Phase 05 — Backend Foundation
+## 36. Phase 05 — Backend Foundation
 
-## Objective
+### Objective
 
 Establish the core backend architecture that every Atlas AI service will rely upon.
 
@@ -1608,7 +1716,7 @@ No domain-specific functionality shall be implemented during this phase.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Backend Framework
 - Dependency Injection
@@ -1622,7 +1730,7 @@ No domain-specific functionality shall be implemented during this phase.
 
 ---
 
-## Task 0501 — Backend Bootstrap
+### Task 0501 — Backend Bootstrap
 
 Create the backend entry point.
 
@@ -1636,7 +1744,7 @@ Responsibilities:
 
 ---
 
-## Task 0502 — Dependency Injection
+### Task 0502 — Dependency Injection
 
 Implement a centralized Dependency Injection container.
 
@@ -1651,7 +1759,7 @@ Direct service instantiation is prohibited.
 
 ---
 
-## Task 0503 — HTTP Server
+### Task 0503 — HTTP Server
 
 Implement the HTTP server.
 
@@ -1667,7 +1775,7 @@ Responsibilities:
 
 ---
 
-## Task 0504 — Middleware Pipeline
+### Task 0504 — Middleware Pipeline
 
 Create reusable middleware.
 
@@ -1685,7 +1793,7 @@ Middleware shall remain modular.
 
 ---
 
-## Task 0505 — Health Check Endpoints
+### Task 0505 — Health Check Endpoints
 
 Create:
 
@@ -1701,7 +1809,7 @@ Each endpoint shall expose only appropriate operational information.
 
 ---
 
-## Task 0506 — OpenAPI Integration
+### Task 0506 — OpenAPI Integration
 
 Generate API documentation automatically.
 
@@ -1717,7 +1825,7 @@ Documentation shall remain synchronized with implementation.
 
 ---
 
-## Task 0507 — Metrics
+### Task 0507 — Metrics
 
 Expose application metrics.
 
@@ -1733,7 +1841,7 @@ Examples:
 
 ---
 
-## Task 0508 — Backend Testing
+### Task 0508 — Backend Testing
 
 Execute:
 
@@ -1751,7 +1859,7 @@ Execute:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The backend foundation shall provide a stable, secure, observable, and extensible platform capable
 of supporting all higher-level business modules.
@@ -1760,9 +1868,9 @@ of supporting all higher-level business modules.
 
 ---
 
-# 37. Phase 06 — Identity & Access Management (IAM)
+## 37. Phase 06 — Identity & Access Management (IAM)
 
-## Objective
+### Objective
 
 Implement a secure, scalable, and enterprise-grade identity and access management system that
 provides authentication, authorization, user management, and permission control for the entire Atlas
@@ -1772,7 +1880,7 @@ This phase establishes the security foundation for all subsequent modules.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - User Management
 - Authentication Service
@@ -1787,11 +1895,11 @@ This phase establishes the security foundation for all subsequent modules.
 
 ---
 
-## Task 0601 — User Domain
+### Task 0601 — User Domain
 
 Create the User domain model.
 
-### Implementation
+#### Implementation
 
 Include:
 
@@ -1804,7 +1912,7 @@ Include:
 
 ---
 
-## Task 0602 — Authentication Module
+### Task 0602 — Authentication Module
 
 Implement authentication.
 
@@ -1824,7 +1932,7 @@ Requirements:
 
 ---
 
-## Task 0603 — Password Management
+### Task 0603 — Password Management
 
 Implement:
 
@@ -1839,7 +1947,7 @@ Passwords shall never be stored in plain text.
 
 ---
 
-## Task 0604 — JWT Service
+### Task 0604 — JWT Service
 
 Create centralized JWT management.
 
@@ -1854,7 +1962,7 @@ Features:
 
 ---
 
-## Task 0605 — Session Management
+### Task 0605 — Session Management
 
 Support:
 
@@ -1867,7 +1975,7 @@ Support:
 
 ---
 
-## Task 0606 — Authorization
+### Task 0606 — Authorization
 
 Implement Role-Based Access Control (RBAC).
 
@@ -1883,7 +1991,7 @@ The authorization layer shall be extensible to ABAC in future releases.
 
 ---
 
-## Task 0607 — User API
+### Task 0607 — User API
 
 Create endpoints for:
 
@@ -1897,7 +2005,7 @@ Create endpoints for:
 
 ---
 
-## Task 0608 — Audit Logging
+### Task 0608 — Audit Logging
 
 Record security events:
 
@@ -1912,7 +2020,7 @@ Audit records shall be immutable.
 
 ---
 
-## Task 0609 — Authentication Testing
+### Task 0609 — Authentication Testing
 
 Mandatory tests:
 
@@ -1932,23 +2040,23 @@ Mandatory tests:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 Authentication shall be fully functional, secure, documented, and validated before any protected
 application modules are implemented.
 
 ---
 
-# 38. Phase 07 — Organizations & Workspaces
+## 38. Phase 07 — Organizations & Workspaces
 
-## Objective
+### Objective
 
 Implement true multi-tenancy to allow multiple organizations and isolated workspaces to coexist
 securely within the platform.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Organizations
 - Workspaces
@@ -1960,7 +2068,7 @@ securely within the platform.
 
 ---
 
-## Task 0701 — Organization Domain
+### Task 0701 — Organization Domain
 
 Implement:
 
@@ -1972,7 +2080,7 @@ Implement:
 
 ---
 
-## Task 0702 — Workspace Domain
+### Task 0702 — Workspace Domain
 
 Implement:
 
@@ -1984,7 +2092,7 @@ Implement:
 
 ---
 
-## Task 0703 — Membership Management
+### Task 0703 — Membership Management
 
 Support:
 
@@ -1997,7 +2105,7 @@ Invitation workflow shall be implemented.
 
 ---
 
-## Task 0704 — Tenant Isolation
+### Task 0704 — Tenant Isolation
 
 Guarantee complete logical isolation between tenants.
 
@@ -2015,7 +2123,7 @@ Cross-tenant data leakage is prohibited.
 
 ---
 
-## Task 0705 — Organization Settings
+### Task 0705 — Organization Settings
 
 Support configuration of:
 
@@ -2028,7 +2136,7 @@ Support configuration of:
 
 ---
 
-## Task 0706 — Workspace API
+### Task 0706 — Workspace API
 
 Create APIs for:
 
@@ -2041,7 +2149,7 @@ Create APIs for:
 
 ---
 
-## Task 0707 — Organization Testing
+### Task 0707 — Organization Testing
 
 Mandatory validation:
 
@@ -2059,7 +2167,7 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 Organizations and workspaces shall provide secure tenant isolation, flexible administration, and
 complete compatibility with all future Atlas AI services.
@@ -2068,9 +2176,9 @@ complete compatibility with all future Atlas AI services.
 
 ---
 
-# 39. Phase 08 — AI Gateway
+## 39. Phase 08 — AI Gateway
 
-## Objective
+### Objective
 
 Implement a centralized AI Gateway that serves as the single entry point for all AI providers,
 ensuring provider independence, intelligent routing, observability, security, and cost optimization.
@@ -2079,7 +2187,7 @@ No service shall communicate directly with an AI provider.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - AI Gateway
 - Provider Abstraction Layer
@@ -2095,11 +2203,11 @@ No service shall communicate directly with an AI provider.
 
 ---
 
-## Task 0801 — AI Gateway Core
+### Task 0801 — AI Gateway Core
 
 Create the central AI Gateway service.
 
-### Responsibilities
+#### Responsibilities
 
 - Receive AI requests
 - Validate requests
@@ -2111,7 +2219,7 @@ Create the central AI Gateway service.
 
 ---
 
-## Task 0802 — AI Provider Interface
+### Task 0802 — AI Provider Interface
 
 Create a common interface for every AI provider.
 
@@ -2143,7 +2251,7 @@ Provider-specific code outside adapters is prohibited.
 
 ---
 
-## Task 0803 — Provider Registry
+### Task 0803 — Provider Registry
 
 Implement dynamic provider registration.
 
@@ -2163,7 +2271,7 @@ Adding a new provider shall not require modifications to existing providers.
 
 ---
 
-## Task 0804 — Model Registry
+### Task 0804 — Model Registry
 
 Maintain centralized information about:
 
@@ -2179,7 +2287,7 @@ Maintain centralized information about:
 
 ---
 
-## Task 0805 — Intelligent Model Router
+### Task 0805 — Intelligent Model Router
 
 Automatically select the optimal model using configurable routing rules.
 
@@ -2197,7 +2305,7 @@ Manual model selection shall remain available.
 
 ---
 
-## Task 0806 — Prompt Manager
+### Task 0806 — Prompt Manager
 
 Integrate with the `prompts/` directory.
 
@@ -2213,7 +2321,7 @@ Prompts shall never be hardcoded into application logic.
 
 ---
 
-## Task 0807 — Streaming Engine
+### Task 0807 — Streaming Engine
 
 Support real-time streaming responses.
 
@@ -2227,7 +2335,7 @@ Requirements:
 
 ---
 
-## Task 0808 — Tool Calling Engine
+### Task 0808 — Tool Calling Engine
 
 Implement standardized Tool Calling.
 
@@ -2242,7 +2350,7 @@ Capabilities:
 
 ---
 
-## Task 0809 — Token & Cost Tracking
+### Task 0809 — Token & Cost Tracking
 
 Track:
 
@@ -2258,7 +2366,7 @@ Support configurable budgets and alerts.
 
 ---
 
-## Task 0810 — Retry & Failover
+### Task 0810 — Retry & Failover
 
 Implement automatic recovery.
 
@@ -2272,7 +2380,7 @@ Support:
 
 ---
 
-## Task 0811 — Provider Health Monitoring
+### Task 0811 — Provider Health Monitoring
 
 Continuously monitor:
 
@@ -2286,7 +2394,7 @@ Routing shall automatically avoid unhealthy providers when possible.
 
 ---
 
-## Task 0812 — AI Gateway Testing
+### Task 0812 — AI Gateway Testing
 
 Mandatory validation:
 
@@ -2310,7 +2418,7 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The AI Gateway shall provide a stable, provider-independent abstraction layer with complete
 observability, resilience, and enterprise-grade reliability.
@@ -2319,9 +2427,9 @@ observability, resilience, and enterprise-grade reliability.
 
 ---
 
-# 40. Phase 09 — Prompt Library & Prompt Management
+## 40. Phase 09 — Prompt Library & Prompt Management
 
-## Objective
+### Objective
 
 Implement a centralized Prompt Library that manages all system prompts, templates, agent prompts,
 workflows, and prompt versions independently of application code.
@@ -2330,7 +2438,7 @@ Prompts shall be treated as managed assets, not hardcoded strings.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Prompt Library
 - Prompt Loader
@@ -2342,8 +2450,510 @@ Prompts shall be treated as managed assets, not hardcoded strings.
 - Prompt Audit Trail
 
 ---
+---
 
-## Task 0901 — Prompt Repository
+## Phase 00 — Global Product Requirements
+
+## Purpose
+
+This section defines mandatory product, architectural, legal, security, compliance, and quality requirements for the entire Atlas AI platform.
+
+These requirements apply to **every phase**, **every task**, and **every implementation decision**.
+
+Unless explicitly approved, no implementation may violate these requirements.
+
+---
+
+## 0.1 Product Vision
+
+Atlas AI is designed as an enterprise-grade, multi-tenant AI platform for individuals, teams, businesses, educational institutions, and enterprise customers.
+
+The platform SHALL remain modular, scalable, provider-independent, and capable of long-term evolution without architectural redesign.
+
+Primary target markets:
+
+- Russian Federation
+- European Union
+- European countries
+
+The architecture SHALL remain suitable for future worldwide deployment.
+
+---
+
+## 0.2 Architecture Principles
+
+Every implementation MUST follow:
+
+- Clean Architecture
+- SOLID Principles
+- Interface First Design
+- Dependency Injection
+- Domain Driven Design where applicable
+- Provider Independence
+- Payment Provider Independence
+- Cloud Provider Independence
+- Infrastructure Independence
+
+Business logic MUST NOT depend on third-party vendors.
+
+External services SHALL always be accessed through interfaces.
+
+---
+
+## 0.3 Multi-Tenant Requirements
+
+The platform SHALL implement strict tenant isolation.
+
+Every request MUST belong to:
+
+- Organization
+- Workspace
+- User
+
+Isolation MUST exist for:
+
+- AI requests
+- Documents
+- Prompt Libraries
+- Knowledge Bases
+- Vector Stores
+- Billing
+- Audit Logs
+- Metrics
+- Storage
+- API responses
+
+Cross-tenant access MUST never be possible.
+
+---
+
+## 0.4 Regulatory Compliance
+
+The platform SHALL be designed to support compliance with applicable legislation.
+
+### Russian Federation
+
+Architecture SHALL support:
+
+- Personal data processing
+- Information security
+- Digital service regulations
+- Financial transaction requirements
+- Electronic document support
+- Audit logging
+- Data localization where required
+
+### European Union
+
+Architecture SHALL support:
+
+- GDPR
+- Privacy by Design
+- Security by Design
+- Data Portability
+- Right to Erasure
+- Right to Access
+- Consent Management
+- Data Minimization
+
+Compliance SHALL be configurable.
+
+No business logic SHALL contain hardcoded jurisdiction-specific behavior.
+
+---
+
+## 0.5 Personal Data
+
+The platform MUST support:
+
+- Account deletion
+- Organization deletion
+- Workspace deletion
+- User data export
+- Organization data export
+- Consent history
+- Privacy settings
+- Retention policies
+- Soft delete
+- Hard delete
+- Recovery period
+- Audit history
+
+---
+
+## 0.6 Regional Infrastructure
+
+Architecture MUST support:
+
+- Multiple deployment regions
+- Country-specific storage
+- Organization-level region selection
+- Future data migration
+- Independent regional infrastructure
+
+No component may assume a single deployment region.
+
+---
+
+## 0.7 AI Platform
+
+Atlas AI SHALL support multiple AI providers simultaneously.
+
+Supported provider categories include:
+
+- Local AI
+- Cloud AI
+- Enterprise AI
+- Self-hosted AI
+
+Every provider MUST implement the common Provider Interface.
+
+Business logic MUST never reference concrete providers.
+
+Organizations SHALL be able to configure:
+
+- Allowed providers
+- Blocked providers
+- Allowed models
+- Blocked models
+- Context limits
+- Token limits
+- Temperature limits
+- Streaming permissions
+- Tool Calling permissions
+- Image generation permissions
+- Audio generation permissions
+- Embedding permissions
+
+Organizations MUST be able to completely disable cloud AI.
+
+Local AI (Ollama and future providers) SHALL be fully supported.
+
+---
+
+## 0.8 AI Usage Accounting
+
+The platform SHALL track:
+
+- Prompt Tokens
+- Completion Tokens
+- Cached Tokens
+- Embedding Tokens
+- Image Usage
+- Audio Usage
+- Provider Costs
+- Model Costs
+- Organization Usage
+- Workspace Usage
+- User Usage
+- Budget Limits
+- Cost Alerts
+
+---
+
+## 0.9 Security
+
+The platform SHALL support:
+
+- RBAC
+- Tenant Isolation
+- MFA
+- Session Management
+- Device Management
+- Trusted Devices
+- API Keys
+- Service Accounts
+- Secret Rotation
+- Encryption at Rest
+- Encryption in Transit
+- Security Policies
+- Rate Limiting
+- Login History
+- Security Audit Logs
+
+Security SHALL be configurable at organization level.
+
+---
+
+## 0.10 Audit Logging
+
+Every critical operation SHALL be auditable.
+
+Including:
+
+- Authentication
+- Authorization
+- AI Requests
+- Organization Management
+- Workspace Management
+- Membership Changes
+- Billing Events
+- Administrative Operations
+- API Key Usage
+- Security Events
+
+Audit logs SHALL be immutable.
+
+---
+
+## 0.11 Billing Architecture
+
+Billing MUST be completely provider-independent.
+
+The billing subsystem SHALL expose abstractions for:
+
+- BillingService
+- SubscriptionService
+- PaymentProvider
+- PaymentGateway
+- InvoiceService
+- RefundService
+- UsageBilling
+- TaxService
+
+Business logic MUST never depend on payment providers.
+
+---
+
+## 0.12 Russian Payments
+
+The platform SHALL support future integration with:
+
+- Система быстрых платежей (СБП)
+- Карты «Мир»
+- ЮKassa
+- Т-Банк Эквайринг
+- Альфа-Банк Эквайринг
+- CloudPayments
+- Robokassa
+- UnitPay
+- Банковские переводы
+- Счета для юридических лиц
+
+The billing subsystem SHALL support:
+
+- One-time payments
+- Subscriptions
+- Automatic renewal
+- Refunds
+- Corporate billing
+- Payment history
+- Invoice generation
+- Tax configuration
+- Payment webhooks
+
+---
+
+## 0.13 International Payments
+
+Architecture SHALL support future integration with:
+
+- Stripe
+- Adyen
+- Mollie
+- PayPal
+- Apple Pay
+- Google Pay
+
+Adding new providers SHALL NOT require changes to business logic.
+
+---
+
+## 0.14 Mobile Applications
+
+The platform SHALL support:
+
+- Web
+- Desktop
+- Android
+- iOS
+
+Backend APIs MUST remain platform-independent.
+
+---
+
+## 0.15 Apple App Store Requirements
+
+Architecture SHALL support:
+
+- Sign in with Apple
+- Account deletion
+- User data export
+- Privacy controls
+- Consent management
+- In-App Purchases
+- Subscription management
+- Restore Purchases
+- Receipt validation
+
+No Apple-specific logic may exist inside business services.
+
+---
+
+## 0.16 Google Play Requirements
+
+Architecture SHALL support:
+
+- Google Sign-In
+- Google Play Billing
+- Subscription management
+- Restore Purchases
+- Privacy controls
+- Account deletion
+- Data export
+
+Platform-specific logic SHALL remain isolated.
+
+---
+
+## 0.17 Subscription System
+
+Billing SHALL support:
+
+- Monthly plans
+- Annual plans
+- Enterprise plans
+- Trial periods
+- Auto renewal
+- Upgrade
+- Downgrade
+- Proration
+- Seat licensing
+- Usage billing
+- Hybrid billing
+- Promo codes
+- Discounts
+- Grace periods
+
+---
+
+## 0.18 Financial Domain
+
+The platform SHALL include support for:
+
+- Customer
+- Billing Account
+- Subscription
+- Plan
+- Invoice
+- Invoice Item
+- Payment
+- Payment Attempt
+- Refund
+- Transaction
+- Payment Method
+- Usage Record
+- AI Cost Record
+- Tax Record
+- Webhook Event
+
+---
+
+## 0.19 Enterprise Features
+
+Architecture SHALL support future implementation of:
+
+- SSO
+- SCIM
+- LDAP
+- Active Directory
+- Organization Policies
+- Workspace Policies
+- Compliance Policies
+- Feature Flags
+- Regional Restrictions
+
+---
+
+## 0.20 Internationalization
+
+The platform SHALL support:
+
+- Multiple languages
+- Multiple currencies
+- Time zones
+- Locale formatting
+- Regional date formats
+- Regional number formats
+- RTL languages
+
+No user-facing strings SHALL be permanently hardcoded.
+
+---
+
+## 0.21 Scalability
+
+Architecture SHALL support:
+
+- Horizontal scaling
+- Event-driven architecture
+- Domain Events
+- Message Queues
+- Background Workers
+- Distributed Cache
+- Provider Failover
+- Retry Policies
+- Circuit Breakers
+- Health Monitoring
+- Metrics
+- Observability
+
+---
+
+## 0.22 Development Standards
+
+Every implementation MUST:
+
+- Follow Clean Architecture
+- Follow SOLID
+- Use Dependency Injection
+- Avoid cyclic dependencies
+- Maintain backward compatibility unless explicitly approved
+- Be fully testable
+- Include regression tests for modified behavior
+- Keep Domain, Application, Infrastructure, and Presentation layers isolated
+
+---
+
+## 0.23 Mandatory Quality Gates
+
+Every task SHALL successfully complete:
+
+```bash
+pnpm -r lint
+pnpm -r typecheck
+pnpm -r test
+pnpm -r build
+```
+
+A task SHALL NOT be considered complete unless:
+
+- All Quality Gates pass
+- New functionality is tested
+- Existing functionality remains green
+- Documentation is updated where required
+
+---
+
+## 0.24 Future Compatibility
+
+All implementations MUST assume future support for:
+
+- Additional AI Providers
+- Additional Payment Providers
+- Additional Authentication Providers
+- Additional Storage Providers
+- Additional Vector Databases
+- Additional Cloud Providers
+- Additional Mobile Platforms
+- Additional Compliance Requirements
+- Additional Enterprise Integrations
+
+No implementation should unnecessarily restrict future expansion or require architectural redesign.
+
+---
+
+### Task 0901 — Prompt Repository
 
 Create the complete prompt directory structure.
 
@@ -2365,7 +2975,7 @@ Every prompt shall have a unique identifier.
 
 ---
 
-## Task 0902 — Prompt Loader
+### Task 0902 — Prompt Loader
 
 Implement a service responsible for:
 
@@ -2377,7 +2987,7 @@ Implement a service responsible for:
 
 ---
 
-## Task 0903 — Prompt Variables
+### Task 0903 — Prompt Variables
 
 Implement template rendering.
 
@@ -2405,7 +3015,7 @@ Missing variables shall produce validation errors.
 
 ---
 
-## Task 0904 — Prompt Versioning
+### Task 0904 — Prompt Versioning
 
 Implement version management.
 
@@ -2421,7 +3031,7 @@ Historical versions shall remain available.
 
 ---
 
-## Task 0905 — Prompt Validation
+### Task 0905 — Prompt Validation
 
 Validate:
 
@@ -2436,7 +3046,7 @@ Invalid prompts shall never be loaded into production.
 
 ---
 
-## Task 0906 — Prompt Cache
+### Task 0906 — Prompt Cache
 
 Implement caching.
 
@@ -2449,7 +3059,7 @@ Requirements:
 
 ---
 
-## Task 0907 — Prompt Testing
+### Task 0907 — Prompt Testing
 
 Create automated validation for:
 
@@ -2467,16 +3077,16 @@ Create automated validation for:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 Prompt management shall be centralized, version-controlled, validated, documented, and completely
 independent from application code.
 
 ---
 
-# 41. Phase 10 — Context Engine
+## 41. Phase 10 — Context Engine
 
-## Objective
+### Objective
 
 Implement the Context Engine responsible for building high-quality AI context from users,
 conversations, documents, memory, tools, permissions, and workspace data.
@@ -2485,7 +3095,7 @@ The Context Engine shall optimize context quality while respecting model limitat
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Context Builder
 - Context Optimizer
@@ -2496,7 +3106,7 @@ The Context Engine shall optimize context quality while respecting model limitat
 
 ---
 
-## Task 1001 — Context Builder
+### Task 1001 — Context Builder
 
 Aggregate context from:
 
@@ -2510,7 +3120,7 @@ Aggregate context from:
 
 ---
 
-## Task 1002 — Context Ranking
+### Task 1002 — Context Ranking
 
 Prioritize context based on:
 
@@ -2522,7 +3132,7 @@ Prioritize context based on:
 
 ---
 
-## Task 1003 — Token Budget Manager
+### Task 1003 — Token Budget Manager
 
 Manage available context window.
 
@@ -2537,7 +3147,7 @@ The most relevant information shall always be preserved.
 
 ---
 
-## Task 1004 — Context Compression
+### Task 1004 — Context Compression
 
 Implement intelligent compression.
 
@@ -2552,7 +3162,7 @@ Compression shall preserve meaning.
 
 ---
 
-## Task 1005 — Context Cache
+### Task 1005 — Context Cache
 
 Cache reusable context.
 
@@ -2565,7 +3175,7 @@ Requirements:
 
 ---
 
-## Task 1006 — Context Testing
+### Task 1006 — Context Testing
 
 Mandatory validation:
 
@@ -2583,7 +3193,7 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The Context Engine shall consistently produce accurate, efficient, and optimized AI context while
 respecting token limits and preserving essential information.
@@ -2592,9 +3202,9 @@ respecting token limits and preserving essential information.
 
 ---
 
-# 42. Phase 11 — Knowledge Platform
+## 42. Phase 11 — Knowledge Platform
 
-## Objective
+### Objective
 
 Implement the enterprise Knowledge Platform responsible for document ingestion, processing,
 indexing, storage, lifecycle management, and retrieval.
@@ -2603,7 +3213,7 @@ The Knowledge Platform shall become the single source of truth for all AI-access
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Document Management
 - File Storage
@@ -2616,7 +3226,7 @@ The Knowledge Platform shall become the single source of truth for all AI-access
 
 ---
 
-## Task 1101 — Document Service
+### Task 1101 — Document Service
 
 Create the central document management service.
 
@@ -2633,7 +3243,7 @@ Responsibilities:
 
 ---
 
-## Task 1102 — File Storage Integration
+### Task 1102 — File Storage Integration
 
 Implement object storage integration.
 
@@ -2648,7 +3258,7 @@ Requirements:
 
 ---
 
-## Task 1103 — Document Metadata
+### Task 1103 — Document Metadata
 
 Store metadata including:
 
@@ -2667,7 +3277,7 @@ Metadata shall remain searchable.
 
 ---
 
-## Task 1104 — OCR Pipeline
+### Task 1104 — OCR Pipeline
 
 Implement Optical Character Recognition.
 
@@ -2682,7 +3292,7 @@ OCR shall preserve document structure whenever possible.
 
 ---
 
-## Task 1105 — Document Parsing
+### Task 1105 — Document Parsing
 
 Implement parsers for:
 
@@ -2699,7 +3309,7 @@ Unsupported formats shall fail gracefully.
 
 ---
 
-## Task 1106 — Processing Queue
+### Task 1106 — Processing Queue
 
 Create an asynchronous processing pipeline.
 
@@ -2735,7 +3345,7 @@ Ready
 
 ---
 
-## Task 1107 — Search Index
+### Task 1107 — Search Index
 
 Index:
 
@@ -2749,7 +3359,7 @@ Support incremental updates.
 
 ---
 
-## Task 1108 — Knowledge API
+### Task 1108 — Knowledge API
 
 Expose APIs for:
 
@@ -2763,7 +3373,7 @@ Expose APIs for:
 
 ---
 
-## Task 1109 — Knowledge Testing
+### Task 1109 — Knowledge Testing
 
 Mandatory validation:
 
@@ -2785,23 +3395,23 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The Knowledge Platform shall reliably ingest, process, store, and expose enterprise documents for
 downstream AI services.
 
 ---
 
-# 43. Phase 12 — Embedding Service & Vector Processing
+## 43. Phase 12 — Embedding Service & Vector Processing
 
-## Objective
+### Objective
 
 Implement a scalable embedding pipeline that transforms processed knowledge into vector
 representations suitable for semantic search and Retrieval-Augmented Generation (RAG).
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Embedding Service
 - Chunking Engine
@@ -2811,7 +3421,7 @@ representations suitable for semantic search and Retrieval-Augmented Generation 
 
 ---
 
-## Task 1201 — Chunking Engine
+### Task 1201 — Chunking Engine
 
 Implement configurable chunking strategies.
 
@@ -2827,7 +3437,7 @@ Chunk size shall be configurable.
 
 ---
 
-## Task 1202 — Embedding Service
+### Task 1202 — Embedding Service
 
 Generate embeddings using the AI Gateway.
 
@@ -2841,7 +3451,7 @@ Requirements:
 
 ---
 
-## Task 1203 — Embedding Cache
+### Task 1203 — Embedding Cache
 
 Avoid duplicate embedding generation.
 
@@ -2854,7 +3464,7 @@ Cache based on:
 
 ---
 
-## Task 1204 — Embedding Versioning
+### Task 1204 — Embedding Versioning
 
 Track:
 
@@ -2867,7 +3477,7 @@ Embeddings shall be regenerable after model upgrades.
 
 ---
 
-## Task 1205 — Vector Metadata
+### Task 1205 — Vector Metadata
 
 Each vector shall include:
 
@@ -2882,7 +3492,7 @@ Each vector shall include:
 
 ---
 
-## Task 1206 — Embedding Testing
+### Task 1206 — Embedding Testing
 
 Mandatory validation:
 
@@ -2900,7 +3510,7 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The embedding pipeline shall generate accurate, reproducible, versioned vectors suitable for
 semantic retrieval and future AI workflows.
@@ -2909,9 +3519,9 @@ semantic retrieval and future AI workflows.
 
 ---
 
-# 44. Phase 13 — Vector Database & Semantic Search
+## 44. Phase 13 — Vector Database & Semantic Search
 
-## Objective
+### Objective
 
 Implement an enterprise-grade vector database layer that provides fast, secure, scalable semantic
 search for the Atlas AI platform.
@@ -2921,7 +3531,7 @@ replacement with minimal changes.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Vector Repository
 - Semantic Search API
@@ -2933,7 +3543,7 @@ replacement with minimal changes.
 
 ---
 
-## Task 1301 — Vector Repository
+### Task 1301 — Vector Repository
 
 Implement an abstraction layer for vector storage.
 
@@ -2950,7 +3560,7 @@ Business services shall never communicate directly with the vector database.
 
 ---
 
-## Task 1302 — Vector Database Adapter
+### Task 1302 — Vector Database Adapter
 
 Implement provider adapters.
 
@@ -2966,7 +3576,7 @@ The architecture shall remain provider-independent.
 
 ---
 
-## Task 1303 — Similarity Search
+### Task 1303 — Similarity Search
 
 Support:
 
@@ -2978,7 +3588,7 @@ The metric shall be configurable.
 
 ---
 
-## Task 1304 — Hybrid Search
+### Task 1304 — Hybrid Search
 
 Combine:
 
@@ -2990,7 +3600,7 @@ Ranking shall intelligently merge all results.
 
 ---
 
-## Task 1305 — Metadata Filtering
+### Task 1305 — Metadata Filtering
 
 Support filtering by:
 
@@ -3008,7 +3618,7 @@ Filtering shall be enforced before result delivery.
 
 ---
 
-## Task 1306 — Vector Maintenance
+### Task 1306 — Vector Maintenance
 
 Implement:
 
@@ -3021,7 +3631,7 @@ Implement:
 
 ---
 
-## Task 1307 — Semantic Search Testing
+### Task 1307 — Semantic Search Testing
 
 Mandatory validation:
 
@@ -3037,23 +3647,23 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The vector database layer shall provide fast, secure, and scalable semantic retrieval with strict
 tenant isolation and provider independence.
 
 ---
 
-# 45. Phase 14 — Retrieval-Augmented Generation (RAG)
+## 45. Phase 14 — Retrieval-Augmented Generation (RAG)
 
-## Objective
+### Objective
 
 Implement a complete Retrieval-Augmented Generation pipeline that enriches AI responses with trusted
 organizational knowledge while minimizing hallucinations.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Retrieval Engine
 - Context Assembly
@@ -3064,7 +3674,7 @@ organizational knowledge while minimizing hallucinations.
 
 ---
 
-## Task 1401 — Retrieval Engine
+### Task 1401 — Retrieval Engine
 
 Retrieve relevant knowledge using:
 
@@ -3077,7 +3687,7 @@ Only authorized documents shall be returned.
 
 ---
 
-## Task 1402 — Context Assembly
+### Task 1402 — Context Assembly
 
 Build optimized AI context using:
 
@@ -3091,7 +3701,7 @@ The Context Engine shall manage token limits.
 
 ---
 
-## Task 1403 — Citation Engine
+### Task 1403 — Citation Engine
 
 Every retrieved knowledge fragment shall maintain:
 
@@ -3105,7 +3715,7 @@ Responses shall support transparent citations.
 
 ---
 
-## Task 1404 — Retrieval Ranking
+### Task 1404 — Retrieval Ranking
 
 Rank retrieved documents based on:
 
@@ -3119,7 +3729,7 @@ Ranking shall be configurable.
 
 ---
 
-## Task 1405 — Hallucination Reduction
+### Task 1405 — Hallucination Reduction
 
 Implement safeguards including:
 
@@ -3133,7 +3743,7 @@ The AI shall acknowledge uncertainty when sufficient supporting evidence is unav
 
 ---
 
-## Task 1406 — RAG Evaluation Framework
+### Task 1406 — RAG Evaluation Framework
 
 Measure:
 
@@ -3148,7 +3758,7 @@ Store evaluation metrics for continuous improvement.
 
 ---
 
-## Task 1407 — RAG Testing
+### Task 1407 — RAG Testing
 
 Mandatory validation:
 
@@ -3168,7 +3778,7 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The RAG system shall consistently produce accurate, explainable, source-grounded responses with
 complete tenant isolation and measurable retrieval quality.
@@ -3177,9 +3787,9 @@ complete tenant isolation and measurable retrieval quality.
 
 ---
 
-# 46. Phase 15 — AI Agents Framework
+## 46. Phase 15 — AI Agents Framework
 
-## Objective
+### Objective
 
 Implement a modular, extensible AI Agent framework that enables specialized agents to collaborate,
 invoke tools, maintain memory, and execute complex workflows.
@@ -3188,7 +3798,7 @@ Agents shall remain isolated, configurable, and independently deployable.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Agent Framework
 - Agent Registry
@@ -3200,7 +3810,7 @@ Agents shall remain isolated, configurable, and independently deployable.
 
 ---
 
-## Task 1501 — Agent Core
+### Task 1501 — Agent Core
 
 Create the base agent abstraction.
 
@@ -3215,7 +3825,7 @@ Every agent shall expose:
 
 ---
 
-## Task 1502 — Agent Registry
+### Task 1502 — Agent Registry
 
 Implement centralized registration.
 
@@ -3231,7 +3841,7 @@ Agents shall never be hardcoded.
 
 ---
 
-## Task 1503 — Agent Runtime
+### Task 1503 — Agent Runtime
 
 Implement execution engine.
 
@@ -3246,7 +3856,7 @@ Responsibilities:
 
 ---
 
-## Task 1504 — Agent Memory
+### Task 1504 — Agent Memory
 
 Support multiple memory layers:
 
@@ -3260,7 +3870,7 @@ Memory policies shall be configurable.
 
 ---
 
-## Task 1505 — Multi-Agent Collaboration
+### Task 1505 — Multi-Agent Collaboration
 
 Support:
 
@@ -3272,7 +3882,7 @@ Support:
 
 ---
 
-## Task 1506 — Agent Lifecycle
+### Task 1506 — Agent Lifecycle
 
 Support:
 
@@ -3285,7 +3895,7 @@ Support:
 
 ---
 
-## Task 1507 — Agent Security
+### Task 1507 — Agent Security
 
 Implement:
 
@@ -3299,7 +3909,7 @@ Agents shall operate only within their authorized scope.
 
 ---
 
-## Task 1508 — Agent Monitoring
+### Task 1508 — Agent Monitoring
 
 Track:
 
@@ -3313,7 +3923,7 @@ Track:
 
 ---
 
-## Task 1509 — AI Agent Testing
+### Task 1509 — AI Agent Testing
 
 Mandatory validation:
 
@@ -3333,23 +3943,23 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The AI Agent framework shall provide secure, observable, scalable, and extensible autonomous
 execution for all future intelligent workflows.
 
 ---
 
-# 47. Phase 16 — Workflow Engine
+## 47. Phase 16 — Workflow Engine
 
-## Objective
+### Objective
 
 Implement a visual and programmable workflow engine that orchestrates AI agents, tools, APIs,
 documents, and business logic into repeatable automation pipelines.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Workflow Designer
 - Workflow Runtime
@@ -3361,7 +3971,7 @@ documents, and business logic into repeatable automation pipelines.
 
 ---
 
-## Task 1601 — Workflow Model
+### Task 1601 — Workflow Model
 
 Implement workflow entities:
 
@@ -3376,7 +3986,7 @@ Implement workflow entities:
 
 ---
 
-## Task 1602 — Workflow Runtime
+### Task 1602 — Workflow Runtime
 
 Execute workflows reliably.
 
@@ -3391,7 +4001,7 @@ Support:
 
 ---
 
-## Task 1603 — Trigger System
+### Task 1603 — Trigger System
 
 Support triggers:
 
@@ -3405,7 +4015,7 @@ Support triggers:
 
 ---
 
-## Task 1604 — Node Library
+### Task 1604 — Node Library
 
 Create reusable workflow nodes:
 
@@ -3425,7 +4035,7 @@ Create reusable workflow nodes:
 
 ---
 
-## Task 1605 — State Management
+### Task 1605 — State Management
 
 Persist workflow execution state.
 
@@ -3438,7 +4048,7 @@ Support:
 
 ---
 
-## Task 1606 — Workflow Versioning
+### Task 1606 — Workflow Versioning
 
 Track:
 
@@ -3451,7 +4061,7 @@ Running workflows shall never be affected by unpublished changes.
 
 ---
 
-## Task 1607 — Workflow Monitoring
+### Task 1607 — Workflow Monitoring
 
 Monitor:
 
@@ -3464,7 +4074,7 @@ Monitor:
 
 ---
 
-## Task 1608 — Workflow Testing
+### Task 1608 — Workflow Testing
 
 Mandatory validation:
 
@@ -3484,7 +4094,7 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The Workflow Engine shall provide reliable, versioned, observable, and fault-tolerant automation
 capable of orchestrating all Atlas AI platform components.
@@ -3493,9 +4103,9 @@ capable of orchestrating all Atlas AI platform components.
 
 ---
 
-# 48. Phase 17 — Plugin Framework
+## 48. Phase 17 — Plugin Framework
 
-## Objective
+### Objective
 
 Implement a secure, modular, and extensible Plugin Framework that allows third-party and internal
 extensions without modifying the Atlas AI core.
@@ -3504,7 +4114,7 @@ Plugins shall operate in isolation and communicate only through approved extensi
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Plugin SDK
 - Plugin Registry
@@ -3517,7 +4127,7 @@ Plugins shall operate in isolation and communicate only through approved extensi
 
 ---
 
-## Task 1701 — Plugin SDK
+### Task 1701 — Plugin SDK
 
 Create an SDK for plugin developers.
 
@@ -3534,7 +4144,7 @@ The SDK shall remain backward compatible across minor releases.
 
 ---
 
-## Task 1702 — Plugin Manifest
+### Task 1702 — Plugin Manifest
 
 Every plugin shall contain a manifest.
 
@@ -3557,7 +4167,7 @@ Invalid manifests shall prevent plugin loading.
 
 ---
 
-## Task 1703 — Plugin Registry
+### Task 1703 — Plugin Registry
 
 Implement centralized plugin discovery.
 
@@ -3571,7 +4181,7 @@ Responsibilities:
 
 ---
 
-## Task 1704 — Plugin Runtime
+### Task 1704 — Plugin Runtime
 
 Provide isolated execution.
 
@@ -3588,7 +4198,7 @@ A plugin failure shall never terminate the platform.
 
 ---
 
-## Task 1705 — Permission System
+### Task 1705 — Permission System
 
 Each plugin shall explicitly request permissions.
 
@@ -3606,7 +4216,7 @@ Permissions shall follow the principle of least privilege.
 
 ---
 
-## Task 1706 — Extension Points
+### Task 1706 — Extension Points
 
 Support extension of:
 
@@ -3622,7 +4232,7 @@ Core modules shall remain closed for direct modification.
 
 ---
 
-## Task 1707 — Plugin Sandbox
+### Task 1707 — Plugin Sandbox
 
 Run plugins inside an isolated environment.
 
@@ -3635,7 +4245,7 @@ Prevent:
 
 ---
 
-## Task 1708 — Plugin Testing
+### Task 1708 — Plugin Testing
 
 Mandatory validation:
 
@@ -3655,23 +4265,23 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The Plugin Framework shall support secure, versioned, and isolated platform extensions without
 compromising system stability or security.
 
 ---
 
-# 49. Phase 18 — Frontend Architecture
+## 49. Phase 18 — Frontend Architecture
 
-## Objective
+### Objective
 
 Build a modern, scalable, accessible, and maintainable frontend architecture that delivers a
 high-quality user experience across desktop and mobile devices.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Frontend Foundation
 - Routing
@@ -3685,7 +4295,7 @@ high-quality user experience across desktop and mobile devices.
 
 ---
 
-## Task 1801 — Frontend Bootstrap
+### Task 1801 — Frontend Bootstrap
 
 Initialize the frontend application.
 
@@ -3699,7 +4309,7 @@ Implementation includes:
 
 ---
 
-## Task 1802 — Application Layout
+### Task 1802 — Application Layout
 
 Create reusable layouts:
 
@@ -3713,7 +4323,7 @@ Layouts shall remain responsive.
 
 ---
 
-## Task 1803 — Routing
+### Task 1803 — Routing
 
 Implement:
 
@@ -3727,7 +4337,7 @@ Unauthorized navigation shall be blocked.
 
 ---
 
-## Task 1804 — State Management
+### Task 1804 — State Management
 
 Implement centralized state management.
 
@@ -3745,7 +4355,7 @@ Global state shall remain predictable and testable.
 
 ---
 
-## Task 1805 — API Client
+### Task 1805 — API Client
 
 Create a standardized API client.
 
@@ -3761,7 +4371,7 @@ Responsibilities:
 
 ---
 
-## Task 1806 — Theme System
+### Task 1806 — Theme System
 
 Support:
 
@@ -3774,7 +4384,7 @@ Theme switching shall not require page reload.
 
 ---
 
-## Task 1807 — Accessibility
+### Task 1807 — Accessibility
 
 Comply with WCAG requirements.
 
@@ -3790,7 +4400,7 @@ Accessibility shall be validated automatically.
 
 ---
 
-## Task 1808 — Frontend Testing
+### Task 1808 — Frontend Testing
 
 Mandatory validation:
 
@@ -3808,7 +4418,7 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The frontend foundation shall provide a responsive, accessible, maintainable, and enterprise-ready
 user interface capable of supporting all platform functionality.
@@ -3817,9 +4427,9 @@ user interface capable of supporting all platform functionality.
 
 ---
 
-# 50. Phase 19 — Design System & User Interface
+## 50. Phase 19 — Design System & User Interface
 
-## Objective
+### Objective
 
 Create a unified enterprise Design System that ensures visual consistency, accessibility,
 scalability, and reusable UI components across the Atlas AI platform.
@@ -3828,7 +4438,7 @@ Every interface shall be built exclusively from Design System components.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Design Tokens
 - Component Library
@@ -3842,7 +4452,7 @@ Every interface shall be built exclusively from Design System components.
 
 ---
 
-## Task 1901 — Design Tokens
+### Task 1901 — Design Tokens
 
 Define global tokens for:
 
@@ -3861,7 +4471,7 @@ Tokens shall become the single source of truth.
 
 ---
 
-## Task 1902 — Component Library
+### Task 1902 — Component Library
 
 Implement reusable UI components.
 
@@ -3897,7 +4507,7 @@ Components shall remain framework-consistent.
 
 ---
 
-## Task 1903 — Form Framework
+### Task 1903 — Form Framework
 
 Create a standardized form system.
 
@@ -3914,7 +4524,7 @@ Every form shall use the same validation architecture.
 
 ---
 
-## Task 1904 — Charts & Dashboards
+### Task 1904 — Charts & Dashboards
 
 Provide visualization components.
 
@@ -3931,7 +4541,7 @@ Support:
 
 ---
 
-## Task 1905 — Responsive Design
+### Task 1905 — Responsive Design
 
 Support:
 
@@ -3944,7 +4554,7 @@ Layouts shall adapt automatically.
 
 ---
 
-## Task 1906 — Animation System
+### Task 1906 — Animation System
 
 Provide consistent animations.
 
@@ -3960,7 +4570,7 @@ Animations shall never reduce usability.
 
 ---
 
-## Task 1907 — UI Testing
+### Task 1907 — UI Testing
 
 Mandatory validation:
 
@@ -3978,23 +4588,23 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The Design System shall provide a consistent, accessible, reusable, and fully documented foundation
 for every Atlas AI interface.
 
 ---
 
-# 51. Phase 20 — Administration Portal
+## 51. Phase 20 — Administration Portal
 
-## Objective
+### Objective
 
 Develop a comprehensive administration portal that enables secure management of the Atlas AI
 platform, organizations, users, AI providers, infrastructure, and operational settings.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Admin Dashboard
 - User Administration
@@ -4008,7 +4618,7 @@ platform, organizations, users, AI providers, infrastructure, and operational se
 
 ---
 
-## Task 2001 — Admin Dashboard
+### Task 2001 — Admin Dashboard
 
 Display:
 
@@ -4025,7 +4635,7 @@ Dashboard widgets shall be configurable.
 
 ---
 
-## Task 2002 — User Management
+### Task 2002 — User Management
 
 Support:
 
@@ -4042,7 +4652,7 @@ Every action shall be audited.
 
 ---
 
-## Task 2003 — Organization Management
+### Task 2003 — Organization Management
 
 Administrators shall manage:
 
@@ -4056,7 +4666,7 @@ Administrators shall manage:
 
 ---
 
-## Task 2004 — AI Provider Administration
+### Task 2004 — AI Provider Administration
 
 Manage:
 
@@ -4071,7 +4681,7 @@ Provider configuration shall require appropriate permissions.
 
 ---
 
-## Task 2005 — Feature Flags
+### Task 2005 — Feature Flags
 
 Implement runtime feature management.
 
@@ -4087,7 +4697,7 @@ Feature flags shall support instant rollback.
 
 ---
 
-## Task 2006 — Audit Center
+### Task 2006 — Audit Center
 
 Provide searchable audit history.
 
@@ -4105,7 +4715,7 @@ Audit records shall be immutable.
 
 ---
 
-## Task 2007 — System Settings
+### Task 2007 — System Settings
 
 Support centralized configuration of:
 
@@ -4120,7 +4730,7 @@ Changes shall be validated before activation.
 
 ---
 
-## Task 2008 — Administration Testing
+### Task 2008 — Administration Testing
 
 Mandatory validation:
 
@@ -4138,7 +4748,7 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The Administration Portal shall provide complete operational control of the Atlas AI platform while
 maintaining strict security, auditability, and scalability.
@@ -4147,9 +4757,9 @@ maintaining strict security, auditability, and scalability.
 
 ---
 
-# 52. Phase 21 — Notifications & Communication
+## 52. Phase 21 — Notifications & Communication
 
-## Objective
+### Objective
 
 Implement a unified notification and communication platform that delivers reliable, configurable,
 and auditable messages across all supported channels.
@@ -4158,7 +4768,7 @@ Every notification shall originate from the Notification Service.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Notification Center
 - Email Service
@@ -4171,7 +4781,7 @@ Every notification shall originate from the Notification Service.
 
 ---
 
-## Task 2101 — Notification Service
+### Task 2101 — Notification Service
 
 Implement a centralized notification engine.
 
@@ -4185,7 +4795,7 @@ Responsibilities:
 
 ---
 
-## Task 2102 — Notification Channels
+### Task 2102 — Notification Channels
 
 Support:
 
@@ -4199,7 +4809,7 @@ Channels shall be configurable.
 
 ---
 
-## Task 2103 — Template Engine
+### Task 2103 — Template Engine
 
 Create reusable templates.
 
@@ -4216,7 +4826,7 @@ Templates shall be validated before publication.
 
 ---
 
-## Task 2104 — User Notification Preferences
+### Task 2104 — User Notification Preferences
 
 Allow users to configure:
 
@@ -4230,7 +4840,7 @@ Preferences shall be respected by every notification workflow.
 
 ---
 
-## Task 2105 — Delivery Monitoring
+### Task 2105 — Delivery Monitoring
 
 Track:
 
@@ -4245,7 +4855,7 @@ Delivery metrics shall be visible in the Administration Portal.
 
 ---
 
-## Task 2106 — Notification Testing
+### Task 2106 — Notification Testing
 
 Mandatory validation:
 
@@ -4263,16 +4873,16 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The notification platform shall reliably deliver messages through multiple channels while respecting
 user preferences and maintaining complete auditability.
 
 ---
 
-# 53. Phase 22 — Monitoring & Observability
+## 53. Phase 22 — Monitoring & Observability
 
-## Objective
+### Objective
 
 Implement enterprise-grade observability that provides complete visibility into application health,
 infrastructure, AI services, workflows, and user activity.
@@ -4281,7 +4891,7 @@ Every production service shall be observable.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Metrics
 - Centralized Logging
@@ -4294,7 +4904,7 @@ Every production service shall be observable.
 
 ---
 
-## Task 2201 — Metrics Collection
+### Task 2201 — Metrics Collection
 
 Collect metrics for:
 
@@ -4311,7 +4921,7 @@ Metrics shall follow standardized naming conventions.
 
 ---
 
-## Task 2202 — Distributed Tracing
+### Task 2202 — Distributed Tracing
 
 Implement request tracing.
 
@@ -4326,7 +4936,7 @@ Tracing shall extend across all services.
 
 ---
 
-## Task 2203 — Alerting
+### Task 2203 — Alerting
 
 Configure alerts for:
 
@@ -4342,7 +4952,7 @@ Alerts shall include remediation guidance where possible.
 
 ---
 
-## Task 2204 — Dashboards
+### Task 2204 — Dashboards
 
 Create dashboards for:
 
@@ -4359,7 +4969,7 @@ Dashboards shall support filtering by organization and workspace.
 
 ---
 
-## Task 2205 — Incident Logging
+### Task 2205 — Incident Logging
 
 Capture operational incidents.
 
@@ -4376,7 +4986,7 @@ Incident history shall be retained according to policy.
 
 ---
 
-## Task 2206 — Observability Testing
+### Task 2206 — Observability Testing
 
 Mandatory validation:
 
@@ -4394,7 +5004,7 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The observability platform shall provide comprehensive operational insight, proactive alerting, and
 complete traceability across the Atlas AI ecosystem.
@@ -4403,9 +5013,9 @@ complete traceability across the Atlas AI ecosystem.
 
 ---
 
-# 54. Phase 23 — Security Hardening
+## 54. Phase 23 — Security Hardening
 
-## Objective
+### Objective
 
 Perform comprehensive security hardening across the Atlas AI platform to minimize attack surface,
 enforce security best practices, and ensure compliance with enterprise security standards.
@@ -4414,7 +5024,7 @@ Security shall be continuously validated throughout the project lifecycle.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Secure Configuration
 - Secret Management
@@ -4426,7 +5036,7 @@ Security shall be continuously validated throughout the project lifecycle.
 
 ---
 
-## Task 2301 — Secret Management
+### Task 2301 — Secret Management
 
 All sensitive information shall be managed through secure secret storage.
 
@@ -4443,7 +5053,7 @@ Secrets shall never be committed to source control.
 
 ---
 
-## Task 2302 — API Security
+### Task 2302 — API Security
 
 Protect all APIs using:
 
@@ -4458,7 +5068,7 @@ Protect all APIs using:
 
 ---
 
-## Task 2303 — Encryption
+### Task 2303 — Encryption
 
 Implement encryption for:
 
@@ -4472,7 +5082,7 @@ Approved cryptographic algorithms shall be used.
 
 ---
 
-## Task 2304 — Dependency Security
+### Task 2304 — Dependency Security
 
 Automate:
 
@@ -4485,7 +5095,7 @@ Critical vulnerabilities shall block releases.
 
 ---
 
-## Task 2305 — Security Headers
+### Task 2305 — Security Headers
 
 Configure:
 
@@ -4498,7 +5108,7 @@ Configure:
 
 ---
 
-## Task 2306 — Security Auditing
+### Task 2306 — Security Auditing
 
 Record:
 
@@ -4513,7 +5123,7 @@ Audit logs shall be immutable.
 
 ---
 
-## Task 2307 — Penetration Testing
+### Task 2307 — Penetration Testing
 
 Perform:
 
@@ -4537,22 +5147,22 @@ Perform:
 
 ---
 
-## Task 2308 — Security Regression
+### Task 2308 — Security Regression
 
 Every resolved security issue shall include a regression test preventing reintroduction.
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The platform shall satisfy all defined security requirements and pass comprehensive automated and
 manual security validation.
 
 ---
 
-# 55. Phase 24 — Performance Optimization
+## 55. Phase 24 — Performance Optimization
 
-## Objective
+### Objective
 
 Optimize every layer of the Atlas AI platform to provide predictable, scalable, and efficient
 performance under expected and peak workloads.
@@ -4561,7 +5171,7 @@ Optimization shall never compromise correctness or maintainability.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Query Optimization
 - API Optimization
@@ -4572,7 +5182,7 @@ Optimization shall never compromise correctness or maintainability.
 
 ---
 
-## Task 2401 — Database Optimization
+### Task 2401 — Database Optimization
 
 Optimize:
 
@@ -4586,7 +5196,7 @@ N+1 query patterns shall be eliminated.
 
 ---
 
-## Task 2402 — API Optimization
+### Task 2402 — API Optimization
 
 Improve:
 
@@ -4600,7 +5210,7 @@ Target latency shall be documented for each endpoint.
 
 ---
 
-## Task 2403 — Caching Strategy
+### Task 2403 — Caching Strategy
 
 Implement caching for:
 
@@ -4615,7 +5225,7 @@ Cache invalidation rules shall be documented.
 
 ---
 
-## Task 2404 — AI Performance
+### Task 2404 — AI Performance
 
 Optimize:
 
@@ -4629,7 +5239,7 @@ Token efficiency shall be continuously monitored.
 
 ---
 
-## Task 2405 — Load Testing
+### Task 2405 — Load Testing
 
 Simulate:
 
@@ -4643,7 +5253,7 @@ Expected performance thresholds shall be met.
 
 ---
 
-## Task 2406 — Benchmark Suite
+### Task 2406 — Benchmark Suite
 
 Create repeatable benchmarks for:
 
@@ -4659,7 +5269,7 @@ Benchmarks shall be version controlled.
 
 ---
 
-## Task 2407 — Performance Testing
+### Task 2407 — Performance Testing
 
 Mandatory validation:
 
@@ -4677,7 +5287,7 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The platform shall demonstrate stable performance under documented production workloads and satisfy
 all defined performance targets.
@@ -4686,9 +5296,9 @@ all defined performance targets.
 
 ---
 
-# 56. Phase 25 — Comprehensive Testing & Quality Assurance
+## 56. Phase 25 — Comprehensive Testing & Quality Assurance
 
-## Objective
+### Objective
 
 Establish a comprehensive testing strategy that validates every layer of the Atlas AI platform and
 guarantees production readiness.
@@ -4697,7 +5307,7 @@ Testing is a mandatory activity throughout development, not a final phase.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Unit Test Suite
 - Integration Test Suite
@@ -4710,7 +5320,7 @@ Testing is a mandatory activity throughout development, not a final phase.
 
 ---
 
-## Task 2501 — Unit Testing
+### Task 2501 — Unit Testing
 
 Every business component shall include unit tests.
 
@@ -4725,7 +5335,7 @@ External dependencies shall be mocked where appropriate.
 
 ---
 
-## Task 2502 — Integration Testing
+### Task 2502 — Integration Testing
 
 Validate interaction between:
 
@@ -4741,7 +5351,7 @@ Integration tests shall use production-like configurations whenever practical.
 
 ---
 
-## Task 2503 — End-to-End Testing
+### Task 2503 — End-to-End Testing
 
 Validate complete user workflows.
 
@@ -4759,7 +5369,7 @@ Minimum scenarios:
 
 ---
 
-## Task 2504 — API Testing
+### Task 2504 — API Testing
 
 Every public API endpoint shall be tested.
 
@@ -4775,7 +5385,7 @@ Validate:
 
 ---
 
-## Task 2505 — Regression Suite
+### Task 2505 — Regression Suite
 
 Maintain a permanent regression suite.
 
@@ -4785,7 +5395,7 @@ Regression testing shall execute automatically before every merge and release.
 
 ---
 
-## Task 2506 — Test Coverage
+### Task 2506 — Test Coverage
 
 Continuously monitor:
 
@@ -4800,7 +5410,7 @@ Coverage shall never replace meaningful test quality.
 
 ---
 
-## Task 2507 — Continuous Test Execution
+### Task 2507 — Continuous Test Execution
 
 Automated tests shall execute:
 
@@ -4814,7 +5424,7 @@ Failed tests immediately block further development until resolved.
 
 ---
 
-## Task 2508 — Quality Gates
+### Task 2508 — Quality Gates
 
 Every pipeline shall validate:
 
@@ -4846,7 +5456,7 @@ No task may proceed if any quality gate fails.
 
 ---
 
-## Task 2509 — Testing Reports
+### Task 2509 — Testing Reports
 
 Generate reports including:
 
@@ -4861,23 +5471,23 @@ Reports shall be archived for audit purposes.
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The platform shall demonstrate stable, repeatable, and fully automated quality validation across
 every supported deployment environment.
 
 ---
 
-# 57. Phase 26 — Continuous Integration & Continuous Delivery (CI/CD)
+## 57. Phase 26 — Continuous Integration & Continuous Delivery (CI/CD)
 
-## Objective
+### Objective
 
 Implement a secure, automated CI/CD pipeline that validates every change and delivers reliable
 deployments with minimal manual intervention.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - CI Pipeline
 - CD Pipeline
@@ -4889,7 +5499,7 @@ deployments with minimal manual intervention.
 
 ---
 
-## Task 2601 — Continuous Integration
+### Task 2601 — Continuous Integration
 
 Every commit shall automatically trigger:
 
@@ -4904,7 +5514,7 @@ Pipeline failures shall block merges.
 
 ---
 
-## Task 2602 — Build Automation
+### Task 2602 — Build Automation
 
 Produce versioned build artifacts.
 
@@ -4917,7 +5527,7 @@ Artifacts shall be:
 
 ---
 
-## Task 2603 — Container Build
+### Task 2603 — Container Build
 
 Automatically build:
 
@@ -4930,7 +5540,7 @@ Container images shall be scanned for vulnerabilities.
 
 ---
 
-## Task 2604 — Deployment Automation
+### Task 2604 — Deployment Automation
 
 Support deployments to:
 
@@ -4942,7 +5552,7 @@ Deployment shall be environment-independent.
 
 ---
 
-## Task 2605 — Release Automation
+### Task 2605 — Release Automation
 
 Automate:
 
@@ -4954,7 +5564,7 @@ Automate:
 
 ---
 
-## Task 2606 — Rollback Automation
+### Task 2606 — Rollback Automation
 
 Support rapid rollback.
 
@@ -4967,7 +5577,7 @@ Rollback shall restore:
 
 ---
 
-## Task 2607 — Pipeline Security
+### Task 2607 — Pipeline Security
 
 Validate:
 
@@ -4980,7 +5590,7 @@ Pipeline credentials shall follow least-privilege principles.
 
 ---
 
-## Task 2608 — CI/CD Testing
+### Task 2608 — CI/CD Testing
 
 Mandatory validation:
 
@@ -4998,7 +5608,7 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 Every change shall move from source code to deployment through a secure, fully automated,
 observable, and repeatable CI/CD pipeline.
@@ -5007,9 +5617,9 @@ observable, and repeatable CI/CD pipeline.
 
 ---
 
-# 58. Phase 27 — Deployment & Production Infrastructure
+## 58. Phase 27 — Deployment & Production Infrastructure
 
-## Objective
+### Objective
 
 Deploy Atlas AI into secure, scalable, fault-tolerant production environments with automated
 provisioning, monitoring, and disaster recovery capabilities.
@@ -5018,7 +5628,7 @@ Production deployments shall be fully reproducible and infrastructure shall be m
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Production Infrastructure
 - Infrastructure as Code
@@ -5031,7 +5641,7 @@ Production deployments shall be fully reproducible and infrastructure shall be m
 
 ---
 
-## Task 2701 — Infrastructure as Code
+### Task 2701 — Infrastructure as Code
 
 Provision all infrastructure using declarative configuration.
 
@@ -5049,7 +5659,7 @@ Manual production changes are prohibited.
 
 ---
 
-## Task 2702 — Container Orchestration
+### Task 2702 — Container Orchestration
 
 Deploy services using a container orchestration platform.
 
@@ -5065,7 +5675,7 @@ Requirements:
 
 ---
 
-## Task 2703 — Networking
+### Task 2703 — Networking
 
 Configure:
 
@@ -5080,7 +5690,7 @@ Production traffic shall always use encrypted communication.
 
 ---
 
-## Task 2704 — Secrets Management
+### Task 2704 — Secrets Management
 
 Deploy centralized secret storage.
 
@@ -5095,7 +5705,7 @@ Application containers shall never embed secrets.
 
 ---
 
-## Task 2705 — Backup Strategy
+### Task 2705 — Backup Strategy
 
 Automate backups for:
 
@@ -5110,7 +5720,7 @@ Backups shall be encrypted and periodically verified.
 
 ---
 
-## Task 2706 — Disaster Recovery
+### Task 2706 — Disaster Recovery
 
 Implement recovery procedures.
 
@@ -5125,7 +5735,7 @@ Recovery procedures shall be documented and tested.
 
 ---
 
-## Task 2707 — Production Validation
+### Task 2707 — Production Validation
 
 Mandatory validation:
 
@@ -5147,16 +5757,16 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 Production infrastructure shall be secure, reproducible, observable, and capable of recovering from
 infrastructure failures with minimal downtime.
 
 ---
 
-# 59. Phase 28 — Release Readiness
+## 59. Phase 28 — Release Readiness
 
-## Objective
+### Objective
 
 Verify that Atlas AI satisfies all technical, functional, operational, and security requirements
 before production release.
@@ -5165,7 +5775,7 @@ No release shall occur without successfully passing every readiness gate.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Release Candidate
 - Final Documentation
@@ -5176,7 +5786,7 @@ No release shall occur without successfully passing every readiness gate.
 
 ---
 
-## Task 2801 — Documentation Review
+### Task 2801 — Documentation Review
 
 Verify:
 
@@ -5192,7 +5802,7 @@ Documentation shall match the implemented system.
 
 ---
 
-## Task 2802 — Final Security Review
+### Task 2802 — Final Security Review
 
 Confirm:
 
@@ -5205,7 +5815,7 @@ Confirm:
 
 ---
 
-## Task 2803 — Performance Certification
+### Task 2803 — Performance Certification
 
 Verify:
 
@@ -5219,7 +5829,7 @@ Performance baselines shall be archived.
 
 ---
 
-## Task 2804 — Operational Readiness
+### Task 2804 — Operational Readiness
 
 Confirm:
 
@@ -5235,7 +5845,7 @@ Operations documentation shall be complete.
 
 ---
 
-## Task 2805 — Release Candidate Validation
+### Task 2805 — Release Candidate Validation
 
 Execute:
 
@@ -5255,7 +5865,7 @@ No unresolved critical defects may remain.
 
 ---
 
-## Task 2806 — Release Approval
+### Task 2806 — Release Approval
 
 Required approvals:
 
@@ -5270,7 +5880,7 @@ Release shall proceed only after unanimous approval.
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 Atlas AI shall be declared production-ready only after every readiness requirement has been
 successfully validated and formally approved.
@@ -5279,9 +5889,9 @@ successfully validated and formally approved.
 
 ---
 
-# 60. Phase 29 — Production Release
+## 60. Phase 29 — Production Release
 
-## Objective
+### Objective
 
 Execute a controlled, traceable, and reversible production release while minimizing risk and
 ensuring service continuity.
@@ -5290,7 +5900,7 @@ Every production release shall follow the standardized release procedure.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Production Release
 - Release Notes
@@ -5301,7 +5911,7 @@ Every production release shall follow the standardized release procedure.
 
 ---
 
-## Task 2901 — Release Preparation
+### Task 2901 — Release Preparation
 
 Verify:
 
@@ -5316,7 +5926,7 @@ No production deployment shall begin until all prerequisites are satisfied.
 
 ---
 
-## Task 2902 — Production Deployment
+### Task 2902 — Production Deployment
 
 Deployment shall include:
 
@@ -5332,7 +5942,7 @@ Deployment shall be automated whenever possible.
 
 ---
 
-## Task 2903 — Smoke Testing
+### Task 2903 — Smoke Testing
 
 Immediately validate:
 
@@ -5349,7 +5959,7 @@ Critical failures require immediate rollback.
 
 ---
 
-## Task 2904 — Production Monitoring
+### Task 2904 — Production Monitoring
 
 Monitor during the release window:
 
@@ -5365,7 +5975,7 @@ Enhanced monitoring shall remain active throughout the stabilization period.
 
 ---
 
-## Task 2905 — Release Communication
+### Task 2905 — Release Communication
 
 Prepare:
 
@@ -5379,7 +5989,7 @@ Communication shall be completed before the maintenance window ends.
 
 ---
 
-## Task 2906 — Rollback Execution
+### Task 2906 — Rollback Execution
 
 Rollback shall be initiated if:
 
@@ -5392,7 +6002,7 @@ Rollback procedures shall be automated where practical.
 
 ---
 
-## Task 2907 — Production Release Testing
+### Task 2907 — Production Release Testing
 
 Mandatory validation:
 
@@ -5410,16 +6020,16 @@ Mandatory validation:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 Atlas AI shall be successfully deployed, operational, monitored, and verified in the production
 environment with rollback readiness maintained throughout the release.
 
 ---
 
-# 61. Phase 30 — Maintenance & Continuous Improvement
+## 61. Phase 30 — Maintenance & Continuous Improvement
 
-## Objective
+### Objective
 
 Establish long-term operational excellence through continuous monitoring, maintenance, optimization,
 upgrades, and iterative improvement.
@@ -5428,7 +6038,7 @@ The project shall remain maintainable throughout its lifecycle.
 
 ---
 
-## Phase Deliverables
+### Phase Deliverables
 
 - Maintenance Procedures
 - Upgrade Strategy
@@ -5439,7 +6049,7 @@ The project shall remain maintainable throughout its lifecycle.
 
 ---
 
-## Task 3001 — Maintenance Schedule
+### Task 3001 — Maintenance Schedule
 
 Define recurring maintenance activities:
 
@@ -5454,7 +6064,7 @@ Maintenance shall be scheduled to minimize user impact.
 
 ---
 
-## Task 3002 — Technical Debt Management
+### Task 3002 — Technical Debt Management
 
 Track all technical debt.
 
@@ -5470,7 +6080,7 @@ Technical debt shall never accumulate without visibility.
 
 ---
 
-## Task 3003 — Dependency Management
+### Task 3003 — Dependency Management
 
 Regularly review:
 
@@ -5484,7 +6094,7 @@ Updates shall be validated in staging before production rollout.
 
 ---
 
-## Task 3004 — Continuous Performance Optimization
+### Task 3004 — Continuous Performance Optimization
 
 Review:
 
@@ -5498,7 +6108,7 @@ Optimization opportunities shall be documented and prioritized.
 
 ---
 
-## Task 3005 — Incident Review
+### Task 3005 — Incident Review
 
 Every production incident shall generate:
 
@@ -5512,7 +6122,7 @@ Lessons learned shall improve future releases.
 
 ---
 
-## Task 3006 — Continuous Improvement Process
+### Task 3006 — Continuous Improvement Process
 
 Collect:
 
@@ -5526,7 +6136,7 @@ Improvement initiatives shall be prioritized based on measurable value.
 
 ---
 
-## Task 3007 — Long-Term Quality Assurance
+### Task 3007 — Long-Term Quality Assurance
 
 Regularly execute:
 
@@ -5546,14 +6156,14 @@ Quality standards shall remain consistent throughout the product lifecycle.
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 Atlas AI shall remain secure, reliable, maintainable, performant, and continuously evolving
 throughout its operational lifetime.
 
 ---
 
-# Appendix A — Universal Development Rules
+## Appendix A — Universal Development Rules
 
 These rules apply to **every task**, **every commit**, and **every phase** without exception.
 
@@ -5608,7 +6218,7 @@ Every implementation shall satisfy:
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 The implementation plan shall serve as the authoritative blueprint for the entire Atlas AI project
 from the first commit to long-term production maintenance.
@@ -5619,9 +6229,9 @@ No implementation may deviate from this document without a formally approved arc
 
 ---
 
-# Appendix B — Definition of Ready (DoR)
+## Appendix B — Definition of Ready (DoR)
 
-## Objective
+### Objective
 
 No implementation task may begin until it satisfies all readiness criteria.
 
@@ -5668,9 +6278,9 @@ If any requirement is missing:
 
 ---
 
-# Appendix C — Definition of Done (DoD)
+## Appendix C — Definition of Done (DoD)
 
-## Objective
+### Objective
 
 A task is complete only when it satisfies every completion criterion.
 
@@ -5726,7 +6336,7 @@ Only then may the task be marked as **Done**.
 
 ---
 
-# Appendix D — Risk Management
+## Appendix D — Risk Management
 
 ## Risk Categories
 
@@ -5758,7 +6368,7 @@ High-risk items shall be resolved before production deployment whenever feasible
 
 ---
 
-# Appendix E — Rollback Strategy
+## Appendix E — Rollback Strategy
 
 Rollback shall always be prepared before deployment.
 
@@ -5776,7 +6386,7 @@ No deployment may proceed without a validated rollback plan.
 
 ---
 
-# Appendix F — Backup & Disaster Recovery
+## Appendix F — Backup & Disaster Recovery
 
 Mandatory backups:
 
@@ -5802,9 +6412,9 @@ Recovery procedures shall be rehearsed on a regular basis.
 
 ---
 
-# Appendix G — Technical Debt Policy
+## Appendix G — Technical Debt Policy
 
-## Objective
+### Objective
 
 Technical debt shall be consciously managed, documented, prioritized, and continuously reduced.
 
@@ -5856,9 +6466,9 @@ The technical debt backlog shall be continuously prioritized.
 
 ---
 
-# Appendix H — Dependency Management Policy
+## Appendix H — Dependency Management Policy
 
-## Objective
+### Objective
 
 All third-party dependencies shall remain secure, maintained, compatible, and properly licensed.
 
@@ -5907,7 +6517,7 @@ OpenCode shall never:
 
 ---
 
-# Appendix I — Coding Standards
+## Appendix I — Coding Standards
 
 ## General Principles
 
@@ -5988,7 +6598,7 @@ Comments shall not duplicate obvious code behavior.
 
 ---
 
-# Appendix J — Naming Conventions
+## Appendix J — Naming Conventions
 
 ## File Names
 
@@ -6014,7 +6624,7 @@ Use RESTful conventions.
 
 Examples:
 
-```
+```text
 
 GET /api/users
 
@@ -6053,7 +6663,7 @@ Indexes shall follow consistent naming conventions.
 
 ---
 
-# Exit Criteria
+## Exit Criteria
 
 Project naming shall remain consistent across every module, service, database object, API endpoint,
 and frontend component.
@@ -6062,9 +6672,9 @@ and frontend component.
 
 ---
 
-# Appendix K — Architecture Decision Records (ADR)
+## Appendix K — Architecture Decision Records (ADR)
 
-## Objective
+### Objective
 
 All significant architectural decisions shall be documented to preserve project knowledge and ensure
 long-term maintainability.
@@ -6118,9 +6728,9 @@ An ADR is required whenever:
 
 ---
 
-# Appendix L — Documentation Standards
+## Appendix L — Documentation Standards
 
-## Objective
+### Objective
 
 Documentation shall remain synchronized with implementation throughout the entire project lifecycle.
 
@@ -6166,7 +6776,7 @@ Outdated documentation is considered a defect.
 
 ---
 
-# Appendix M — Git Workflow Policy
+## Appendix M — Git Workflow Policy
 
 ## Branch Strategy
 
@@ -6226,9 +6836,9 @@ At least one successful CI pipeline is required before merge.
 
 ---
 
-# Appendix N — Code Review Policy
+## Appendix N — Code Review Policy
 
-## Objective
+### Objective
 
 Every code change shall undergo structured review before merging.
 
@@ -6272,7 +6882,7 @@ No code may be merged without approval.
 
 ---
 
-# Appendix O — Final Project Acceptance Checklist
+## Appendix O — Final Project Acceptance Checklist
 
 Before Atlas AI is considered complete, verify:
 
@@ -6318,7 +6928,7 @@ Before Atlas AI is considered complete, verify:
 
 ---
 
-# Final Statement
+## Final Statement
 
 This document is the **single authoritative implementation blueprint** for the Atlas AI platform.
 
@@ -6338,9 +6948,9 @@ production acceptance criterion has been fulfilled.
 
 ---
 
-# Appendix P — Versioning Policy
+## Appendix P — Versioning Policy
 
-## Objective
+### Objective
 
 Establish a consistent versioning strategy for every release of Atlas AI.
 
@@ -6348,7 +6958,7 @@ The platform shall follow **Semantic Versioning (SemVer)**.
 
 Format:
 
-```
+```text
 MAJOR.MINOR.PATCH
 ```
 
@@ -6364,19 +6974,19 @@ Examples:
 
 Increase:
 
-**MAJOR**
+### MAJOR
 
 - Breaking API changes
 - Architectural redesign
 - Incompatible database migrations
 
-**MINOR**
+### MINOR
 
 - New features
 - Backward-compatible improvements
 - New integrations
 
-**PATCH**
+### PATCH
 
 - Bug fixes
 - Security fixes
@@ -6399,7 +7009,7 @@ Release history shall remain immutable.
 
 ---
 
-# Appendix Q — API Design Standards
+## Appendix Q — API Design Standards
 
 ## REST Guidelines
 
@@ -6443,7 +7053,7 @@ API responses shall remain consistent across the platform.
 
 ---
 
-# Appendix R — Logging Standards
+## Appendix R — Logging Standards
 
 ## Logging Levels
 
@@ -6492,7 +7102,7 @@ Example:
 
 ---
 
-# Appendix S — Configuration Management
+## Appendix S — Configuration Management
 
 ## Configuration Sources
 
@@ -6537,7 +7147,7 @@ Application startup shall fail fast when configuration is invalid.
 
 ---
 
-# Appendix T — Long-Term Vision
+## Appendix T — Long-Term Vision
 
 Atlas AI shall evolve through continuous iteration while preserving backward compatibility whenever
 practical.
@@ -6560,7 +7170,7 @@ implementation plan.
 
 ---
 
-# Master Principle
+## Master Principle
 
 Every line of code written for Atlas AI shall satisfy one simple rule:
 
@@ -6571,7 +7181,7 @@ This principle overrides all implementation decisions whenever trade-offs are re
 
 ---
 
-# Final Declaration
+## Final Declaration
 
 This **MASTER_IMPLEMENTATION_PLAN.md** is the governing document for the Atlas AI project.
 
@@ -6589,15 +7199,15 @@ From the first repository initialization to long-term production maintenance:
 Only after every requirement defined in this document has been fulfilled may the project be
 considered complete.
 
-**END OF DOCUMENT**
+### END OF DOCUMENT
 
 ---
 
 ---
 
-# Appendix U — AI Development Workflow
+## Appendix U — AI Development Workflow
 
-## Objective
+### Objective
 
 Define the mandatory workflow OpenCode shall follow for every implementation task.
 
@@ -6644,9 +7254,9 @@ If any validation fails:
 
 ---
 
-# Appendix V — Bug Fix Policy
+## Appendix V — Bug Fix Policy
 
-## Objective
+### Objective
 
 Every defect shall permanently improve product quality.
 
@@ -6680,7 +7290,7 @@ A bug is not considered resolved until:
 
 ---
 
-# Appendix W — Refactoring Policy
+## Appendix W — Refactoring Policy
 
 Refactoring is allowed only when it:
 
@@ -6708,7 +7318,7 @@ Behavioral changes are prohibited unless explicitly planned.
 
 ---
 
-# Appendix X — AI Coding Principles
+## Appendix X — AI Coding Principles
 
 OpenCode shall always prefer:
 
@@ -6724,7 +7334,7 @@ cost.
 
 ---
 
-# Appendix Y — Non-Negotiable Rules
+## Appendix Y — Non-Negotiable Rules
 
 The following rules are absolute.
 
@@ -6748,7 +7358,7 @@ Violation of any rule shall immediately stop implementation until corrected.
 
 ---
 
-# Appendix Z — Final AI Execution Contract
+## Appendix Z — Final AI Execution Contract
 
 By executing this implementation plan, OpenCode agrees to:
 
@@ -6776,7 +7386,7 @@ document has been successfully completed.
 
 ---
 
-# END OF MASTER IMPLEMENTATION PLAN
+## END OF MASTER IMPLEMENTATION PLAN
 
 Document Status: APPROVED
 

@@ -196,6 +196,26 @@ describe("EmailPasswordProvider", () => {
     expect(result.success).toBe(false);
     expect(result.failureReason).toBe("Invalid email or password");
   });
+
+  it("should reject null email", async () => {
+    const result = await provider.authenticate({
+      email: null,
+      password: TEST_PASSWORD,
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.failureReason).toBe("Email and password are required");
+  });
+
+  it("should reject null password", async () => {
+    const result = await provider.authenticate({
+      email: TEST_EMAIL,
+      password: null,
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.failureReason).toBe("Email and password are required");
+  });
 });
 
 describe("AuthService", () => {
